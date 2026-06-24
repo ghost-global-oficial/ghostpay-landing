@@ -1,0 +1,16 @@
+{
+  "name": "ghostpay-landing",
+  "version": "1.0.0",
+  "description": "Ghost Pay - Landing Page oficial",
+  "private": true,
+  "scripts": {
+    "dev": "npx serve .",
+    "start": "npx serve .",
+    "build": "echo 'Static site - no build needed'",
+    "deploy": "npx netlify deploy --prod",
+    "deploy:preview": "npx netlify deploy"
+  },
+  "keywords": ["ghostpay", "crypto", "payments", "landing-page"],
+  "author": "Ghost Pay",
+  "license": "MIT"
+}

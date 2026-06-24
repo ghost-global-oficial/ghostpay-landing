@@ -1,0 +1,7 @@
+# Netlify _redirects file
+
+/sdk    https://github.com/ghostpay/sdk   302
+/docs   /#features                         302
+
+# SPA fallback (se necessário)
+/*      /index.html                        200
