@@ -602,56 +602,63 @@
                         sig: params.get('sig') || '',
                     };
 
-                    // Verify HMAC signature — REJECT if invalid or missing
-                    if (!payment.sig) {
-                        showMessage('Link sem assinatura. Recusado por seguranca.', 'error');
-                        stopScanning();
-                        return;
-                    }
-
-                    const signingKey = localStorage.getItem('ghostpay_signing_key');
-                    if (!signingKey) {
-                        showMessage('Chave de verificacao nao configurada. Recusado.', 'error');
-                        stopScanning();
-                        return;
-                    }
-
-                    // Build payload for verification (everything except sig)
-                    const verifyParams = new URLSearchParams(urlStr);
-                    verifyParams.delete('sig');
-                    const payloadStr = verifyParams.toString();
-
-                    // Compute HMAC-SHA256
-                    const encoder = new TextEncoder();
-                    const keyData = encoder.encode(signingKey);
-                    const msgData = encoder.encode(payloadStr);
-
-                    crypto.subtle.importKey(
-                        'raw',
-                        keyData,
-                        { name: 'HMAC', hash: 'SHA-256' },
-                        false,
-                        ['verify']
-                    ).then(key => {
-                        const sigBytes = hexToBytes(payment.sig);
-                        return crypto.subtle.verify(
-                            'HMAC',
-                            key,
-                            sigBytes,
-                            msgData
-                        );
-                    }).then(isValid => {
-                        if (!isValid) {
-                            showMessage('Assinatura invalida! Link foi alterado. Recusado.', 'error');
+                    // If has signature, verify it
+                    if (payment.sig) {
+                        const signingKey = localStorage.getItem('ghostpay_signing_key');
+                        if (!signingKey) {
+                            showMessage('Chave de verificacao nao configurada. Recusado.', 'error');
                             stopScanning();
                             return;
                         }
-                        displayPayment(payment);
+
+                        // Build payload for verification (everything except sig)
+                        const verifyParams = new URLSearchParams(urlStr);
+                        verifyParams.delete('sig');
+                        const payloadStr = verifyParams.toString();
+
+                        // Compute HMAC-SHA256
+                        const encoder = new TextEncoder();
+                        const keyData = encoder.encode(signingKey);
+                        const msgData = encoder.encode(payloadStr);
+
+                        crypto.subtle.importKey(
+                            'raw',
+                            keyData,
+                            { name: 'HMAC', hash: 'SHA-256' },
+                            false,
+                            ['verify']
+                        ).then(key => {
+                            const sigBytes = hexToBytes(payment.sig);
+                            return crypto.subtle.verify(
+                                'HMAC',
+                                key,
+                                sigBytes,
+                                msgData
+                            );
+                        }).then(isValid => {
+                            if (!isValid) {
+                                showMessage('Assinatura invalida! Link foi alterado. Recusado.', 'error');
+                                stopScanning();
+                                return;
+                            }
+                            displayPayment(payment);
+                            stopScanning();
+                        }).catch(() => {
+                            showMessage('Erro ao verificar assinatura. Recusado.', 'error');
+                            stopScanning();
+                        });
+                        return;
+                    }
+
+                    // No signature — simple transfer (show warning but allow)
+                    if (!payment.address) {
+                        showMessage('Link sem endereco. Recusado.', 'error');
                         stopScanning();
-                    }).catch(() => {
-                        showMessage('Erro ao verificar assinatura. Recusado.', 'error');
-                        stopScanning();
-                    });
+                        return;
+                    }
+
+                    displayPayment(payment);
+                    stopScanning();
                     return;
                 }
 
@@ -785,6 +792,22 @@
             currentPayment = null;
             document.getElementById('payment-details').style.display = 'none';
             document.getElementById('manual-link').value = '';
+        }
+
+        function generateTransferQR(address, amount, currency, chain) {
+            const nonce = Array.from(crypto.getRandomValues(new Uint8Array(16)))
+                .map(b => b.toString(16).padStart(2, '0')).join('');
+
+            const params = new URLSearchParams({
+                receiver: 'Transfer',
+                amount: String(amount),
+                currency: currency || 'USD',
+                chain: chain || 'bitcoin',
+                address: address,
+                nonce: nonce,
+            });
+
+            return `ghostpay:payment?${params.toString()}`;
         }
 
         function closeModal(id) {

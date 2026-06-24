@@ -1303,6 +1303,22 @@
         // UTILITIES
         // ============================================
 
+        function generateTransferQR(address, amount, currency, chain) {
+            const nonce = Array.from(crypto.getRandomValues(new Uint8Array(16)))
+                .map(b => b.toString(16).padStart(2, '0')).join('');
+
+            const params = new URLSearchParams({
+                receiver: 'Transfer',
+                amount: String(amount),
+                currency: currency || 'USD',
+                chain: chain || 'bitcoin',
+                address: address,
+                nonce: nonce,
+            });
+
+            return `ghostpay:payment?${params.toString()}`;
+        }
+
         async function copyAddress() {
             if (!receiverAddress) return;
             try {
