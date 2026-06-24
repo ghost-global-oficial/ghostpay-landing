@@ -382,17 +382,11 @@ ul {
     padding: 48px 32px;
     border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 16px;
-    transition: all 0.3s ease;
+    transition: transform 0.3s ease;
 }
 
 .feature-card:hover {
-    background: var(--white);
-    color: var(--black);
     transform: translateY(-4px);
-}
-
-.feature-card:hover .feature-icon i {
-    color: var(--black);
 }
 
 .feature-icon {
@@ -402,7 +396,6 @@ ul {
 .feature-icon i {
     font-size: 48px;
     color: var(--white);
-    transition: color 0.3s ease;
 }
 
 .feature-card h3 {
@@ -417,10 +410,6 @@ ul {
     color: var(--gray);
     font-size: 0.9375rem;
     line-height: 1.7;
-}
-
-.feature-card:hover p {
-    color: var(--black);
 }
 
 /* How it Works */
