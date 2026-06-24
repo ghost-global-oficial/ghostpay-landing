@@ -1,74 +1,95 @@
-# Ghost Pay - Landing Page
+# Ghost Pay - Landing Page + Payment Pages
 
-Landing page oficial do Ghost Pay - Pagamentos Cripto Anónimos.
-
-## Deploy Rápido (1 comando)
-
-### Windows
-```cmd
-deploy.bat
-```
-
-### Linux/Mac
-```bash
-chmod +x deploy.sh
-./deploy.sh
-```
-
-Isso vai:
-1. Criar o repositório no GitHub
-2. Ativar GitHub Pages
-3. Publicar o site automaticamente
-
-### Outras opções de deploy
-```bash
-# Netlify
-deploy.bat netlify
-
-# Vercel
-deploy.bat vercel
-
-# Servidor local (teste)
-deploy.bat local
-```
-
-## Deploy Manual
-
-### GitHub Pages
-1. Crie um repositório no GitHub chamado `ghostpay-landing`
-2. Faça push dos arquivos
-3. Ative GitHub Pages em Settings → Pages
-4. Selecione branch `main` e pasta `/ (root)`
-
-### Netlify
-1. Acesse [netlify.com](https://netlify.com)
-2. Arraste a pasta `landing-page` para o deploy
-3. Pronto!
-
-### Vercel
-1. Acesse [vercel.com](https://vercel.com)
-2. Importe o repositório
-3. Deploy automático
-
-## Desenvolvimento
-
-```bash
-npm run dev
-```
-
-Acesse: http://localhost:3000
+Landing page e páginas de pagamento hosted do Ghost Pay.
 
 ## Estrutura
 
 ```
 landing-page/
-├── index.html      # Página principal
-├── styles.css      # Estilos
-├── main.js         # JavaScript
-├── netlify.toml    # Config Netlify
-├── vercel.json     # Config Vercel
-├── .htaccess       # Config Apache
-└── _redirects      # Redirects Netlify
+├── index.html              # Landing page principal
+├── styles.css              # Estilos
+├── main.js                 # JavaScript
+├── pages/
+│   ├── payment.html        # Checkout de pagamento (hosted)
+│   └── scan.html           # Scanner QR code (hosted)
+├── sdk/
+│   └── ghostpay-sdk.js     # Bundle UMD do SDK
+├── components/
+│   └── ghost-qrcode.js     # Componente QR code
+├── vercel.json             # Config Vercel (rotas: /payment, /scan)
+├── netlify.toml            # Config Netlify
+├── .htaccess               # Config Apache
+└── _redirects              # Redirects Netlify
+```
+
+## Páginas de Pagamento
+
+### Checkout (`/payment`)
+
+URL:
+```
+https://ghostpay-landing.vercel.app/payment?receiver=Loja&amount=25&currency=USD&chain=ethereum&address=0x...&sig=abc123
+```
+
+Parâmetros suportados:
+| Parâmetro | Obrigatório | Descrição |
+|-----------|-------------|-----------|
+| `receiver` | Sim | Nome do recebedor |
+| `amount` | Sim | Valor do pagamento |
+| `currency` | Sim | Moeda (USD, EUR, etc.) |
+| `chain` | Sim | Blockchain (bitcoin, ethereum, solana, polygon, bsc) |
+| `address` | Sim | Endereço da wallet do recebedor |
+| `plan` | Não | ID do plano |
+| `description` | Não | Descrição do pagamento |
+| `sig` | Não | HMAC-SHA256 (verificação de integridade) |
+
+### Scanner (`/scan`)
+
+URL:
+```
+https://ghostpay-landing.vercel.app/scan
+```
+
+Escaneia QR codes com formato `ghostpay:payment?...` e verifica a assinatura HMAC.
+
+## Deploy
+
+### Vercel (Recomendado)
+
+1. Conecta o repositório ao Vercel
+2. Deploy automático
+3. URLs: `https://ghostpay-landing.vercel.app/`
+
+### Deploy Rápido
+
+```bash
+# Windows
+deploy.bat
+
+# Linux/Mac
+chmod +x deploy.sh
+./deploy.sh
+```
+
+### Outras opções
+
+```bash
+deploy.bat netlify    # Netlify
+deploy.bat vercel     # Vercel
+deploy.bat local      # Servidor local
+```
+
+## Integração com Ghost Wallet
+
+A app Android Ghost Wallet escaneia QR codes e abre automaticamente a página de pagamento hosted:
+
+```typescript
+// Ao escanear QR code com ghostpay:payment?...
+if (scannedData.startsWith('ghostpay:payment?')) {
+  const queryString = scannedData.replace('ghostpay:payment?', '');
+  const paymentUrl = `https://ghostpay-landing.vercel.app/payment?${queryString}`;
+  Linking.openURL(paymentUrl);
+}
 ```
 
 ## Segurança
@@ -77,6 +98,7 @@ landing-page/
 - CSP (Content Security Policy) habilitado
 - Forçar HTTPS
 - Cache otimizado
+- Páginas hosted em domínio controlado (impossível manipular localmente)
 
 ## Licença
 

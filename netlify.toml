@@ -28,6 +28,21 @@
     Cache-Control = "public, max-age=0, must-revalidate"
 
 [[redirects]]
+  from = "/payment"
+  to = "/pages/payment.html"
+  status = 200
+
+[[redirects]]
+  from = "/scan"
+  to = "/pages/scan.html"
+  status = 200
+
+[[redirects]]
+  from = "/checkout"
+  to = "/pages/payment.html"
+  status = 200
+
+[[redirects]]
   from = "/sdk"
   to = "https://github.com/ghostpay/sdk"
   status = 302
