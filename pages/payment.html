@@ -996,6 +996,10 @@
           supportedChains: ALL_CHAINS,
         });
 
+        if (paramPlan) {
+            checkout.selectPlan(paramPlan);
+        }
+
         // ============================================
         // STATE
         // ============================================
