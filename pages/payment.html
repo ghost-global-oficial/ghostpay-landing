@@ -951,22 +951,35 @@
 
         const isDynamicMode = paramReceiver && paramAmount;
 
+        if (!isDynamicMode) {
+            document.body.innerHTML = `
+                <div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:system-ui;color:#fff;background:#000;">
+                    <div style="text-align:center;max-width:400px;padding:2rem;">
+                        <h1 style="font-size:1.5rem;margin-bottom:1rem;">Link de pagamento inválido</h1>
+                        <p style="color:#999;margin-bottom:1.5rem;">Este link não contém os parâmetros necessários. Solicite um novo link de pagamento ao recebedor.</p>
+                        <div style="background:#111;border-radius:8px;padding:1rem;font-size:0.8rem;color:#666;word-break:break-all;">
+                            Parâmetros requeridos: receiver, amount
+                        </div>
+                    </div>
+                </div>`;
+            throw new Error('Missing required URL params: receiver, amount');
+        }
+
         // ============================================
         // RECEIVER CONFIGURATION via SDK Checkout API
         // ============================================
 
         const checkout = SDK.Checkout.fromJSON({
           receiver: {
-            name: paramReceiver || 'GhostPay',
-            email: 'pay@ghostpay.dev',
+            name: paramReceiver,
           },
           mode: 'fixed',
           plans: [
             {
               id: paramPlan || 'fixed',
               name: 'Total a pagar',
-              description: paramDescription || 'Pagamento rápido.',
-              price: paramAmount ? parseFloat(paramAmount) : 25.00,
+              description: paramDescription || '',
+              price: parseFloat(paramAmount),
               currency: paramCurrency || 'USD',
               selected: true,
             },
@@ -1082,12 +1095,12 @@
 
             featuresTitle.style.display = '';
             list.style.display = '';
-            const features = checkout.selectedPlan?.features || [
-                'Todas as ferramentas, sem limites',
-                'Trabalho colaborativo em tempo real',
-                'Sincronização entre dispositivos',
-                'Suporte prioritário com resposta rápida',
-            ];
+            const features = checkout.selectedPlan?.features;
+            if (!features || features.length === 0) {
+                featuresTitle.style.display = 'none';
+                list.style.display = 'none';
+                return;
+            }
             list.innerHTML = features.map(f => `<li>${escapeHtml(f)}</li>`).join('');
         }
 
