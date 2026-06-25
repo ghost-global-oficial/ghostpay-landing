@@ -949,6 +949,7 @@
         const paramPlan = urlParams.get('plan');
         const paramDescription = urlParams.get('description');
         const paramPlans = urlParams.get('plans');
+        const paramApiKey = urlParams.get('apiKey');
 
         let parsedPlans = null;
         if (paramPlans) {
@@ -975,6 +976,8 @@
         // RECEIVER CONFIGURATION via SDK Checkout API
         // ============================================
 
+        const ALL_CHAINS = ['bitcoin', 'ethereum', 'solana', 'polygon', 'bsc'];
+
         const checkout = SDK.Checkout.fromJSON({
           receiver: {
             name: paramReceiver,
@@ -990,7 +993,7 @@
               selected: true,
             },
           ],
-          supportedChains: paramChain ? [paramChain] : ['bitcoin', 'ethereum', 'solana', 'polygon', 'bsc'],
+          supportedChains: ALL_CHAINS,
         });
 
         // ============================================
@@ -1007,23 +1010,6 @@
         // ============================================
 
         async function init() {
-            // If address was provided via URL params, skip wallet loading
-            if (!receiverAddress) {
-                // Load receiver's wallet address from local wallet
-                const stored = localStorage.getItem('ghost_wallet_encrypted');
-                if (stored) {
-                    try {
-                        const password = prompt('Senha da wallet do recebedor:');
-                        if (password) {
-                            const wallet = await SDK.Wallet.importEncrypted(stored, password);
-                            receiverAddress = wallet.getAddress(selectedChain);
-                        }
-                    } catch (e) {
-                        console.log('Wallet não configurada para recebedor');
-                    }
-                }
-            }
-
             renderReceiverInfo();
             renderPlans();
             renderFeatures();
@@ -1214,19 +1200,8 @@
             }
         }
 
-        async function updateReceiverAddress() {
-            const stored = localStorage.getItem('ghost_wallet_encrypted');
-            if (!stored) return;
-
-            try {
-                const password = prompt('Senha da wallet:');
-                if (!password) return;
-
-                const wallet = await SDK.Wallet.importEncrypted(stored, password);
-                receiverAddress = wallet.getAddress(selectedChain);
-            } catch (e) {
-                console.error('Erro ao obter endereÃ§o:', e);
-            }
+        function updateReceiverAddress() {
+            receiverAddress = paramAddress || null;
         }
 
         // ============================================
@@ -1239,13 +1214,13 @@
                 return;
             }
 
-            if (!receiverAddress) {
-                showToast('EndereÃ§o do recebedor nÃ£o configurado', 'error');
+            if (!receiverAddress && !paramApiKey) {
+                showToast('Endereço do recebedor não configurado', 'error');
                 return;
             }
 
             checkout.selectChain(selectedChain);
-            const data = checkout.buildCheckoutData(receiverAddress);
+            const data = checkout.buildCheckoutData(receiverAddress || '');
 
             paymentData = {
                 receiver: data.receiver.name,
@@ -1261,7 +1236,55 @@
                 paymentLink: data.paymentLink,
             };
 
-            showQRModal();
+            if (paramApiKey) {
+                await sendPaymentViaP2P(data);
+            } else {
+                showQRModal();
+            }
+        }
+
+        async function sendPaymentViaP2P(data) {
+            showToast('Conectando ao receptor via rede P2P...', 'info');
+
+            try {
+                const network = new SDK.MeshNetwork();
+                await network.start();
+
+                await network.connectToPeer(paramApiKey);
+
+                network.on('peer:connected', () => {
+                    showToast('Conectado ao receptor! Enviando pagamento...', 'success');
+
+                    const intent = network.createPaymentIntent({
+                        receiver: data.receiver.name,
+                        amount: data.amount,
+                        currency: data.currency,
+                        chain: data.chain,
+                        address: data.address,
+                        nodeId: paramApiKey,
+                    });
+
+                    showQRModal();
+
+                    document.getElementById('status-text').textContent = 'Pagamento enviado via P2P';
+                    document.getElementById('payment-status').className = 'status-badge pending';
+                });
+
+                network.on('mesh:intent-created', () => {
+                    showToast('Intenção de pagamento enviada!', 'success');
+                });
+
+                setTimeout(() => {
+                    if (!document.getElementById('payment-status').textContent.includes('Conectado')) {
+                        showToast('Timeout: receptor não encontrado. Tentando QR Code...', 'error');
+                        showQRModal();
+                    }
+                }, 10000);
+            } catch (e) {
+                console.error('Erro P2P:', e);
+                showToast('Erro ao conectar via P2P. Usando QR Code...', 'error');
+                showQRModal();
+            }
         }
 
         function showQRModal() {
