@@ -919,6 +919,7 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
     <script src="/components/ghost-qrcode.js"></script>
     <script src="/sdk/ghostpay-sdk.js"></script>
     <script>
@@ -936,8 +937,7 @@
         }
 
         // ============================================
-        // RECEIVER CONFIGURATION via SDK Checkout API
-        // Supports URL params: receiver, amount, currency, chain, address, plan, description
+        // URL PARAMS
         // ============================================
 
         const urlParams = new URLSearchParams(window.location.search);
@@ -950,6 +950,10 @@
         const paramDescription = urlParams.get('description');
 
         const isDynamicMode = paramReceiver && paramAmount;
+
+        // ============================================
+        // RECEIVER CONFIGURATION via SDK Checkout API
+        // ============================================
 
         const checkout = SDK.Checkout.fromJSON({
           receiver: {
@@ -970,18 +974,13 @@
           supportedChains: paramChain ? [paramChain] : ['bitcoin', 'ethereum', 'solana', 'polygon', 'bsc'],
         });
 
-        // Store the receiver address from URL params (for hosted payment pages)
-        if (paramAddress) {
-          receiverAddress = paramAddress;
-        }
-
         // ============================================
         // STATE
         // ============================================
 
+        let receiverAddress = paramAddress || null;
         let selectedPlan = checkout.selectedPlan;
         let selectedChain = checkout.selectedChain;
-        let receiverAddress = null;
         let paymentData = null;
 
         // ============================================
