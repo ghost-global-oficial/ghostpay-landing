@@ -948,6 +948,12 @@
         const paramAddress = urlParams.get('address');
         const paramPlan = urlParams.get('plan');
         const paramDescription = urlParams.get('description');
+        const paramPlans = urlParams.get('plans');
+
+        let parsedPlans = null;
+        if (paramPlans) {
+            try { parsedPlans = JSON.parse(paramPlans); } catch (e) { /* ignore */ }
+        }
 
         const isDynamicMode = paramReceiver && paramAmount;
 
@@ -973,8 +979,8 @@
           receiver: {
             name: paramReceiver,
           },
-          mode: 'fixed',
-          plans: [
+          mode: parsedPlans && parsedPlans.length > 1 ? 'multi' : 'fixed',
+          plans: parsedPlans && parsedPlans.length > 0 ? parsedPlans : [
             {
               id: paramPlan || 'fixed',
               name: 'Total a pagar',
