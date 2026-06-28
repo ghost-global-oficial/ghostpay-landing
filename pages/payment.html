@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Ghost Pay - Checkout de Pagamento">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' https://raw.githubusercontent.com; connect-src 'self' https://cdn.jsdelivr.net;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' https://raw.githubusercontent.com data: blob:; connect-src 'self' https://cdn.jsdelivr.net;">
     <title>Ghost Pay - Checkout</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -754,6 +754,258 @@
 
         .toast.success { border-color: var(--success); color: var(--success); }
         .toast.error { border-color: var(--error); color: var(--error); }
+
+        /* ======================== */
+        /* CATALOG MODAL            */
+        /* ======================== */
+
+        .catalog-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .catalog-overlay.active { display: flex; }
+
+        .catalog-modal {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            max-width: 700px;
+            width: 100%;
+            max-height: 85vh;
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            animation: modalIn 0.2s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .catalog-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .catalog-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .catalog-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 24px;
+            cursor: pointer;
+            padding: 4px;
+            line-height: 1;
+        }
+
+        .catalog-close:hover { color: var(--text); }
+
+        .catalog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            padding: 20px 24px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .catalog-item {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+
+        .catalog-item:hover {
+            border-color: var(--border-hover);
+        }
+
+        .catalog-item-image {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            background: var(--surface-3);
+            display: block;
+        }
+
+        .catalog-item-image-placeholder {
+            width: 100%;
+            height: 140px;
+            background: var(--surface-3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: var(--text-muted);
+        }
+
+        .catalog-item-info {
+            padding: 12px;
+        }
+
+        .catalog-item-name {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .catalog-item-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .catalog-item-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .catalog-item-price {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .catalog-qty-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .catalog-qty-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text);
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.15s;
+            font-family: inherit;
+        }
+
+        .catalog-qty-btn:hover {
+            border-color: var(--accent);
+            background: var(--accent-glow);
+        }
+
+        .catalog-qty-value {
+            font-size: 14px;
+            font-weight: 600;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .catalog-footer {
+            padding: 16px 24px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .catalog-total-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .catalog-total-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .catalog-confirm-btn {
+            padding: 12px 24px;
+            background: var(--accent);
+            color: #000;
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            transition: background 0.2s;
+        }
+
+        .catalog-confirm-btn:hover {
+            background: var(--accent-hover);
+        }
+
+        .catalog-confirm-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .catalog-empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .catalog-selected-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: var(--accent-glow);
+            border: 1px solid var(--accent);
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--accent);
+            margin-bottom: 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .catalog-selected-badge:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .catalog-view-btn {
+            width: 100%;
+            padding: 14px;
+            background: transparent;
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: var(--radius-md);
+            font-family: inherit;
+            margin-bottom: 16px;
+            transition: all 0.2s;
+        }
+
+        .catalog-view-btn:hover {
+            background: var(--accent-glow);
+        }
     </style>
 </head>
 <body>
@@ -771,6 +1023,14 @@
 
             <div id="plans-container">
                 <!-- Plans loaded dynamically from receiver config -->
+            </div>
+
+            <!-- Catalog button (shown in catalog mode) -->
+            <div id="catalog-section" style="display: none;">
+                <button class="catalog-view-btn" onclick="openCatalogModal()">
+                    🛒 Abrir Catálogo
+                </button>
+                <div id="catalog-selected-info"></div>
             </div>
 
             <h3 class="features-title">O que vais desbloquear</h3>
@@ -918,6 +1178,28 @@
         </div>
     </div>
 
+    <!-- Catalog Modal -->
+    <div class="catalog-overlay" id="catalog-modal" onclick="if(event.target===this)closeCatalogModal()">
+        <div class="catalog-modal">
+            <div class="catalog-header">
+                <div class="catalog-title" id="catalog-modal-title">Catálogo</div>
+                <button class="catalog-close" onclick="closeCatalogModal()">&times;</button>
+            </div>
+            <div class="catalog-grid" id="catalog-grid">
+                <!-- Products rendered dynamically -->
+            </div>
+            <div class="catalog-footer">
+                <div>
+                    <div class="catalog-total-label">Total</div>
+                    <div class="catalog-total-value" id="catalog-total">$0.00</div>
+                </div>
+                <button class="catalog-confirm-btn" id="catalog-confirm-btn" onclick="confirmCatalog()" disabled>
+                    Confirmar Seleção
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
     <script src="/components/ghost-qrcode.js"></script>
     <script src="/sdk/ghostpay-sdk.js?v=2"></script>
@@ -956,8 +1238,14 @@
         }
 
         const isDynamicMode = paramReceiver && paramAmount;
+        const paramCatalog = urlParams.get('catalog');
 
-        if (!isDynamicMode) {
+        let parsedCatalogProducts = null;
+        if (paramCatalog) {
+            try { parsedCatalogProducts = JSON.parse(paramCatalog); } catch (e) { /* ignore */ }
+        }
+
+        if (!isDynamicMode && !parsedCatalogProducts) {
             document.body.innerHTML = `
                 <div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:system-ui;color:#fff;background:#000;">
                     <div style="text-align:center;max-width:400px;padding:2rem;">
@@ -981,17 +1269,20 @@
           receiver: {
             name: paramReceiver,
           },
-          mode: parsedPlans && parsedPlans.length > 1 ? 'multi' : 'fixed',
+          mode: parsedCatalogProducts && parsedCatalogProducts.length > 0
+            ? 'catalog'
+            : parsedPlans && parsedPlans.length > 1 ? 'multi' : 'fixed',
           plans: parsedPlans && parsedPlans.length > 0 ? parsedPlans : [
             {
               id: paramPlan || 'fixed',
               name: 'Total a pagar',
               description: paramDescription || '',
-              price: parseFloat(paramAmount),
+              price: parseFloat(paramAmount || '0'),
               currency: paramCurrency || 'USD',
               selected: true,
             },
           ],
+          catalogProducts: parsedCatalogProducts || [],
           supportedChains: ALL_CHAINS,
         });
 
@@ -1018,6 +1309,14 @@
             renderFeatures();
             setupEventListeners();
             updateTotal();
+
+            // Show catalog section if catalog mode
+            if (checkout.mode === 'catalog') {
+                document.getElementById('catalog-section').style.display = 'block';
+                document.getElementById('plans-container').style.display = 'none';
+                document.querySelector('.features-title').style.display = 'none';
+                document.getElementById('features-list').style.display = 'none';
+            }
         }
 
         // ============================================
@@ -1029,10 +1328,14 @@
             document.getElementById('billed-to').textContent = checkout.receiver.name;
 
             const isSingle = checkout.plans.length <= 1 || checkout.mode === 'fixed';
+            const isCatalog = checkout.mode === 'catalog';
             const planTitle = document.getElementById('plan-title');
             const planSubtitle = document.getElementById('plan-subtitle');
 
-            if (isSingle) {
+            if (isCatalog) {
+                planTitle.textContent = checkout.receiver.name || 'Loja';
+                planSubtitle.textContent = 'Seleciona os produtos que deseja comprar.';
+            } else if (isSingle) {
                 const plan = checkout.plans[0];
                 planTitle.textContent = plan.name || 'Pagamento';
                 planSubtitle.textContent = plan.description || '';
@@ -1100,6 +1403,12 @@
         }
 
         function updateTotal() {
+            if (checkout.mode === 'catalog') {
+                const total = checkout.catalogTotal;
+                document.getElementById('total-amount').textContent = '$' + total.toFixed(2);
+                document.getElementById('total-currency').textContent = checkout.getCurrency();
+                return;
+            }
             if (!selectedPlan) return;
             document.getElementById('total-amount').textContent = '$' + selectedPlan.price.toFixed(2);
             document.getElementById('total-currency').textContent = selectedPlan.currency;
@@ -1146,14 +1455,17 @@
         }
 
         function generateInlineQR() {
-            if (!selectedPlan) {
+            if (checkout.mode === 'catalog') {
+                if (checkout.catalogTotal <= 0) return;
+            } else if (!selectedPlan) {
                 document.getElementById('qr-inline-placeholder').style.display = 'block';
                 document.getElementById('qr-inline-wrapper').style.display = 'none';
                 document.getElementById('qr-inline-info').style.display = 'none';
                 return;
             }
 
-            if (!selectedPlan.price || selectedPlan.price <= 0) return;
+            const amount = checkout.mode === 'catalog' ? checkout.catalogTotal : selectedPlan.price;
+            if (!amount || amount <= 0) return;
 
             try {
                 checkout.selectChain(selectedChain);
@@ -1219,7 +1531,12 @@
         // ============================================
 
         async function handlePayment() {
-            if (!selectedPlan) {
+            if (checkout.mode === 'catalog') {
+                if (checkout.catalogTotal <= 0) {
+                    showToast('Selecione pelo menos um produto', 'error');
+                    return;
+                }
+            } else if (!selectedPlan) {
                 showToast('Selecione um plano', 'error');
                 return;
             }
@@ -1229,8 +1546,9 @@
                 return;
             }
 
-            if (!selectedPlan.price || selectedPlan.price <= 0) {
-                showToast('Valor do plano inválido', 'error');
+            const amount = checkout.mode === 'catalog' ? checkout.catalogTotal : selectedPlan.price;
+            if (!amount || amount <= 0) {
+                showToast('Valor inválido', 'error');
                 return;
             }
 
@@ -1311,9 +1629,11 @@
             const modal = document.getElementById('qr-modal');
             modal.classList.add('active');
 
-            document.getElementById('qr-amount-display').textContent = `$${selectedPlan.price.toFixed(2)} ${selectedPlan.currency}`;
+            const amount = checkout.mode === 'catalog' ? checkout.catalogTotal : selectedPlan.price;
+            const currency = checkout.mode === 'catalog' ? checkout.getCurrency() : selectedPlan.currency;
+            document.getElementById('qr-amount-display').textContent = `$${amount.toFixed(2)} ${currency}`;
             document.getElementById('qr-chain-display').textContent = getChainLabel(selectedChain);
-            document.getElementById('qr-address-display').textContent = receiverAddress || 'EndereÃ§o nÃ£o configurado';
+            document.getElementById('qr-address-display').textContent = receiverAddress || 'Endereço não configurado';
 
             // Generate QR code with ghostpay: URI for native app
             const qrData = `ghostpay:payment?receiver=${encodeURIComponent(paymentData.receiver)}&amount=${paymentData.amount}&currency=${paymentData.currency}&chain=${paymentData.chain}&address=${encodeURIComponent(paymentData.address)}&nonce=${paymentData.nonce}`;
@@ -1342,9 +1662,10 @@
                 if (!paymentData) return;
 
                 const txs = JSON.parse(localStorage.getItem('ghost_transactions') || '[]');
+                const amount = checkout.mode === 'catalog' ? checkout.catalogTotal : selectedPlan?.price;
                 const found = txs.find(tx =>
                     tx.nonce === paymentData.nonce ||
-                    (tx.to === receiverAddress && tx.amount === String(selectedPlan.price))
+                    (tx.to === receiverAddress && tx.amount === String(amount))
                 );
 
                 if (found && found.status === 'confirmed') {
@@ -1359,6 +1680,108 @@
 
             badge.className = 'status-badge ' + status;
             text.textContent = status === 'confirmed' ? 'Pagamento confirmado' : 'Aguardando pagamento';
+        }
+
+        // ============================================
+        // CATALOG MODAL
+        // ============================================
+
+        function openCatalogModal() {
+            const modal = document.getElementById('catalog-modal');
+            modal.classList.add('active');
+            renderCatalogProducts();
+            updateCatalogTotal();
+        }
+
+        function closeCatalogModal() {
+            document.getElementById('catalog-modal').classList.remove('active');
+            renderCatalogSelectedInfo();
+            updateTotal();
+        }
+
+        function renderCatalogProducts() {
+            const grid = document.getElementById('catalog-grid');
+            const products = checkout.catalogProducts;
+
+            if (!products.length) {
+                grid.innerHTML = '<div class="catalog-empty">Nenhum produto disponível</div>';
+                return;
+            }
+
+            grid.innerHTML = products.map(product => {
+                const item = checkout.selectedItems.find(i => i.product.id === product.id);
+                const qty = item ? item.quantity : 0;
+                const outOfStock = product.inStock === false;
+
+                return `
+                    <div class="catalog-item" data-product-id="${escapeHtml(product.id)}" style="${outOfStock ? 'opacity:0.5;' : ''}">
+                        ${product.image
+                            ? `<img class="catalog-item-image" src="${escapeHtml(product.image)}" alt="${escapeHtml(product.name)}" onerror="this.outerHTML='<div class=\\'catalog-item-image-placeholder\\'>📦</div>'">`
+                            : '<div class="catalog-item-image-placeholder">📦</div>'
+                        }
+                        <div class="catalog-item-info">
+                            <div class="catalog-item-name">${escapeHtml(product.name)}</div>
+                            ${product.description ? `<div class="catalog-item-desc">${escapeHtml(product.description)}</div>` : ''}
+                            <div class="catalog-item-bottom">
+                                <div class="catalog-item-price">$${product.price.toFixed(2)}</div>
+                                ${outOfStock
+                                    ? '<span style="font-size:12px;color:var(--error);">Esgotado</span>'
+                                    : `<div class="catalog-qty-controls">
+                                        <button class="catalog-qty-btn" onclick="catalogChangeQty('${escapeHtml(product.id)}', -1)">−</button>
+                                        <span class="catalog-qty-value">${qty}</span>
+                                        <button class="catalog-qty-btn" onclick="catalogChangeQty('${escapeHtml(product.id)}', 1)">+</button>
+                                    </div>`
+                                }
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function catalogChangeQty(productId, delta) {
+            const item = checkout.selectedItems.find(i => i.product.id === productId);
+            const currentQty = item ? item.quantity : 0;
+            const newQty = currentQty + delta;
+
+            if (newQty <= 0) {
+                checkout.removeCatalogItem(productId);
+            } else if (item) {
+                checkout.setCatalogItemQuantity(productId, newQty);
+            } else {
+                checkout.addCatalogItem(productId, newQty);
+            }
+
+            renderCatalogProducts();
+            updateCatalogTotal();
+        }
+
+        function updateCatalogTotal() {
+            const total = checkout.catalogTotal;
+            document.getElementById('catalog-total').textContent = `$${total.toFixed(2)}`;
+            document.getElementById('catalog-confirm-btn').disabled = total <= 0;
+        }
+
+        function confirmCatalog() {
+            closeCatalogModal();
+        }
+
+        function renderCatalogSelectedInfo() {
+            const container = document.getElementById('catalog-selected-info');
+            const items = checkout.selectedItems;
+            const total = checkout.catalogTotal;
+
+            if (items.length === 0) {
+                container.innerHTML = '';
+                return;
+            }
+
+            const summary = items.map(i => `${i.quantity}x ${i.product.name}`).join(', ');
+            container.innerHTML = `
+                <div class="catalog-selected-badge" onclick="openCatalogModal()">
+                    🛒 ${items.length} produto(s) — $${total.toFixed(2)}
+                </div>
+            `;
         }
 
         // ============================================
