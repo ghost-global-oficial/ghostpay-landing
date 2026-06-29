@@ -1006,6 +1006,111 @@
         .catalog-view-btn:hover {
             background: var(--accent-glow);
         }
+
+        .catalog-items-list {
+            margin-bottom: 16px;
+        }
+
+        .catalog-items-header {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .catalog-items-table {
+            width: 100%;
+            margin-bottom: 16px;
+        }
+
+        .catalog-item-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .catalog-item-row:last-child {
+            border-bottom: none;
+        }
+
+        .catalog-item-row-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .catalog-item-row-img {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-sm);
+            object-fit: cover;
+            background: var(--surface-3);
+            flex-shrink: 0;
+        }
+
+        .catalog-item-row-img-placeholder {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-sm);
+            background: var(--surface-3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .catalog-item-row-name {
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .catalog-item-row-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .catalog-item-row-qty {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .catalog-item-row-price {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 14px;
+            font-weight: 600;
+            min-width: 60px;
+            text-align: right;
+        }
+
+        .catalog-items-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-top: 2px solid var(--border);
+            margin-top: 4px;
+        }
+
+        .catalog-items-total-label {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .catalog-items-total-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 18px;
+            font-weight: 700;
+        }
     </style>
 </head>
 <body>
@@ -1025,12 +1130,12 @@
                 <!-- Plans loaded dynamically from receiver config -->
             </div>
 
-            <!-- Catalog button (shown in catalog mode) -->
+            <!-- Catalog button + items list (shown in catalog mode) -->
             <div id="catalog-section" style="display: none;">
+                <div id="catalog-items-list"></div>
                 <button class="catalog-view-btn" onclick="openCatalogModal()">
                     🛒 Abrir Catálogo
                 </button>
-                <div id="catalog-selected-info"></div>
             </div>
 
             <h3 class="features-title">O que vais desbloquear</h3>
@@ -1239,10 +1344,22 @@
 
         const isDynamicMode = paramReceiver && paramAmount;
         const paramCatalog = urlParams.get('catalog');
+        const paramItems = urlParams.get('items');
 
         let parsedCatalogProducts = null;
         if (paramCatalog) {
             try { parsedCatalogProducts = JSON.parse(paramCatalog); } catch (e) { /* ignore */ }
+        }
+
+        // Parse pre-selected items: "tshirt:2,cap:1"
+        let preSelectedItems = [];
+        if (paramItems) {
+            paramItems.split(',').forEach(pair => {
+                const [id, qty] = pair.split(':');
+                if (id && qty) {
+                    preSelectedItems.push({ id: id.trim(), quantity: parseInt(qty, 10) || 1 });
+                }
+            });
         }
 
         if (!isDynamicMode && !parsedCatalogProducts) {
@@ -1290,6 +1407,15 @@
             checkout.selectPlan(paramPlan);
         }
 
+        // Pre-select catalog items from ?items= param
+        if (preSelectedItems.length > 0 && checkout.mode === 'catalog') {
+            for (const item of preSelectedItems) {
+                try {
+                    checkout.addCatalogItem(item.id, item.quantity);
+                } catch { /* product not found, skip */ }
+            }
+        }
+
         // ============================================
         // STATE
         // ============================================
@@ -1316,6 +1442,7 @@
                 document.getElementById('plans-container').style.display = 'none';
                 document.querySelector('.features-title').style.display = 'none';
                 document.getElementById('features-list').style.display = 'none';
+                renderCatalogSelectedInfo();
             }
         }
 
@@ -1697,6 +1824,11 @@
             document.getElementById('catalog-modal').classList.remove('active');
             renderCatalogSelectedInfo();
             updateTotal();
+            // Regenerate QR if QR tab is active
+            const qrTab = document.querySelector('[data-method="qrcode"]');
+            if (qrTab && qrTab.classList.contains('active')) {
+                generateInlineQR();
+            }
         }
 
         function renderCatalogProducts() {
@@ -1754,6 +1886,7 @@
 
             renderCatalogProducts();
             updateCatalogTotal();
+            renderCatalogSelectedInfo();
         }
 
         function updateCatalogTotal() {
@@ -1767,7 +1900,7 @@
         }
 
         function renderCatalogSelectedInfo() {
-            const container = document.getElementById('catalog-selected-info');
+            const container = document.getElementById('catalog-items-list');
             const items = checkout.selectedItems;
             const total = checkout.catalogTotal;
 
@@ -1776,12 +1909,37 @@
                 return;
             }
 
-            const summary = items.map(i => `${i.quantity}x ${i.product.name}`).join(', ');
-            container.innerHTML = `
-                <div class="catalog-selected-badge" onclick="openCatalogModal()">
-                    🛒 ${items.length} produto(s) — $${total.toFixed(2)}
+            let html = '<div class="catalog-items-header">Itens no Carrinho</div>';
+            html += '<div class="catalog-items-table">';
+
+            for (const item of items) {
+                const imgHtml = item.product.image
+                    ? `<img class="catalog-item-row-img" src="${escapeHtml(item.product.image)}" alt="${escapeHtml(item.product.name)}" onerror="this.outerHTML='<div class=\\'catalog-item-row-img-placeholder\\'>📦</div>'">`
+                    : '<div class="catalog-item-row-img-placeholder">📦</div>';
+
+                html += `
+                    <div class="catalog-item-row">
+                        <div class="catalog-item-row-left">
+                            ${imgHtml}
+                            <div class="catalog-item-row-name">${escapeHtml(item.product.name)}</div>
+                        </div>
+                        <div class="catalog-item-row-right">
+                            <span class="catalog-item-row-qty">x${item.quantity}</span>
+                            <span class="catalog-item-row-price">$${(item.product.price * item.quantity).toFixed(2)}</span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            html += '</div>';
+            html += `
+                <div class="catalog-items-total">
+                    <div class="catalog-items-total-label">Total</div>
+                    <div class="catalog-items-total-value">$${total.toFixed(2)}</div>
                 </div>
             `;
+
+            container.innerHTML = html;
         }
 
         // ============================================
