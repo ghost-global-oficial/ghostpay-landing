@@ -664,7 +664,7 @@
                     <div class="crypto-icon">BNB</div>
                     <div class="crypto-name">BSC</div>
                 </button>
-                <button class="crypto-btn crypto-more" onclick="openCoinModal()">
+                <button class="crypto-btn crypto-more" onclick="console.log('[DONATE] More button clicked'); openCoinModal()">
                     <div class="crypto-icon">+</div>
                     <div class="crypto-name">More</div>
                 </button>
@@ -774,13 +774,18 @@
         const COIN_ICONS_WITH_SVG = ['avax','ada','dot','doge','trx','atom','ltc','algo','xlm','xmr','dash'];
 
         function openCoinModal() {
-            document.getElementById('coin-modal').classList.add('active');
+            console.log('[DONATE] openCoinModal called');
+            const modal = document.getElementById('coin-modal');
+            console.log('[DONATE] modal element:', modal);
+            modal.classList.add('active');
+            console.log('[DONATE] modal classes:', modal.className);
             renderCoinList('');
             document.getElementById('coin-search-input').value = '';
             document.getElementById('coin-search-input').focus();
         }
 
         function closeCoinModal() {
+            console.log('[DONATE] closeCoinModal called');
             document.getElementById('coin-modal').classList.remove('active');
         }
 
@@ -790,6 +795,7 @@
         }
 
         function renderCoinList(query) {
+            console.log('[DONATE] renderCoinList called, query:', query, 'selectedChain:', selectedChain);
             const list = document.getElementById('coin-list');
             const allCoins = [...MORE_COINS];
             const filtered = query
