@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Ghost Pay - Doar para">
+    <meta name="description" content="Ghost Pay - Donate with Crypto">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' https://raw.githubusercontent.com data: blob:; connect-src 'self' https://cdn.jsdelivr.net;">
     <title>Ghost Pay - Donate</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -188,7 +188,7 @@
         }
 
         .custom-amount-input:focus {
-            border-color: var(--accent);
+            border-color: var(--border);
         }
 
         .custom-amount-input::placeholder {
@@ -478,11 +478,11 @@
     <div class="donate-layout">
         <!-- LEFT PANEL -->
         <div class="info-panel">
-            <h1 class="donate-title">Doar</h1>
-            <p class="donate-subtitle">Escolhe um valor e apoia com criptomoeda</p>
+            <h1 class="donate-title">Donate</h1>
+            <p class="donate-subtitle">Choose an amount and support with crypto</p>
 
             <div class="receiver-card" id="receiverCard" style="display: none;">
-                <div class="receiver-label">Recebedor</div>
+                <div class="receiver-label">Receiver</div>
                 <div class="receiver-name" id="receiverName"></div>
                 <div class="receiver-description" id="receiverDesc"></div>
             </div>
@@ -494,7 +494,7 @@
 
         <!-- RIGHT PANEL -->
         <div class="payment-panel">
-            <div class="section-title">Escolher Criptomoeda</div>
+            <div class="section-title">Select Cryptocurrency</div>
             <div class="crypto-grid" id="cryptoGrid">
                 <button class="crypto-btn active" data-chain="bitcoin">
                     <div class="crypto-icon">&#8383;</div>
@@ -520,23 +520,23 @@
 
             <div class="total-section">
                 <div class="total-row">
-                    <span class="total-label">Valor</span>
+                    <span class="total-label">Amount</span>
                     <span class="total-value" id="totalAmount">$0.00</span>
                 </div>
                 <div class="total-row">
-                    <span class="total-label">Rede</span>
+                    <span class="total-label">Network</span>
                     <span id="selectedChainName" style="font-weight: 600;">Bitcoin</span>
                 </div>
             </div>
 
-            <button class="donate-btn" id="donateBtn" disabled>Doar Agora</button>
+            <button class="donate-btn" id="donateBtn" disabled>Donate Now</button>
 
             <div class="qr-section" id="qrSection" style="display: none;">
                 <div class="qr-container" id="qrContainer"></div>
-                <div class="qr-hint">Escaneia com a Ghost Wallet</div>
+                <div class="qr-hint">Scan with Ghost Wallet</div>
                 <div class="copy-link" id="copyLink" style="display: none;">
                     <span id="donateLink"></span>
-                    <span class="copy-icon">Copiar</span>
+                    <span class="copy-icon">Copy</span>
                 </div>
             </div>
         </div>
@@ -545,8 +545,8 @@
     <!-- Custom Amount Modal -->
     <div class="modal-overlay" id="moreModal">
         <div class="modal">
-            <div class="modal-title">Valor Personalizado</div>
-            <div class="modal-text">Insere o valor que desejas doar</div>
+            <div class="modal-title">Custom Amount</div>
+            <div class="modal-text">Enter the amount you want to donate</div>
             <div class="custom-amount-wrapper" style="margin-bottom: 20px;">
                 <span class="currency-symbol">$</span>
                 <input
@@ -560,8 +560,8 @@
                 >
             </div>
             <div style="display: flex; gap: 12px;">
-                <button class="modal-btn" style="flex: 1; background: var(--surface-3); color: var(--text);" onclick="closeMoreModal()">Cancelar</button>
-                <button class="modal-btn" style="flex: 1;" onclick="confirmCustomAmount()">Confirmar</button>
+                <button class="modal-btn" style="flex: 1; background: var(--surface-3); color: var(--text);" onclick="closeMoreModal()">Cancel</button>
+                <button class="modal-btn" style="flex: 1;" onclick="confirmCustomAmount()">Confirm</button>
             </div>
         </div>
     </div>
@@ -570,9 +570,9 @@
     <div class="modal-overlay" id="successModal">
         <div class="modal">
             <div class="modal-icon">&#10003;</div>
-            <div class="modal-title">Doacao Criada</div>
-            <div class="modal-text" id="modalText">Link de doacao gerado com sucesso.</div>
-            <button class="modal-btn" onclick="closeModal()">Fechar</button>
+            <div class="modal-title">Donation Created</div>
+            <div class="modal-text" id="modalText">Donation link generated successfully.</div>
+            <button class="modal-btn" onclick="closeModal()">Close</button>
         </div>
     </div>
 
@@ -622,7 +622,7 @@
         // Add "More" button
         const moreBtn = document.createElement('button');
         moreBtn.className = 'preset-btn more-btn';
-        moreBtn.textContent = 'Mais';
+        moreBtn.textContent = 'More';
         moreBtn.onclick = () => openMoreModal();
         presetContainer.appendChild(moreBtn);
 
@@ -721,13 +721,13 @@
 
                 copyLink.onclick = () => {
                     navigator.clipboard.writeText(link).then(() => {
-                        document.getElementById('modalText').textContent = 'Link copiado para a area de transferencia.';
+                        document.getElementById('modalText').textContent = 'Link copied to clipboard.';
                         document.getElementById('successModal').classList.add('active');
                     });
                 };
 
                 // Show success
-                document.getElementById('modalText').textContent = `Doacao de $${selectedAmount.toFixed(2)} em ${chainNames[selectedChain]} criada.`;
+                document.getElementById('modalText').textContent = `Donation of $${selectedAmount.toFixed(2)} on ${chainNames[selectedChain]} created.`;
                 document.getElementById('successModal').classList.add('active');
 
             } catch (err) {
