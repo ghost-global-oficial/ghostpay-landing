@@ -688,6 +688,8 @@
 
             <button class="donate-btn" id="donateBtn" disabled>Donate Now</button>
 
+            <div id="donateError" style="display:none; background:rgba(255,68,68,0.1); border:1px solid rgba(255,68,68,0.3); border-radius:var(--radius-md); padding:12px 16px; margin-top:12px; font-size:13px; color:#FF4444;"></div>
+
             <div class="qr-section" id="qrSection" style="display: none;">
                 <div class="qr-container" id="qrContainer"></div>
                 <div class="qr-hint">Scan with Ghost Wallet</div>
@@ -907,6 +909,29 @@
         // Crypto selection
         const chainNames = { bitcoin: 'Bitcoin', ethereum: 'Ethereum', solana: 'Solana', polygon: 'Polygon', bsc: 'BSC' };
 
+        const donateAddress = params.get('address') || '';
+
+        function showError(msg) {
+            const el = document.getElementById('donateError');
+            el.textContent = msg;
+            el.style.display = 'block';
+        }
+
+        function hideError() {
+            document.getElementById('donateError').style.display = 'none';
+        }
+
+        function updateBtnState() {
+            const btn = document.getElementById('donateBtn');
+            if (!donateAddress) {
+                btn.disabled = true;
+                btn.title = 'No wallet address configured';
+            } else {
+                btn.disabled = selectedAmount <= 0;
+                btn.title = '';
+            }
+        }
+
         document.querySelectorAll('.crypto-btn:not(.crypto-more)').forEach(btn => {
             btn.onclick = () => {
                 document.querySelectorAll('.crypto-btn').forEach(b => b.classList.remove('active'));
@@ -926,14 +951,28 @@
             document.getElementById('selectedChainName').textContent = chainNames[selectedChain];
         }
 
+        if (!donateAddress) {
+            showError('No wallet address configured. Add &address=YOUR_WALLET to the URL.');
+        }
+
         function updateTotal() {
             document.getElementById('totalAmount').textContent = `$${selectedAmount.toFixed(2)}`;
-            document.getElementById('donateBtn').disabled = selectedAmount <= 0;
+            updateBtnState();
         }
 
         // Donate button
         document.getElementById('donateBtn').onclick = () => {
             if (selectedAmount <= 0) return;
+            hideError();
+
+            if (!donateAddress) {
+                showError('No wallet address configured. Add &address=YOUR_WALLET to the URL.');
+                return;
+            }
+
+            const btn = document.getElementById('donateBtn');
+            btn.disabled = true;
+            btn.textContent = 'Generating...';
 
             try {
                 const donate = new SDK.Donate({
@@ -947,11 +986,9 @@
                 donate.selectChain(selectedChain);
                 donate.setCustomAmount(selectedAmount);
 
-                const address = params.get('address') || '';
                 const signingKey = params.get('signingKey') || undefined;
-                const link = donate.generateDonateLink(address, signingKey);
+                const link = donate.generateDonateLink(donateAddress, signingKey);
 
-                // Show QR
                 const qrSection = document.getElementById('qrSection');
                 qrSection.style.display = 'block';
 
@@ -976,7 +1013,6 @@
                     qrContainer.appendChild(ghostQR);
                 }
 
-                // Show copy link
                 const copyLink = document.getElementById('copyLink');
                 copyLink.style.display = 'flex';
                 document.getElementById('donateLink').textContent = link;
@@ -988,12 +1024,16 @@
                     });
                 };
 
-                // Show success
                 document.getElementById('modalText').textContent = `Donation of $${selectedAmount.toFixed(2)} on ${chainNames[selectedChain]} created.`;
                 document.getElementById('successModal').classList.add('active');
 
             } catch (err) {
                 console.error('Donate error:', err);
+                showError('Failed to generate donation link. Please try again.');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Donate Now';
+                updateBtnState();
             }
         };
 
@@ -1013,12 +1053,15 @@
 
         function confirmCustomAmount() {
             const val = parseFloat(document.getElementById('modalAmount').value);
-            if (val > 0) {
-                document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
-                selectedAmount = val;
-                updateTotal();
-                closeMoreModal();
+            if (isNaN(val) || val < 0.01) {
+                document.getElementById('modalAmount').style.borderColor = '#FF4444';
+                return;
             }
+            document.getElementById('modalAmount').style.borderColor = '';
+            document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+            selectedAmount = val;
+            updateTotal();
+            closeMoreModal();
         }
 
         // Init
