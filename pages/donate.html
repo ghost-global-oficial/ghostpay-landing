@@ -664,7 +664,7 @@
                     <div class="crypto-icon">BNB</div>
                     <div class="crypto-name">BSC</div>
                 </button>
-                <button class="crypto-btn crypto-more" onclick="console.log('[DONATE] More button clicked'); openCoinModal()">
+                <button class="crypto-btn crypto-more" id="moreCryptoBtn">
                     <div class="crypto-icon">+</div>
                     <div class="crypto-name">More</div>
                 </button>
@@ -1028,6 +1028,12 @@
 
         // Init
         updateTotal();
+
+        // Bind More crypto button
+        document.getElementById('moreCryptoBtn').addEventListener('click', function() {
+            console.log('[DONATE] More crypto button clicked');
+            openCoinModal();
+        });
     </script>
 </body>
 </html>
