@@ -38,6 +38,11 @@
   status = 200
 
 [[redirects]]
+  from = "/donate"
+  to = "/pages/donate.html"
+  status = 200
+
+[[redirects]]
   from = "/checkout"
   to = "/pages/payment.html"
   status = 200
