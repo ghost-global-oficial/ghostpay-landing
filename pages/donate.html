@@ -287,6 +287,13 @@
         .crypto-icon {
             font-size: 24px;
             margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .crypto-icon img {
+            border-radius: 50%;
         }
 
         .crypto-name {
@@ -645,23 +652,23 @@
             <div class="section-title">Select Cryptocurrency</div>
             <div class="crypto-grid" id="cryptoGrid">
                 <button class="crypto-btn active" data-chain="bitcoin">
-                    <div class="crypto-icon">&#8383;</div>
+                    <div class="crypto-icon"><img src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/svg/color/btc.svg" width="32" height="32" alt="BTC"></div>
                     <div class="crypto-name">Bitcoin</div>
                 </button>
                 <button class="crypto-btn" data-chain="ethereum">
-                    <div class="crypto-icon">&#926;</div>
+                    <div class="crypto-icon"><img src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/svg/color/eth.svg" width="32" height="32" alt="ETH"></div>
                     <div class="crypto-name">Ethereum</div>
                 </button>
                 <button class="crypto-btn" data-chain="solana">
-                    <div class="crypto-icon">SOL</div>
+                    <div class="crypto-icon"><img src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/svg/color/sol.svg" width="32" height="32" alt="SOL"></div>
                     <div class="crypto-name">Solana</div>
                 </button>
                 <button class="crypto-btn" data-chain="polygon">
-                    <div class="crypto-icon">MATIC</div>
+                    <div class="crypto-icon"><img src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/svg/color/matic.svg" width="32" height="32" alt="MATIC"></div>
                     <div class="crypto-name">Polygon</div>
                 </button>
                 <button class="crypto-btn" data-chain="bsc">
-                    <div class="crypto-icon">BNB</div>
+                    <div class="crypto-icon"><img src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/svg/color/bnb.svg" width="32" height="32" alt="BNB"></div>
                     <div class="crypto-name">BSC</div>
                 </button>
                 <button class="crypto-btn crypto-more" id="moreCryptoBtn">
