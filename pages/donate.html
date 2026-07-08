@@ -474,6 +474,147 @@
         .features-list .check {
             color: var(--success);
         }
+
+        /* Coin Modal */
+        .coin-modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .coin-modal-overlay.active { display: flex; }
+
+        .coin-modal {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-xl);
+            width: 90%;
+            max-width: 420px;
+            max-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .coin-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px 12px;
+        }
+
+        .coin-modal-title {
+            font-family: 'Space Mono', monospace;
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .coin-modal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-size: 24px;
+            cursor: pointer;
+            padding: 4px 8px;
+        }
+
+        .coin-modal-close:hover { color: var(--text); }
+
+        .coin-search {
+            padding: 0 24px 12px;
+        }
+
+        .coin-search input {
+            width: 100%;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            color: var(--text);
+            font-size: 14px;
+            outline: none;
+        }
+
+        .coin-search input:focus {
+            border-color: var(--border);
+        }
+
+        .coin-search input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .coin-list {
+            overflow-y: auto;
+            padding: 0 12px 12px;
+        }
+
+        .coin-list-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+
+        .coin-list-item:hover {
+            background: var(--surface-2);
+        }
+
+        .coin-list-item.selected {
+            background: var(--accent-glow);
+        }
+
+        .coin-list-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .coin-list-info {
+            flex: 1;
+        }
+
+        .coin-list-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .coin-list-symbol {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .coin-list-check {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+        }
+
+        .coin-list-item.selected .coin-list-check {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .crypto-more {
+            background: transparent;
+            border: 1px dashed var(--border);
+        }
+
+        .crypto-more:hover {
+            border-color: var(--border-hover);
+        }
     </style>
 </head>
 <body>
@@ -523,6 +664,10 @@
                     <div class="crypto-icon">BNB</div>
                     <div class="crypto-name">BSC</div>
                 </button>
+                <button class="crypto-btn crypto-more" onclick="openCoinModal()">
+                    <div class="crypto-icon">+</div>
+                    <div class="crypto-name">More</div>
+                </button>
             </div>
 
             <div class="total-section">
@@ -546,6 +691,20 @@
                     <span class="copy-icon">Copy</span>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Coin Modal -->
+    <div class="coin-modal-overlay" id="coin-modal" onclick="if(event.target===this)closeCoinModal()">
+        <div class="coin-modal">
+            <div class="coin-modal-header">
+                <div class="coin-modal-title">Select Coin</div>
+                <button class="coin-modal-close" onclick="closeCoinModal()">&times;</button>
+            </div>
+            <div class="coin-search">
+                <input type="text" id="coin-search-input" placeholder="Search coin..." oninput="filterCoins()">
+            </div>
+            <div class="coin-list" id="coin-list"></div>
         </div>
     </div>
 
@@ -588,6 +747,99 @@
     <script src="/sdk/ghostpay-sdk.js?v=2"></script>
     <script>
         const SDK = window.GhostPaySDK;
+
+        // More coins list
+        const MORE_COINS = [
+            { chain: 'avalanche-2', name: 'Avalanche', symbol: 'AVAX', icon: '<img src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/svg/color/avax.svg" width="20" height="20" alt="AVAX">', color: '#E84142' },
+            { chain: 'cardano', name: 'Cardano', symbol: 'ADA', icon: '<img src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/svg/color/ada.svg" width="20" height="20" alt="ADA">', color: '#0033AD' },
+            { chain: 'polkadot', name: 'Polkadot', symbol: 'DOT', icon: '<img src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/svg/color/dot.svg" width="20" height="20" alt="DOT">', color: '#E6007A' },
+            { chain: 'dogecoin', name: 'Dogecoin', symbol: 'DOGE', icon: '<img src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/svg/color/doge.svg" width="20" height="20" alt="DOGE">', color: '#C2A633' },
+            { chain: 'tron', name: 'Tron', symbol: 'TRX', icon: '<img src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/svg/color/trx.svg" width="20" height="20" alt="TRX">', color: '#FF0013' },
+            { chain: 'cosmos', name: 'Cosmos', symbol: 'ATOM', icon: '<img src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/svg/color/atom.svg" width="20" height="20" alt="ATOM">', color: '#2E3148' },
+            { chain: 'litecoin', name: 'Litecoin', symbol: 'LTC', icon: '<img src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/svg/color/ltc.svg" width="20" height="20" alt="LTC">', color: '#BFBBBB' },
+            { chain: 'fantom', name: 'Fantom', symbol: 'FTM', icon: '<span style="font-weight:700;font-size:14px;">F</span>', color: '#1969FF' },
+            { chain: 'algorand', name: 'Algorand', symbol: 'ALGO', icon: '<img src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/svg/color/algo.svg" width="20" height="20" alt="ALGO">', color: '#000000' },
+            { chain: 'stellar', name: 'Stellar', symbol: 'XLM', icon: '<img src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/svg/color/xlm.svg" width="20" height="20" alt="XLM">', color: '#14B6E7' },
+            { chain: 'monero', name: 'Monero', symbol: 'XMR', icon: '<img src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/svg/color/xmr.svg" width="20" height="20" alt="XMR">', color: '#FF6600' },
+            { chain: 'dash', name: 'Dash', symbol: 'DASH', icon: '<img src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/svg/color/dash.svg" width="20" height="20" alt="DASH">', color: '#008DE4' },
+        ];
+
+        const COIN_ICONS_WITH_SVG = ['avax','ada','dot','doge','trx','atom','ltc','algo','xlm','xmr','dash'];
+
+        function openCoinModal() {
+            document.getElementById('coin-modal').classList.add('active');
+            renderCoinList('');
+            document.getElementById('coin-search-input').value = '';
+            document.getElementById('coin-search-input').focus();
+        }
+
+        function closeCoinModal() {
+            document.getElementById('coin-modal').classList.remove('active');
+        }
+
+        function filterCoins() {
+            const query = document.getElementById('coin-search-input').value.toLowerCase();
+            renderCoinList(query);
+        }
+
+        function renderCoinList(query) {
+            const list = document.getElementById('coin-list');
+            const allCoins = [...MORE_COINS];
+            const filtered = query
+                ? allCoins.filter(c => c.name.toLowerCase().includes(query) || c.symbol.toLowerCase().includes(query))
+                : allCoins;
+
+            list.innerHTML = filtered.map(coin => `
+                <div class="coin-list-item ${selectedChain === coin.chain ? 'selected' : ''}" onclick="selectMoreCoin('${coin.chain}')">
+                    <div class="coin-list-icon" style="background: ${coin.color};">${coin.icon}</div>
+                    <div class="coin-list-info">
+                        <div class="coin-list-name">${coin.name}</div>
+                        <div class="coin-list-symbol">${coin.symbol}</div>
+                    </div>
+                    <div class="coin-list-check"></div>
+                </div>
+            `).join('');
+        }
+
+        function selectMoreCoin(chain) {
+            const coin = MORE_COINS.find(c => c.chain === chain);
+            if (!coin) return;
+            selectedChain = chain;
+
+            const grid = document.getElementById('cryptoGrid');
+            grid.querySelectorAll('.crypto-btn').forEach(b => b.classList.remove('active'));
+
+            const existingBtn = grid.querySelector(`[data-chain="${chain}"]`);
+            if (existingBtn) {
+                existingBtn.classList.add('active');
+            } else {
+                const moreBtn = grid.querySelector('.crypto-more');
+                if (moreBtn) {
+                    const newBtn = document.createElement('button');
+                    newBtn.className = 'crypto-btn active';
+                    newBtn.setAttribute('data-chain', chain);
+                    const iconHtml = COIN_ICONS_WITH_SVG.includes(coin.symbol.toLowerCase())
+                        ? `<img src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/svg/color/${coin.symbol.toLowerCase()}.svg" width="28" height="28" alt="${coin.symbol}">`
+                        : `<span style="font-weight:700;font-size:14px;color:#fff;">${coin.symbol.charAt(0)}</span>`;
+                    newBtn.innerHTML = `
+                        <div class="crypto-icon">${iconHtml}</div>
+                        <div class="crypto-name">${coin.symbol}</div>
+                    `;
+                    newBtn.onclick = () => {
+                        grid.querySelectorAll('.crypto-btn').forEach(b => b.classList.remove('active'));
+                        newBtn.classList.add('active');
+                        selectedChain = chain;
+                        document.getElementById('selectedChainName').textContent = coin.name;
+                        updateTotal();
+                    };
+                    grid.insertBefore(newBtn, moreBtn);
+                }
+            }
+
+            document.getElementById('selectedChainName').textContent = coin.name;
+            updateTotal();
+            closeCoinModal();
+        }
 
         // State
         let selectedChain = 'bitcoin';
