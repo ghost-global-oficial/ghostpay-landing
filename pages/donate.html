@@ -477,18 +477,6 @@
 
             <div class="preset-amounts" id="presetAmounts"></div>
 
-            <div class="custom-amount-wrapper">
-                <span class="currency-symbol">$</span>
-                <input
-                    type="number"
-                    class="custom-amount-input"
-                    id="customAmount"
-                    placeholder="Valor personalizado"
-                    min="0.01"
-                    step="0.01"
-                >
-            </div>
-
 
         </div>
 
@@ -601,9 +589,6 @@
             if (presetAmounts.includes(amt)) {
                 const btns = document.querySelectorAll('.preset-btn');
                 btns.forEach(b => { if (b.textContent === `$${amt}`) selectPreset(amt, b); });
-            } else {
-                document.getElementById('customAmount').value = amt;
-                selectedAmount = amt;
             }
         }
 
@@ -611,16 +596,8 @@
             document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             selectedAmount = amount;
-            document.getElementById('customAmount').value = '';
             updateTotal();
         }
-
-        // Custom amount
-        document.getElementById('customAmount').addEventListener('input', (e) => {
-            document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
-            selectedAmount = parseFloat(e.target.value) || 0;
-            updateTotal();
-        });
 
         // Crypto selection
         const chainNames = { bitcoin: 'Bitcoin', ethereum: 'Ethereum', solana: 'Solana', polygon: 'Polygon', bsc: 'BSC' };
