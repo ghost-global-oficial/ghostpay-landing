@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Ghost Pay - Donate with Crypto">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' https://raw.githubusercontent.com https://s2.coinmarketcap.com data: blob:; connect-src 'self' https://cdn.jsdelivr.net;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' https://cdn.jsdelivr.net https://s2.coinmarketcap.com data: blob:; connect-src 'self' https://cdn.jsdelivr.net;">
     <title>Ghost Pay - Donate</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -653,23 +653,23 @@
             <div class="section-title">Select Cryptocurrency</div>
             <div class="crypto-grid" id="cryptoGrid">
                 <button class="crypto-btn active" data-chain="bitcoin">
-                    <div class="crypto-icon"><img src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/svg/color/btc.svg" width="32" height="32" alt="BTC"></div>
+                    <div class="crypto-icon"><img src="https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/btc.svg" width="32" height="32" alt="BTC"></div>
                     <div class="crypto-name">Bitcoin</div>
                 </button>
                 <button class="crypto-btn" data-chain="ethereum">
-                    <div class="crypto-icon"><img src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/svg/color/eth.svg" width="32" height="32" alt="ETH"></div>
+                    <div class="crypto-icon"><img src="https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/eth.svg" width="32" height="32" alt="ETH"></div>
                     <div class="crypto-name">Ethereum</div>
                 </button>
                 <button class="crypto-btn" data-chain="solana">
-                    <div class="crypto-icon"><img src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/svg/color/sol.svg" width="32" height="32" alt="SOL"></div>
+                    <div class="crypto-icon"><img src="https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/sol.svg" width="32" height="32" alt="SOL"></div>
                     <div class="crypto-name">Solana</div>
                 </button>
                 <button class="crypto-btn" data-chain="polygon">
-                    <div class="crypto-icon"><img src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/svg/color/matic.svg" width="32" height="32" alt="MATIC"></div>
+                    <div class="crypto-icon"><img src="https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/matic.svg" width="32" height="32" alt="MATIC"></div>
                     <div class="crypto-name">Polygon</div>
                 </button>
                 <button class="crypto-btn" data-chain="bsc">
-                    <div class="crypto-icon"><img src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/svg/color/bnb.svg" width="32" height="32" alt="BNB"></div>
+                    <div class="crypto-icon"><img src="https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/bnb.svg" width="32" height="32" alt="BNB"></div>
                     <div class="crypto-name">BSC</div>
                 </button>
                 <button class="crypto-btn crypto-more" id="moreCryptoBtn">
@@ -765,18 +765,18 @@
 
         // More coins list
         const MORE_COINS = [
-            { chain: 'avalanche-2', name: 'Avalanche', symbol: 'AVAX', icon: 'https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/svg/color/avax.svg', color: '#E84142' },
-            { chain: 'cardano', name: 'Cardano', symbol: 'ADA', icon: 'https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/svg/color/ada.svg', color: '#0033AD' },
-            { chain: 'polkadot', name: 'Polkadot', symbol: 'DOT', icon: 'https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/svg/color/dot.svg', color: '#E6007A' },
-            { chain: 'dogecoin', name: 'Dogecoin', symbol: 'DOGE', icon: 'https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/svg/color/doge.svg', color: '#C2A633' },
-            { chain: 'tron', name: 'Tron', symbol: 'TRX', icon: 'https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/svg/color/trx.svg', color: '#FF0013' },
-            { chain: 'cosmos', name: 'Cosmos', symbol: 'ATOM', icon: 'https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/svg/color/atom.svg', color: '#2E3148' },
-            { chain: 'litecoin', name: 'Litecoin', symbol: 'LTC', icon: 'https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/svg/color/ltc.svg', color: '#BFBBBB' },
+            { chain: 'avalanche-2', name: 'Avalanche', symbol: 'AVAX', icon: 'https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/avax.svg', color: '#E84142' },
+            { chain: 'cardano', name: 'Cardano', symbol: 'ADA', icon: 'https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/ada.svg', color: '#0033AD' },
+            { chain: 'polkadot', name: 'Polkadot', symbol: 'DOT', icon: 'https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/dot.svg', color: '#E6007A' },
+            { chain: 'dogecoin', name: 'Dogecoin', symbol: 'DOGE', icon: 'https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/doge.svg', color: '#C2A633' },
+            { chain: 'tron', name: 'Tron', symbol: 'TRX', icon: 'https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/trx.svg', color: '#FF0013' },
+            { chain: 'cosmos', name: 'Cosmos', symbol: 'ATOM', icon: 'https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/atom.svg', color: '#2E3148' },
+            { chain: 'litecoin', name: 'Litecoin', symbol: 'LTC', icon: 'https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/ltc.svg', color: '#BFBBBB' },
             { chain: 'fantom', name: 'Fantom', symbol: 'FTM', icon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3513.png', color: '#1969FF' },
-            { chain: 'algorand', name: 'Algorand', symbol: 'ALGO', icon: 'https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/svg/color/algo.svg', color: '#000000' },
-            { chain: 'stellar', name: 'Stellar', symbol: 'XLM', icon: 'https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/svg/color/xlm.svg', color: '#14B6E7' },
-            { chain: 'monero', name: 'Monero', symbol: 'XMR', icon: 'https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/svg/color/xmr.svg', color: '#FF6600' },
-            { chain: 'dash', name: 'Dash', symbol: 'DASH', icon: 'https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/svg/color/dash.svg', color: '#008DE4' },
+            { chain: 'algorand', name: 'Algorand', symbol: 'ALGO', icon: 'https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/algo.svg', color: '#000000' },
+            { chain: 'stellar', name: 'Stellar', symbol: 'XLM', icon: 'https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/xlm.svg', color: '#14B6E7' },
+            { chain: 'monero', name: 'Monero', symbol: 'XMR', icon: 'https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/xmr.svg', color: '#FF6600' },
+            { chain: 'dash', name: 'Dash', symbol: 'DASH', icon: 'https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/dash.svg', color: '#008DE4' },
         ];
 
         function openCoinModal() {
