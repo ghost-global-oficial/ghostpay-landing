@@ -911,8 +911,9 @@
 
         // Crypto selection
         const chainNames = { bitcoin: 'Bitcoin', ethereum: 'Ethereum', solana: 'Solana', polygon: 'Polygon', bsc: 'BSC' };
+        console.log('[DONATE] crypto selection setup');
 
-        document.querySelectorAll('.crypto-btn').forEach(btn => {
+        document.querySelectorAll('.crypto-btn:not(.crypto-more)').forEach(btn => {
             btn.onclick = () => {
                 document.querySelectorAll('.crypto-btn').forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
@@ -1027,13 +1028,23 @@
         }
 
         // Init
-        updateTotal();
+        try {
+            updateTotal();
+            console.log('[DONATE] updateTotal OK');
+        } catch(e) {
+            console.error('[DONATE] updateTotal ERROR:', e);
+        }
 
         // Bind More crypto button
-        document.getElementById('moreCryptoBtn').addEventListener('click', function() {
-            console.log('[DONATE] More crypto button clicked');
-            openCoinModal();
-        });
+        try {
+            document.getElementById('moreCryptoBtn').addEventListener('click', function() {
+                console.log('[DONATE] More crypto button clicked');
+                openCoinModal();
+            });
+            console.log('[DONATE] addEventListener OK');
+        } catch(e) {
+            console.error('[DONATE] addEventListener ERROR:', e);
+        }
     </script>
 </body>
 </html>
