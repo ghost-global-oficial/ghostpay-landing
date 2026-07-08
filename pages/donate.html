@@ -748,6 +748,13 @@
     <script>
         const SDK = window.GhostPaySDK;
 
+        // State
+        let selectedChain = 'bitcoin';
+        let selectedAmount = 0;
+        let receiverName = '';
+        let receiverDesc = '';
+        let presetAmounts = [5, 10, 25, 50, 100];
+
         // More coins list
         const MORE_COINS = [
             { chain: 'avalanche-2', name: 'Avalanche', symbol: 'AVAX', icon: '<img src="https://raw.githubusercontent.com/spothq/cryptocurrency-icons/master/svg/color/avax.svg" width="20" height="20" alt="AVAX">', color: '#E84142' },
@@ -840,13 +847,6 @@
             updateTotal();
             closeCoinModal();
         }
-
-        // State
-        let selectedChain = 'bitcoin';
-        let selectedAmount = 0;
-        let receiverName = '';
-        let receiverDesc = '';
-        let presetAmounts = [5, 10, 25, 50, 100];
 
         // URL params
         const params = new URLSearchParams(window.location.search);
