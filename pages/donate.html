@@ -145,6 +145,18 @@
             background: var(--accent-glow);
         }
 
+        .preset-btn.more-btn {
+            background: transparent;
+            border-style: dashed;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .preset-btn.more-btn:hover {
+            color: var(--text);
+            border-color: var(--text-secondary);
+        }
+
         .custom-amount-wrapper {
             position: relative;
             margin-bottom: 32px;
@@ -530,6 +542,30 @@
         </div>
     </div>
 
+    <!-- Custom Amount Modal -->
+    <div class="modal-overlay" id="moreModal">
+        <div class="modal">
+            <div class="modal-title">Valor Personalizado</div>
+            <div class="modal-text">Insere o valor que desejas doar</div>
+            <div class="custom-amount-wrapper" style="margin-bottom: 20px;">
+                <span class="currency-symbol">$</span>
+                <input
+                    type="number"
+                    class="custom-amount-input"
+                    id="modalAmount"
+                    placeholder="0.00"
+                    min="0.01"
+                    step="0.01"
+                    autofocus
+                >
+            </div>
+            <div style="display: flex; gap: 12px;">
+                <button class="modal-btn" style="flex: 1; background: var(--surface-3); color: var(--text);" onclick="closeMoreModal()">Cancelar</button>
+                <button class="modal-btn" style="flex: 1;" onclick="confirmCustomAmount()">Confirmar</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Success Modal -->
     <div class="modal-overlay" id="successModal">
         <div class="modal">
@@ -582,6 +618,13 @@
             btn.onclick = () => selectPreset(amount, btn);
             presetContainer.appendChild(btn);
         });
+
+        // Add "More" button
+        const moreBtn = document.createElement('button');
+        moreBtn.className = 'preset-btn more-btn';
+        moreBtn.textContent = 'Mais';
+        moreBtn.onclick = () => openMoreModal();
+        presetContainer.appendChild(moreBtn);
 
         // Pre-fill from URL
         if (urlAmount) {
@@ -694,6 +737,26 @@
 
         function closeModal() {
             document.getElementById('successModal').classList.remove('active');
+        }
+
+        function openMoreModal() {
+            document.getElementById('moreModal').classList.add('active');
+            document.getElementById('modalAmount').value = '';
+            setTimeout(() => document.getElementById('modalAmount').focus(), 100);
+        }
+
+        function closeMoreModal() {
+            document.getElementById('moreModal').classList.remove('active');
+        }
+
+        function confirmCustomAmount() {
+            const val = parseFloat(document.getElementById('modalAmount').value);
+            if (val > 0) {
+                document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+                selectedAmount = val;
+                updateTotal();
+                closeMoreModal();
+            }
         }
 
         // Init
