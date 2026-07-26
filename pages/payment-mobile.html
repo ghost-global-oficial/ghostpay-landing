@@ -8,7 +8,7 @@
     <title>Ghost Pay - Pagamento</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #0A0A0A;
@@ -16,16 +16,13 @@
             --surface-2: #1A1A1A;
             --surface-3: #222222;
             --border: #2A2A2A;
-            --border-hover: #3A3A3A;
             --text: #FFFFFF;
             --text-secondary: #B0B0B0;
             --text-muted: #666666;
             --accent: #FFFFFF;
-            --accent-hover: #E0E0E0;
             --accent-glow: rgba(255, 255, 255, 0.08);
             --success: #00FF88;
             --error: #FF4444;
-            --warning: #FFAA00;
             --radius-sm: 8px;
             --radius-md: 12px;
             --radius-lg: 16px;
@@ -34,1368 +31,395 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
         *::-webkit-scrollbar { width: 0; height: 0; }
-        * { scrollbar-width: none; }
 
         body {
             font-family: 'Inter', sans-serif;
             background: var(--bg);
             color: var(--text);
-            min-height: 100vh;
             min-height: 100dvh;
             line-height: 1.6;
             padding-top: 60px;
-            overflow-x: hidden;
         }
-
-        /* ======================== */
-        /* HEADER BAR               */
-        /* ======================== */
 
         .header-bar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 60px;
-            background: var(--bg);
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            padding: 0 16px;
-            z-index: 100;
+            position: fixed; top: 0; left: 0; right: 0; height: 56px;
+            background: rgba(10, 10, 10, 0.95);
             -webkit-backdrop-filter: blur(12px);
             backdrop-filter: blur(12px);
-            background: rgba(10, 10, 10, 0.9);
+            display: flex; align-items: center; padding: 0 16px; z-index: 100;
         }
 
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+        .brand { display: flex; align-items: center; gap: 10px; }
 
         .brand-icon {
-            width: 32px;
-            height: 32px;
-            background: var(--accent);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            font-weight: 700;
-            border-radius: var(--radius-sm);
-            color: #000;
-            flex-shrink: 0;
+            width: 30px; height: 30px; background: var(--accent); color: #000;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px; font-weight: 700; border-radius: var(--radius-sm);
         }
 
         .brand-name {
             font-family: 'Space Mono', monospace;
-            font-size: 16px;
-            font-weight: 700;
-            letter-spacing: -0.5px;
+            font-size: 15px; font-weight: 700; letter-spacing: -0.5px;
         }
 
-        /* ======================== */
-        /* SCROLLABLE CONTENT       */
-        /* ======================== */
+        .content { padding: 20px 16px; padding-bottom: 40px; }
 
-        .page-content {
-            padding: 24px 16px;
-            padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+        .section-title {
+            font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px;
+            color: var(--text-muted); margin-bottom: 12px;
         }
 
-        /* ======================== */
-        /* PLAN INFO SECTION        */
-        /* ======================== */
-
-        .receiver-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 12px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            font-size: 13px;
-            color: var(--text-secondary);
-            margin-bottom: 16px;
+        .receiver-card {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius-lg); padding: 16px; margin-bottom: 20px;
         }
 
-        .receiver-badge-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--success);
-            flex-shrink: 0;
+        .receiver-label {
+            font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
+            color: var(--text-muted); margin-bottom: 4px;
         }
 
-        .plan-title {
-            font-size: 26px;
-            font-weight: 700;
-            letter-spacing: -0.8px;
-            margin-bottom: 6px;
-            line-height: 1.2;
+        .receiver-name { font-size: 16px; font-weight: 600; }
+
+        .amount-display {
+            text-align: center; padding: 32px 0; margin-bottom: 20px;
         }
 
-        .plan-subtitle {
-            font-size: 14px;
-            color: var(--text-secondary);
-            margin-bottom: 20px;
-            line-height: 1.5;
+        .amount-value {
+            font-family: 'Space Mono', monospace;
+            font-size: 48px; font-weight: 700; line-height: 1;
         }
 
-        .plan-card {
-            background: var(--surface);
-            border: 2px solid var(--border);
-            padding: 16px;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            border-radius: var(--radius-md);
+        .amount-currency {
+            font-size: 14px; color: var(--text-muted); margin-top: 4px;
         }
 
-        .plan-card.selected {
-            border-color: var(--accent);
-            background: var(--accent-glow);
+        .crypto-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 10px; margin-bottom: 20px;
         }
 
-        .plan-card.unselected {
-            border-color: var(--border);
-            background: transparent;
+        .crypto-btn {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius-md); padding: 14px 8px;
+            color: var(--text); cursor: pointer; text-align: center;
+            transition: all 0.15s; -webkit-tap-highlight-color: transparent;
         }
 
-        .plan-radio {
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
-            border: 2px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
+        .crypto-btn:active { transform: scale(0.96); }
 
-        .plan-card.selected .plan-radio {
-            border-color: var(--accent);
-        }
-
-        .plan-card.selected .plan-radio::after {
-            content: '';
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--accent);
-        }
-
-        .fixed-amount-display {
-            text-align: center;
-            padding: 20px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-lg);
-            margin-bottom: 16px;
-        }
-
-        .fixed-amount-value {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 32px;
-            font-weight: 700;
-            color: var(--text);
-            line-height: 1.2;
-        }
-
-        .fixed-amount-currency {
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-top: 4px;
-        }
-
-        .plan-details { flex: 1; min-width: 0; }
-
-        .plan-name {
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 2px;
-        }
-
-        .plan-desc {
-            font-size: 12px;
-            color: var(--text-secondary);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .plan-price {
-            text-align: right;
-            flex-shrink: 0;
-        }
-
-        .plan-amount {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 18px;
-            font-weight: 600;
-        }
-
-        .plan-period {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-
-        /* ======================== */
-        /* FEATURES                 */
-        /* ======================== */
-
-        .features-title {
-            font-size: 14px;
-            font-weight: 600;
-            margin: 24px 0 12px;
-        }
-
-        .features-list {
-            list-style: none;
-        }
-
-        .features-list li {
-            padding: 5px 0;
-            font-size: 13px;
-            color: var(--text-secondary);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .features-list li::before {
-            content: '>';
-            color: var(--accent);
-            font-weight: 700;
-            font-family: 'JetBrains Mono', monospace;
-        }
-
-        /* ======================== */
-        /* CATALOG SECTION          */
-        /* ======================== */
-
-        .catalog-view-btn {
-            width: 100%;
-            padding: 14px;
-            background: transparent;
-            border: 1px solid var(--accent);
-            color: var(--accent);
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            border-radius: var(--radius-md);
-            font-family: inherit;
-            margin-bottom: 16px;
-            transition: all 0.2s;
-        }
-
-        .catalog-view-btn:hover {
-            background: var(--accent-glow);
-        }
-
-        .catalog-items-header {
-            font-size: 14px;
-            font-weight: 600;
-            color: var(--text-secondary);
-            margin-bottom: 12px;
-        }
-
-        .catalog-item-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .catalog-item-row:last-child {
-            border-bottom: none;
-        }
-
-        .catalog-item-row-left {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex: 1;
-            min-width: 0;
-        }
-
-        .catalog-item-row-img {
-            width: 36px;
-            height: 36px;
-            border-radius: var(--radius-sm);
-            object-fit: cover;
-            background: var(--surface-3);
-            flex-shrink: 0;
-        }
-
-        .catalog-item-row-img-placeholder {
-            width: 36px;
-            height: 36px;
-            border-radius: var(--radius-sm);
-            background: var(--surface-3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            flex-shrink: 0;
-        }
-
-        .catalog-item-row-name {
-            font-size: 13px;
-            font-weight: 500;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .catalog-item-row-right {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-shrink: 0;
-        }
-
-        .catalog-item-row-qty {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-
-        .catalog-item-row-price {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 13px;
-            font-weight: 600;
-            min-width: 50px;
-            text-align: right;
-        }
-
-        .catalog-items-total {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 0;
-            border-top: 2px solid var(--border);
-            margin-top: 4px;
-        }
-
-        .catalog-items-total-label {
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .catalog-items-total-value {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 16px;
-            font-weight: 700;
-        }
-
-        /* ======================== */
-        /* PAYMENT SECTION          */
-        /* ======================== */
-
-        .section-divider {
-            height: 1px;
-            background: var(--border);
-            margin: 24px 0;
-        }
-
-        .payment-section-title {
-            font-size: 17px;
-            font-weight: 600;
-            margin-bottom: 16px;
-        }
-
-        .billed-to {
-            margin-bottom: 20px;
-        }
-
-        .billed-to-label {
-            font-size: 12px;
-            color: var(--text-muted);
-            margin-bottom: 6px;
-        }
-
-        .billed-to-name {
-            font-size: 14px;
-            font-weight: 500;
-            padding: 12px 14px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            width: 100%;
-            border-radius: var(--radius-sm);
-            text-align: center;
-        }
-
-        /* ======================== */
-        /* CRYPTO GRID              */
-        /* ======================== */
-
-        .crypto-options {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 16px;
-        }
-
-        .crypto-option {
-            padding: 14px 8px;
-            border: 1px solid var(--border);
-            background: transparent;
-            cursor: pointer;
-            text-align: center;
-            transition: all 0.2s ease;
-            color: var(--text);
-            font-family: inherit;
-            border-radius: var(--radius-md);
-        }
-
-        .crypto-option:hover {
-            border-color: var(--border-hover);
-        }
-
-        .crypto-option.active {
-            border-color: var(--accent);
-            background: var(--accent-glow);
+        .crypto-btn.active {
+            border-color: var(--accent); background: var(--accent-glow);
         }
 
         .crypto-icon {
-            margin-bottom: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 6px; height: 32px;
         }
 
-        .crypto-icon img {
-            width: 28px;
-            height: 28px;
-        }
+        .crypto-icon img { border-radius: 50%; }
 
-        .crypto-name {
-            font-size: 11px;
-            font-weight: 500;
-        }
+        .crypto-name { font-size: 11px; font-weight: 600; }
 
-        .crypto-more {
-            border-style: dashed;
-            opacity: 0.6;
-        }
-
-        .crypto-more:hover {
-            opacity: 1;
-        }
-
-        /* ======================== */
-        /* TOTAL & PAY              */
-        /* ======================== */
+        .crypto-more { border-style: dashed; }
 
         .total-section {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            margin-bottom: 20px;
-            padding: 16px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius-lg); padding: 16px; margin-bottom: 16px;
+            display: flex; justify-content: space-between; align-items: center;
         }
 
-        .total-label {
-            font-size: 14px;
-            font-weight: 600;
-        }
+        .total-label { font-size: 14px; color: var(--text-secondary); }
 
-        .total-amount {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 22px;
-            font-weight: 600;
-        }
-
-        .total-currency {
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-left: 4px;
+        .total-value {
+            font-family: 'Space Mono', monospace;
+            font-size: 20px; font-weight: 700;
         }
 
         .pay-btn {
-            width: 100%;
-            padding: 16px;
-            background: var(--accent);
-            color: #000;
-            border: none;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-family: inherit;
-            letter-spacing: 0.3px;
-            border-radius: var(--radius-md);
+            width: 100%; background: var(--accent); color: #000;
+            border: none; border-radius: var(--radius-md);
+            padding: 16px; font-size: 16px; font-weight: 600;
+            cursor: pointer; transition: all 0.15s;
             -webkit-tap-highlight-color: transparent;
+            margin-bottom: 12px;
         }
 
-        .pay-btn:active {
-            transform: scale(0.98);
+        .pay-btn:active { transform: scale(0.98); opacity: 0.9; }
+        .pay-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        .error-box {
+            display: none; background: rgba(255,68,68,0.1);
+            border: 1px solid rgba(255,68,68,0.3); border-radius: var(--radius-md);
+            padding: 12px 16px; margin-bottom: 12px;
+            font-size: 13px; color: var(--error);
         }
 
-        .pay-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
+        .qr-section {
+            display: none; text-align: center;
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius-lg); padding: 24px 16px; margin-top: 16px;
         }
 
-        /* ======================== */
-        /* SECURITY NOTE            */
-        /* ======================== */
+        .qr-hint { font-size: 12px; color: var(--text-muted); margin-top: 12px; }
+
+        .copy-link {
+            display: flex; align-items: center; gap: 8px;
+            background: var(--surface-2); border: 1px solid var(--border);
+            border-radius: var(--radius-md); padding: 12px 16px;
+            margin-top: 12px; cursor: pointer;
+        }
+
+        .copy-link span {
+            flex: 1; font-family: 'Space Mono', monospace;
+            font-size: 11px; color: var(--text-secondary);
+            overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+        }
 
         .security-note {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            margin-top: 20px;
-            font-size: 11px;
-            color: var(--text-muted);
-            text-align: center;
+            display: flex; align-items: center; gap: 8px;
+            font-size: 12px; color: var(--text-muted);
+            text-align: center; justify-content: center;
+            margin-top: 24px; padding: 0 16px;
         }
 
-        .security-note svg {
-            width: 12px;
-            height: 12px;
-            flex-shrink: 0;
-        }
+        .security-note svg { width: 16px; height: 16px; flex-shrink: 0; }
 
-        /* ======================== */
-        /* QR CODE TAB (inline)     */
-        /* ======================== */
-
-        .pay-method-tabs {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0;
-            border: 1px solid var(--border);
-            margin-bottom: 20px;
-            border-radius: var(--radius-md);
-            overflow: hidden;
-        }
-
-        .pay-method-tab {
-            padding: 12px;
-            text-align: center;
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-            border: none;
-            background: transparent;
-            color: var(--text-muted);
-            transition: all 0.2s ease;
-            font-family: inherit;
-        }
-
-        .pay-method-tab.active {
-            background: var(--surface);
-            color: var(--text);
-        }
-
-        .pay-method-tab:not(:last-child) {
-            border-right: 1px solid var(--border);
-        }
-
-        .qr-inline-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 16px 0;
-        }
-
-        .qr-amount-display {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 24px;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .qr-chain-display {
-            font-size: 13px;
-            color: var(--text-secondary);
-            margin-bottom: 16px;
-        }
-
-        .qr-address {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 10px;
-            color: var(--text-muted);
-            word-break: break-all;
-            padding: 10px;
-            background: var(--surface);
-            margin-bottom: 12px;
-            text-align: left;
-            border-radius: var(--radius-sm);
-            width: 100%;
-        }
-
-        .qr-inline-actions {
-            display: flex;
-            gap: 10px;
-            width: 100%;
-            margin-top: 12px;
-        }
-
-        .qr-inline-btn {
-            flex: 1;
-            padding: 12px;
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-            border: 1px solid var(--border);
-            background: transparent;
-            color: var(--text);
-            transition: all 0.2s ease;
-            font-family: inherit;
-            border-radius: var(--radius-sm);
-        }
-
-        .qr-inline-btn:hover {
-            border-color: var(--text-muted);
-        }
-
-        .qr-inline-btn.primary {
-            background: var(--accent);
-            border-color: var(--accent);
-            color: #000;
-        }
-
-        /* ======================== */
-        /* QR MODAL                 */
-        /* ======================== */
-
+        /* Modal */
         .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 1000;
-            align-items: flex-end;
-            justify-content: center;
-            padding: 0;
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.8); z-index: 200;
+            align-items: flex-end; justify-content: center;
         }
 
         .modal-overlay.active { display: flex; }
 
-        .modal-box {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-bottom: none;
-            max-width: 100%;
-            width: 100%;
-            padding: 24px;
-            padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px));
-            text-align: center;
-            animation: slideUp 0.3s ease;
-            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-            max-height: 90vh;
-            overflow-y: auto;
+        .modal-sheet {
+            background: var(--surface); border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+            width: 100%; max-width: 480px; max-height: 80vh;
+            display: flex; flex-direction: column;
+            padding-bottom: env(safe-area-inset-bottom, 0);
         }
 
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(100%); }
-            to { opacity: 1; transform: translateY(0); }
+        .modal-header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 20px 12px;
         }
 
-        .modal-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 6px;
+        .modal-title { font-family: 'Space Mono', monospace; font-size: 16px; font-weight: 700; }
+
+        .modal-close {
+            background: none; border: none; color: var(--text-muted);
+            font-size: 24px; cursor: pointer; padding: 4px 8px;
         }
 
-        .modal-subtitle {
-            font-size: 13px;
-            color: var(--text-secondary);
-            margin-bottom: 24px;
-        }
-
-        .qr-wrapper {
-            display: inline-block;
-            padding: 0;
-            margin-bottom: 20px;
-            border-radius: var(--radius-lg);
-        }
-
-        .modal-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .modal-btn {
-            flex: 1;
-            padding: 12px;
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-            border: 1px solid var(--border);
-            background: transparent;
-            color: var(--text);
-            transition: all 0.2s ease;
-            font-family: inherit;
-            border-radius: var(--radius-sm);
-        }
-
-        .modal-btn:hover {
-            border-color: var(--text-muted);
-        }
-
-        .modal-btn.primary {
-            background: var(--accent);
-            border-color: var(--accent);
-            color: #000;
-        }
-
-        .status-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 14px;
-            font-size: 12px;
-            font-weight: 500;
-            border: 1px solid;
-            margin-top: 16px;
-            border-radius: 20px;
-        }
-
-        .status-badge.pending {
-            border-color: var(--warning);
-            color: var(--warning);
-        }
-
-        .status-badge.confirmed {
-            border-color: var(--success);
-            color: var(--success);
-        }
-
-        .status-dot {
-            width: 6px; height: 6px;
-            border-radius: 50%;
-            background: currentColor;
-        }
-
-        .status-badge.pending .status-dot {
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
-
-        .modal-close-btn {
-            width: 100%;
-            padding: 12px;
-            margin-top: 12px;
-            font-size: 13px;
-            font-weight: 500;
-            cursor: pointer;
-            border: 1px solid var(--border);
-            background: transparent;
-            color: var(--text);
-            font-family: inherit;
-            border-radius: var(--radius-sm);
-        }
-
-        /* ======================== */
-        /* COIN MODAL               */
-        /* ======================== */
-
-        .coin-modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 1000;
-            align-items: flex-end;
-            justify-content: center;
-            padding: 0;
-        }
-
-        .coin-modal-overlay.active { display: flex; }
-
-        .coin-modal {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-bottom: none;
-            max-width: 100%;
-            width: 100%;
-            max-height: 85vh;
-            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-            overflow: hidden;
-            animation: slideUp 0.3s ease;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .coin-modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 16px;
-            flex-shrink: 0;
-        }
-
-        .coin-modal-title {
-            font-size: 16px;
-            font-weight: 600;
-        }
-
-        .coin-modal-close {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 22px;
-            cursor: pointer;
-            padding: 4px;
-            line-height: 1;
-        }
+        .modal-body { padding: 0 20px 20px; overflow-y: auto; }
 
         .coin-search {
-            padding: 0 16px 12px;
-            flex-shrink: 0;
+            padding: 0 20px 12px;
         }
 
         .coin-search input {
-            width: 100%;
-            padding: 12px 14px;
-            background: var(--surface-2);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-sm);
-            color: var(--text);
-            font-family: 'Inter', sans-serif;
-            font-size: 14px;
+            width: 100%; background: var(--surface-2); border: 1px solid var(--border);
+            border-radius: var(--radius-md); padding: 12px 16px;
+            color: var(--text); font-size: 14px; outline: none;
         }
 
-        .coin-search input:focus {
-            outline: none;
-            border-color: var(--text-muted);
-        }
+        .coin-search input:focus { border-color: var(--text-muted); }
+        .coin-search input::placeholder { color: var(--text-muted); }
 
-        .coin-search input::placeholder {
-            color: var(--text-muted);
-        }
-
-        .coin-list {
-            overflow-y: auto;
-            padding: 0 8px 8px;
-            padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
-            flex: 1;
-        }
+        .coin-list { overflow-y: auto; padding: 0 12px 12px; }
 
         .coin-list-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px;
-            cursor: pointer;
-            transition: background 0.15s;
-            border-radius: var(--radius-sm);
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px; border-radius: var(--radius-md);
+            cursor: pointer; transition: background 0.15s;
         }
 
-        .coin-list-item:active {
-            background: var(--surface-2);
-        }
-
-        .coin-list-item.selected {
-            background: var(--accent-glow);
-        }
+        .coin-list-item:active { background: var(--surface-2); }
+        .coin-list-item.selected { background: var(--accent-glow); }
 
         .coin-list-icon {
-            width: 34px;
-            height: 34px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            background: var(--surface-2);
+            width: 36px; height: 36px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0; overflow: hidden;
         }
 
-        .coin-list-icon img {
-            width: 20px;
-            height: 20px;
-        }
-
-        .coin-list-info {
-            flex: 1;
-        }
-
-        .coin-list-name {
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        .coin-list-symbol {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
+        .coin-list-info { flex: 1; }
+        .coin-list-name { font-size: 14px; font-weight: 600; }
+        .coin-list-symbol { font-size: 12px; color: var(--text-muted); }
 
         .coin-list-check {
-            width: 18px;
-            height: 18px;
-            border-radius: 50%;
+            width: 20px; height: 20px; border-radius: 50%;
             border: 2px solid var(--border);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
         }
 
         .coin-list-item.selected .coin-list-check {
-            border-color: var(--accent);
+            background: var(--accent); border-color: var(--accent);
         }
-
-        .coin-list-item.selected .coin-list-check::after {
-            content: '';
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--accent);
-        }
-
-        /* ======================== */
-        /* CATALOG MODAL            */
-        /* ======================== */
-
-        .catalog-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 1000;
-            align-items: flex-end;
-            justify-content: center;
-            padding: 0;
-        }
-
-        .catalog-overlay.active { display: flex; }
-
-        .catalog-modal {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-bottom: none;
-            max-width: 100%;
-            width: 100%;
-            max-height: 90vh;
-            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-            overflow: hidden;
-            animation: slideUp 0.3s ease;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .catalog-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 16px;
-            border-bottom: 1px solid var(--border);
-            flex-shrink: 0;
-        }
-
-        .catalog-title {
-            font-size: 16px;
-            font-weight: 600;
-        }
-
-        .catalog-close {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            font-size: 22px;
-            cursor: pointer;
-            padding: 4px;
-            line-height: 1;
-        }
-
-        .catalog-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
-            padding: 16px;
-            overflow-y: auto;
-            flex: 1;
-        }
-
-        .catalog-item {
-            background: var(--surface-2);
-            border: 1px solid var(--border);
-            border-radius: var(--radius-md);
-            overflow: hidden;
-            transition: border-color 0.2s;
-        }
-
-        .catalog-item:active {
-            border-color: var(--border-hover);
-        }
-
-        .catalog-item-image {
-            width: 100%;
-            height: 100px;
-            object-fit: cover;
-            background: var(--surface-3);
-            display: block;
-        }
-
-        .catalog-item-image-placeholder {
-            width: 100%;
-            height: 100px;
-            background: var(--surface-3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            color: var(--text-muted);
-        }
-
-        .catalog-item-info {
-            padding: 10px;
-        }
-
-        .catalog-item-name {
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 3px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .catalog-item-desc {
-            font-size: 11px;
-            color: var(--text-secondary);
-            margin-bottom: 6px;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .catalog-item-bottom {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .catalog-item-price {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        .catalog-qty-controls {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .catalog-qty-btn {
-            width: 26px;
-            height: 26px;
-            border-radius: 6px;
-            border: 1px solid var(--border);
-            background: transparent;
-            color: var(--text);
-            font-size: 14px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.15s;
-            font-family: inherit;
-        }
-
-        .catalog-qty-btn:active {
-            border-color: var(--accent);
-            background: var(--accent-glow);
-        }
-
-        .catalog-qty-value {
-            font-size: 13px;
-            font-weight: 600;
-            min-width: 18px;
-            text-align: center;
-        }
-
-        .catalog-footer {
-            padding: 14px 16px;
-            border-top: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-shrink: 0;
-            padding-bottom: calc(14px + env(safe-area-inset-bottom, 0px));
-        }
-
-        .catalog-total-label {
-            font-size: 13px;
-            color: var(--text-secondary);
-        }
-
-        .catalog-total-value {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 18px;
-            font-weight: 600;
-        }
-
-        .catalog-confirm-btn {
-            padding: 12px 20px;
-            background: var(--accent);
-            color: #000;
-            border: none;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            border-radius: var(--radius-sm);
-            font-family: inherit;
-            transition: background 0.2s;
-        }
-
-        .catalog-confirm-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .catalog-empty {
-            text-align: center;
-            padding: 32px 16px;
-            color: var(--text-muted);
-            font-size: 14px;
-            grid-column: 1 / -1;
-        }
-
-        /* ======================== */
-        /* TOAST                    */
-        /* ======================== */
 
         .toast {
-            position: fixed;
-            bottom: calc(24px + env(safe-area-inset-bottom, 0px));
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            padding: 12px 20px;
-            background: var(--surface);
-            border: 1px solid var(--border);
-            font-size: 13px;
-            z-index: 2000;
-            transition: transform 0.3s ease;
-            border-radius: var(--radius-md);
-            max-width: calc(100% - 32px);
-            text-align: center;
-            white-space: nowrap;
+            position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%);
+            background: var(--surface-2); border: 1px solid var(--border);
+            border-radius: var(--radius-md); padding: 12px 20px;
+            font-size: 13px; z-index: 300; transition: bottom 0.3s;
+            max-width: 90vw; text-align: center;
         }
 
-        .toast.show {
-            transform: translateX(-50%) translateY(0);
-        }
-
-        .toast.success { border-color: var(--success); color: var(--success); }
+        .toast.show { bottom: 24px; }
         .toast.error { border-color: var(--error); color: var(--error); }
-        .toast.info { border-color: var(--text-secondary); color: var(--text-secondary); }
+        .toast.success { border-color: var(--success); color: var(--success); }
+        .toast.info { border-color: var(--accent); color: var(--text); }
+
+        .qr-address {
+            font-family: 'Space Mono', monospace; font-size: 11px;
+            color: var(--text-muted); word-break: break-all;
+            margin: 8px 0; padding: 8px; background: var(--surface-2);
+            border-radius: var(--radius-sm);
+        }
+
+        .modal-actions { display: flex; gap: 10px; margin-top: 12px; }
+
+        .modal-btn {
+            flex: 1; background: var(--surface-2); border: 1px solid var(--border);
+            border-radius: var(--radius-md); padding: 12px;
+            color: var(--text); font-size: 13px; font-weight: 600;
+            cursor: pointer; text-align: center;
+        }
+
+        .modal-btn.primary { background: var(--accent); color: #000; border-color: var(--accent); }
+
+        .status-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600;
+            margin-top: 12px;
+        }
+
+        .status-badge.pending { background: rgba(255,170,0,0.1); color: var(--text-secondary); }
+        .status-badge.confirmed { background: rgba(0,255,136,0.1); color: var(--success); }
+
+        .status-dot {
+            width: 8px; height: 8px; border-radius: 50%;
+        }
+
+        .status-badge.pending .status-dot { background: var(--text-muted); }
+        .status-badge.confirmed .status-dot { background: var(--success); }
     </style>
 </head>
 <body>
-    <!-- Header Bar -->
-    <header class="header-bar">
+    <div class="header-bar">
         <div class="brand">
-            <div class="brand-icon">G</div>
-            <div class="brand-name" id="receiver-name">GHOST PAY</div>
-        </div>
-    </header>
-
-    <!-- Scrollable Page Content -->
-    <div class="page-content">
-
-        <!-- Plan Info Section -->
-        <div class="receiver-badge">
-            <span class="receiver-badge-dot"></span>
-            <span id="billed-to">-</span>
-        </div>
-
-        <h1 class="plan-title" id="plan-title">Plano Pro</h1>
-        <p class="plan-subtitle" id="plan-subtitle">Acesso ilimitado a todas as ferramentas.</p>
-
-        <div id="plans-container">
-            <!-- Plans loaded dynamically -->
-        </div>
-
-        <!-- Catalog section (hidden by default) -->
-        <div id="catalog-section" style="display: none;">
-            <div id="catalog-items-list"></div>
-            <button class="catalog-view-btn" onclick="openCatalogModal()">
-                Abrir Catálogo
-            </button>
-        </div>
-
-        <h3 class="features-title" id="features-title">O que vais desbloquear</h3>
-        <ul class="features-list" id="features-list">
-            <li>Acesso ilimitado a todas as ferramentas</li>
-            <li>Trabalho colaborativo em tempo real</li>
-            <li>Sincronização entre dispositivos</li>
-            <li>Suporte prioritário</li>
-        </ul>
-
-        <div class="section-divider"></div>
-
-        <!-- Payment Section -->
-        <div class="payment-section">
-            <div class="pay-method-tabs">
-                <button class="pay-method-tab active" data-method="crypto" onclick="switchTab('crypto')">Criptomoeda</button>
-                <button class="pay-method-tab" data-method="qrcode" onclick="switchTab('qrcode')">QR Code</button>
-            </div>
-
-            <!-- VIEW: Crypto -->
-            <div id="view-crypto">
-                <div class="payment-section-title">Selecionar Moeda</div>
-
-                <div class="crypto-options" id="crypto-options">
-                    <button class="crypto-option active" data-chain="bitcoin">
-                        <div class="crypto-icon"><img src="https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/btc.svg" alt="BTC" width="28" height="28"></div>
-                        <div class="crypto-name">Bitcoin</div>
-                    </button>
-                    <button class="crypto-option" data-chain="ethereum">
-                        <div class="crypto-icon"><img src="https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/eth.svg" alt="ETH" width="28" height="28"></div>
-                        <div class="crypto-name">Ethereum</div>
-                    </button>
-                    <button class="crypto-option" data-chain="solana">
-                        <div class="crypto-icon"><img src="https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/sol.svg" alt="SOL" width="28" height="28"></div>
-                        <div class="crypto-name">Solana</div>
-                    </button>
-                    <button class="crypto-option" data-chain="polygon">
-                        <div class="crypto-icon"><img src="https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/matic.svg" alt="MATIC" width="28" height="28"></div>
-                        <div class="crypto-name">Polygon</div>
-                    </button>
-                    <button class="crypto-option" data-chain="bsc">
-                        <div class="crypto-icon"><img src="https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/bnb.svg" alt="BNB" width="28" height="28"></div>
-                        <div class="crypto-name">BNB</div>
-                    </button>
-                    <button class="crypto-option crypto-more" onclick="openCoinModal()">
-                        <div class="crypto-icon" style="font-size:22px;font-weight:300;">+</div>
-                        <div class="crypto-name">More</div>
-                    </button>
-                </div>
-
-                <div class="total-section">
-                    <div class="total-label">Total</div>
-                    <div>
-                        <span class="total-amount" id="total-amount">0.00</span>
-                        <span class="total-currency" id="total-currency">USD</span>
-                    </div>
-                </div>
-
-                <button class="pay-btn" id="pay-btn" onclick="handlePayment()">
-                    Pagar Agora
-                </button>
-            </div>
-
-            <!-- VIEW: QR Code (inline) -->
-            <div id="view-qrcode" style="display: none;">
-                <div class="qr-inline-section">
-                    <div class="qr-wrapper" id="qr-inline-wrapper" style="display: none;">
-                        <ghost-qrcode id="qr-code-inline" data="" size="lg"></ghost-qrcode>
-                    </div>
-                    <div id="qr-inline-placeholder" style="text-align: center; color: var(--text-muted); padding: 32px 0;">
-                        <p>Seleciona um plano para gerar o QR Code</p>
-                    </div>
-                    <div id="qr-inline-info" style="display: none; text-align: center; width: 100%;">
-                        <div class="qr-amount-display" id="qr-amount-inline">0.00</div>
-                        <div class="qr-chain-display" id="qr-chain-inline">Bitcoin (BTC)</div>
-                        <div class="qr-address" id="qr-address-inline">-</div>
-                        <div class="qr-inline-actions">
-                            <button class="qr-inline-btn" onclick="copyAddress()">Copiar Endereço</button>
-                            <button class="qr-inline-btn primary" onclick="copyPaymentLink()">Copiar Link</button>
-                        </div>
-                        <div class="status-badge pending" id="payment-status-inline" style="margin-top: 12px;">
-                            <span class="status-dot"></span>
-                            <span id="status-text-inline">Aguardando pagamento</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="security-note">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                </svg>
-                Pagamento encriptado e processado de forma segura via mesh network
-            </div>
+            <div class="brand-icon">GP</div>
+            <div class="brand-name">GHOST PAY</div>
         </div>
     </div>
 
-    <!-- QR Code Modal -->
-    <div class="modal-overlay" id="qr-modal">
-        <div class="modal-box">
-            <div class="modal-title">Pagar com Criptomoeda</div>
-            <div class="modal-subtitle">Escaneia o QR Code ou copia o endereço abaixo</div>
+    <div class="content">
+        <div class="receiver-card" id="receiverCard" style="display: none;">
+            <div class="receiver-label">Pagar a</div>
+            <div class="receiver-name" id="receiverName"></div>
+        </div>
 
-            <div class="qr-wrapper">
-                <ghost-qrcode id="qr-code" data="" size="lg"></ghost-qrcode>
-            </div>
+        <div class="amount-display">
+            <div class="amount-value" id="amountDisplay">$0.00</div>
+            <div class="amount-currency" id="amountCurrency">USD</div>
+        </div>
 
-            <div class="qr-amount-display" id="qr-amount-display">0.00</div>
-            <div class="qr-chain-display" id="qr-chain-display">Bitcoin (BTC)</div>
+        <div class="section-title">Selecionar Moeda</div>
+        <div class="crypto-grid" id="cryptoGrid">
+            <button class="crypto-btn active" data-chain="bitcoin">
+                <div class="crypto-icon"><img src="https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/btc.svg" width="28" height="28" alt="BTC"></div>
+                <div class="crypto-name">Bitcoin</div>
+            </button>
+            <button class="crypto-btn" data-chain="ethereum">
+                <div class="crypto-icon"><img src="https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/eth.svg" width="28" height="28" alt="ETH"></div>
+                <div class="crypto-name">Ethereum</div>
+            </button>
+            <button class="crypto-btn" data-chain="solana">
+                <div class="crypto-icon"><img src="https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/sol.svg" width="28" height="28" alt="SOL"></div>
+                <div class="crypto-name">Solana</div>
+            </button>
+            <button class="crypto-btn" data-chain="polygon">
+                <div class="crypto-icon"><img src="https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/matic.svg" width="28" height="28" alt="MATIC"></div>
+                <div class="crypto-name">Polygon</div>
+            </button>
+            <button class="crypto-btn" data-chain="bsc">
+                <div class="crypto-icon"><img src="https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/bnb.svg" width="28" height="28" alt="BNB"></div>
+                <div class="crypto-name">BSC</div>
+            </button>
+            <button class="crypto-btn crypto-more" id="moreCryptoBtn">
+                <div class="crypto-icon">+</div>
+                <div class="crypto-name">More</div>
+            </button>
+        </div>
 
-            <div class="qr-address" id="qr-address-display">-</div>
+        <div class="total-section">
+            <span class="total-label">Total</span>
+            <span class="total-value" id="totalDisplay">$0.00</span>
+        </div>
 
+        <button class="pay-btn" id="payBtn" disabled>Pagar Agora</button>
+        <div class="error-box" id="errorBox"></div>
+
+        <div class="qr-section" id="qrSection">
+            <div id="qrContainer"></div>
+            <div class="qr-hint">Escaneia com Ghost Wallet</div>
+            <div class="qr-address" id="qrAddress"></div>
             <div class="modal-actions">
-                <button class="modal-btn" onclick="copyAddress()">Copiar Endereço</button>
-                <button class="modal-btn primary" onclick="copyPaymentLink()">Copiar Link</button>
+                <button class="modal-btn" onclick="copyAddress()">Copiar Endereco</button>
+                <button class="modal-btn primary" onclick="copyLink()">Copiar Link</button>
             </div>
-
-            <div class="status-badge pending" id="payment-status">
+            <div class="status-badge pending" id="statusBadge">
                 <span class="status-dot"></span>
-                <span id="status-text">Aguardando pagamento</span>
+                <span id="statusText">Aguardando pagamento</span>
             </div>
+        </div>
 
-            <button class="modal-close-btn" onclick="closeModal()">Fechar</button>
+        <div class="security-note">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            </svg>
+            Pagamento encriptado e seguro via mesh network
+        </div>
+    </div>
+
+    <!-- Coin Modal -->
+    <div class="modal-overlay" id="coinModal" onclick="if(event.target===this)closeCoinModal()">
+        <div class="modal-sheet">
+            <div class="modal-header">
+                <div class="modal-title">Selecionar Moeda</div>
+                <button class="modal-close" onclick="closeCoinModal()">&times;</button>
+            </div>
+            <div class="coin-search">
+                <input type="text" id="coinSearchInput" placeholder="Pesquisar moeda..." oninput="filterCoins()">
+            </div>
+            <div class="coin-list" id="coinList"></div>
+        </div>
+    </div>
+
+    <!-- QR Modal (for payment confirmation) -->
+    <div class="modal-overlay" id="qrModal" onclick="if(event.target===this)closeQRModal()">
+        <div class="modal-sheet">
+            <div class="modal-header">
+                <div class="modal-title">Pagar com Criptomoeda</div>
+                <button class="modal-close" onclick="closeQRModal()">&times;</button>
+            </div>
+            <div class="modal-body" style="text-align: center;">
+                <div id="qrModalContainer"></div>
+                <div class="qr-address" id="qrModalAddress" style="margin: 12px 0;"></div>
+                <div class="modal-actions">
+                    <button class="modal-btn" onclick="copyAddress()">Copiar Endereco</button>
+                    <button class="modal-btn primary" onclick="copyLink()">Copiar Link</button>
+                </div>
+                <div class="status-badge pending" id="qrModalStatus" style="margin-top: 12px;">
+                    <span class="status-dot"></span>
+                    <span id="qrModalStatusText">Aguardando pagamento</span>
+                </div>
+            </div>
         </div>
     </div>
 
     <div class="toast" id="toast"></div>
-
-    <!-- Coin Selection Modal -->
-    <div class="coin-modal-overlay" id="coin-modal" onclick="if(event.target===this)closeCoinModal()">
-        <div class="coin-modal">
-            <div class="coin-modal-header">
-                <div class="coin-modal-title">Selecionar Moeda</div>
-                <button class="coin-modal-close" onclick="closeCoinModal()">&times;</button>
-            </div>
-            <div class="coin-search">
-                <input type="text" id="coin-search-input" placeholder="Pesquisar moeda..." oninput="filterCoins()">
-            </div>
-            <div class="coin-list" id="coin-list"></div>
-        </div>
-    </div>
-
-    <!-- Catalog Modal -->
-    <div class="catalog-overlay" id="catalog-modal" onclick="if(event.target===this)closeCatalogModal()">
-        <div class="catalog-modal">
-            <div class="catalog-header">
-                <div class="catalog-title" id="catalog-modal-title">Catálogo</div>
-                <button class="catalog-close" onclick="closeCatalogModal()">&times;</button>
-            </div>
-            <div class="catalog-grid" id="catalog-grid"></div>
-            <div class="catalog-footer">
-                <div>
-                    <div class="catalog-total-label">Total</div>
-                    <div class="catalog-total-value" id="catalog-total">$0.00</div>
-                </div>
-                <button class="catalog-confirm-btn" id="catalog-confirm-btn" onclick="confirmCatalog()" disabled>
-                    Confirmar
-                </button>
-            </div>
-        </div>
-    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
     <script src="/components/ghost-qrcode.js"></script>
@@ -1405,25 +429,8 @@
 
         function escapeHtml(str) {
             if (!str) return '';
-            return String(str)
-                .replace(/&/g, '&amp;')
-                .replace(/</g, '&lt;')
-                .replace(/>/g, '&gt;')
-                .replace(/"/g, '&quot;')
-                .replace(/'/g, '&#39;');
+            return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
         }
-
-        function hexToBytes(hex) {
-            const bytes = new Uint8Array(hex.length / 2);
-            for (let i = 0; i < hex.length; i += 2) {
-                bytes[i / 2] = parseInt(hex.substr(i, 2), 16);
-            }
-            return bytes;
-        }
-
-        // ============================================
-        // URL PARAMS
-        // ============================================
 
         const urlParams = new URLSearchParams(window.location.search);
         const paramReceiver = urlParams.get('receiver');
@@ -1431,578 +438,175 @@
         const paramCurrency = urlParams.get('currency');
         const paramChain = urlParams.get('chain');
         const paramAddress = urlParams.get('address');
-        const paramPlan = urlParams.get('plan');
-        const paramDescription = urlParams.get('description');
-        const paramPlans = urlParams.get('plans');
-        const paramApiKey = urlParams.get('apiKey');
-        const paramSig = urlParams.get('sig');
         const paramTimestamp = urlParams.get('timestamp');
         const paramTTL = urlParams.get('ttl');
-        const paramCatalog = urlParams.get('catalog');
-        const paramItems = urlParams.get('items');
+        const paramSig = urlParams.get('sig');
+        const paramApiKey = urlParams.get('apiKey');
 
-        // ============================================
-        // SECURITY: Link expiration check
-        // ============================================
-
+        // Link expiration
         if (paramTimestamp) {
-            const linkAge = Date.now() - parseInt(paramTimestamp, 10);
-            const ttl = parseInt(paramTTL || '300000', 10);
-            if (linkAge > ttl) {
-                document.body.innerHTML = `
-                    <div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:system-ui;color:#fff;background:#000;">
-                        <div style="text-align:center;max-width:320px;padding:2rem;">
-                            <h1 style="font-size:1.4rem;margin-bottom:0.8rem;">Link expirado</h1>
-                            <p style="color:#999;font-size:0.9rem;">Este link de pagamento expirou. Solicite um novo link ao recebedor.</p>
-                        </div>
-                    </div>`;
-                throw new Error('Payment link expired');
+            const age = Date.now() - parseInt(paramTimestamp, 10);
+            if (age > parseInt(paramTTL || '300000', 10)) {
+                document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;color:#fff;background:#000;padding:2rem;text-align:center;"><div><h1 style="font-size:1.5rem;margin-bottom:1rem;">Link expirado</h1><p style="color:#999;">Este link de pagamento expirou.</p></div></div>';
+                throw new Error('Expired');
             }
         }
 
-        // ============================================
-        // SECURITY: HMAC Signature verification
-        // ============================================
-
-        let signatureValid = false;
+        // HMAC verification
         if (paramSig) {
-            const verificationKey = urlParams.get('key');
-            if (verificationKey) {
+            const vk = urlParams.get('key');
+            if (vk) {
                 try {
-                    const verifyParams = new URLSearchParams(window.location.search);
-                    verifyParams.delete('sig');
-                    verifyParams.delete('key');
-                    const payloadStr = verifyParams.toString();
-
-                    const encoder = new TextEncoder();
-                    const keyData = encoder.encode(verificationKey);
-                    const msgData = encoder.encode(payloadStr);
-
-                    const key = await crypto.subtle.importKey(
-                        'raw', keyData, { name: 'HMAC', hash: 'SHA-256' }, false, ['verify']
-                    );
+                    const vp = new URLSearchParams(window.location.search);
+                    vp.delete('sig'); vp.delete('key');
+                    const enc = new TextEncoder();
+                    const key = await crypto.subtle.importKey('raw', enc.encode(vk), {name:'HMAC',hash:'SHA-256'}, false, ['verify']);
                     const sigBytes = hexToBytes(paramSig);
-                    signatureValid = await crypto.subtle.verify('HMAC', key, sigBytes, msgData);
-
-                    if (!signatureValid) {
-                        document.body.innerHTML = `
-                            <div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:system-ui;color:#fff;background:#000;">
-                                <div style="text-align:center;max-width:320px;padding:2rem;">
-                                    <h1 style="font-size:1.4rem;margin-bottom:0.8rem;">Link adulterado</h1>
-                                    <p style="color:#FF4444;font-size:0.9rem;">A assinatura deste link de pagamento é inválida. O link foi modificado. Recusado por segurança.</p>
-                                </div>
-                            </div>`;
-                        throw new Error('Invalid HMAC signature');
+                    const valid = await crypto.subtle.verify('HMAC', key, sigBytes, enc.encode(vp.toString()));
+                    if (!valid) {
+                        document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;color:#fff;background:#000;padding:2rem;text-align:center;"><div><h1 style="font-size:1.5rem;margin-bottom:1rem;">Link adulterado</h1><p style="color:#FF4444;">Assinatura invalida. Link modificado.</p></div></div>';
+                        throw new Error('Invalid HMAC');
                     }
-                } catch (e) {
-                    if (e.message.includes('Invalid HMAC')) throw e;
-                    console.error('[GhostPay] Signature verification error:', e);
-                }
+                } catch (e) { if (e.message === 'Invalid HMAC') throw e; }
             }
         }
 
-        // ============================================
-        // PARSE PLANS & CATALOG
-        // ============================================
-
-        let parsedPlans = null;
-        if (paramPlans) {
-            try { parsedPlans = JSON.parse(paramPlans); } catch (e) { /* ignore */ }
+        if (!paramReceiver || !paramAmount) {
+            document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;color:#fff;background:#000;padding:2rem;text-align:center;"><div><h1 style="font-size:1.5rem;margin-bottom:1rem;">Link invalido</h1><p style="color:#999;">Parametros receiver e amount sao obrigatorios.</p></div></div>';
+            throw new Error('Missing params');
         }
 
-        const isDynamicMode = paramReceiver && paramAmount;
-
-        let parsedCatalogProducts = null;
-        if (paramCatalog) {
-            try { parsedCatalogProducts = JSON.parse(paramCatalog); } catch (e) { /* ignore */ }
+        function hexToBytes(hex) {
+            const bytes = new Uint8Array(hex.length / 2);
+            for (let i = 0; i < hex.length; i += 2) bytes[i / 2] = parseInt(hex.substr(i, 2), 16);
+            return bytes;
         }
 
-        let preSelectedItems = [];
-        if (paramItems) {
-            paramItems.split(',').forEach(pair => {
-                const [id, qty] = pair.split(':');
-                if (id && qty) {
-                    preSelectedItems.push({ id: id.trim(), quantity: parseInt(qty, 10) || 1 });
-                }
-            });
-        }
+        const chainNames = { bitcoin:'Bitcoin', ethereum:'Ethereum', solana:'Solana', polygon:'Polygon', bsc:'BSC' };
+        const amount = parseFloat(paramAmount) || 0;
+        const currency = paramCurrency || 'USD';
+        let selectedChain = paramChain || 'bitcoin';
+        let receiverAddress = paramAddress || '';
+        let paymentLink = '';
 
-        if (!isDynamicMode && !parsedCatalogProducts) {
-            document.body.innerHTML = `
-                <div style="display:flex;align-items:center;justify-content:center;height:100vh;font-family:system-ui;color:#fff;background:#000;">
-                    <div style="text-align:center;max-width:320px;padding:2rem;">
-                        <h1 style="font-size:1.4rem;margin-bottom:0.8rem;">Link de pagamento inválido</h1>
-                        <p style="color:#999;font-size:0.9rem;">Este link não contém os parâmetros necessários. Solicite um novo link de pagamento ao recebedor.</p>
-                        <div style="background:#111;border-radius:8px;padding:0.8rem;font-size:0.75rem;color:#666;word-break:break-all;margin-top:1rem;">
-                            Parâmetros requeridos: receiver, amount
-                        </div>
-                    </div>
-                </div>`;
-            throw new Error('Missing required URL params: receiver, amount');
-        }
+        // Init
+        document.getElementById('receiverName').textContent = paramReceiver;
+        document.getElementById('receiverCard').style.display = 'block';
+        document.getElementById('amountDisplay').textContent = `$${amount.toFixed(2)}`;
+        document.getElementById('amountCurrency').textContent = currency;
+        document.getElementById('totalDisplay').textContent = `$${amount.toFixed(2)}`;
 
-        // ============================================
-        // SDK CHECKOUT
-        // ============================================
-
-        const ALL_CHAINS = ['bitcoin', 'ethereum', 'solana', 'polygon', 'bsc'];
-
-        const checkout = SDK.Checkout.fromJSON({
-            receiver: { name: paramReceiver },
-            mode: parsedCatalogProducts && parsedCatalogProducts.length > 0
-                ? 'catalog'
-                : parsedPlans && parsedPlans.length > 1 ? 'multi' : 'fixed',
-            plans: parsedPlans && parsedPlans.length > 0 ? parsedPlans : [
-                {
-                    id: paramPlan || 'fixed',
-                    name: 'Total a pagar',
-                    description: paramDescription || '',
-                    price: parseFloat(paramAmount || '0'),
-                    currency: paramCurrency || 'USD',
-                    selected: true,
-                },
-            ],
-            catalogProducts: parsedCatalogProducts || [],
-            supportedChains: ALL_CHAINS,
+        // Set initial chain
+        document.querySelectorAll('.crypto-btn').forEach(b => {
+            b.classList.remove('active');
+            if (b.dataset.chain === selectedChain) b.classList.add('active');
         });
 
-        if (paramPlan) {
-            checkout.selectPlan(paramPlan);
+        updateBtn();
+
+        function updateBtn() {
+            const btn = document.getElementById('payBtn');
+            btn.disabled = amount <= 0 || !receiverAddress;
         }
 
-        if (preSelectedItems.length > 0 && checkout.mode === 'catalog') {
-            for (const item of preSelectedItems) {
-                try { checkout.addCatalogItem(item.id, item.quantity); } catch { /* product not found */ }
-            }
-        }
-
-        // ============================================
-        // STATE
-        // ============================================
-
-        let receiverAddress = paramAddress || null;
-        let selectedPlan = checkout.selectedPlan;
-        let selectedChain = checkout.selectedChain;
-        let paymentData = null;
-        let lastTxHash = null;
-        let statusPollingInterval = null;
-
-        // ============================================
-        // INIT
-        // ============================================
-
-        async function init() {
-            renderReceiverInfo();
-            renderPlans();
-            renderFeatures();
-            setupEventListeners();
-            updateTotal();
-
-            if (checkout.mode === 'catalog') {
-                document.getElementById('catalog-section').style.display = 'block';
-                document.getElementById('plans-container').style.display = 'none';
-                document.getElementById('features-title').style.display = 'none';
-                document.getElementById('features-list').style.display = 'none';
-                renderCatalogSelectedInfo();
-            }
-        }
-
-        // ============================================
-        // RENDER FUNCTIONS
-        // ============================================
-
-        function renderReceiverInfo() {
-            document.getElementById('receiver-name').textContent = checkout.receiver.name;
-            document.getElementById('billed-to').textContent = checkout.receiver.name;
-
-            const isSingle = checkout.plans.length <= 1 || checkout.mode === 'fixed';
-            const isCatalog = checkout.mode === 'catalog';
-            const planTitle = document.getElementById('plan-title');
-            const planSubtitle = document.getElementById('plan-subtitle');
-
-            if (isCatalog) {
-                planTitle.textContent = checkout.receiver.name || 'Loja';
-                planSubtitle.textContent = 'Seleciona os produtos que deseja comprar.';
-            } else if (isSingle) {
-                const plan = checkout.plans[0];
-                planTitle.textContent = plan.name || 'Pagamento';
-                planSubtitle.textContent = plan.description || '';
-            } else {
-                planTitle.textContent = 'Escolher Plano';
-                planSubtitle.textContent = checkout.plans[0]?.description || '';
-            }
-        }
-
-        function renderPlans() {
-            const container = document.getElementById('plans-container');
-            const isSingle = checkout.plans.length <= 1 || checkout.mode === 'fixed';
-
-            if (isSingle) {
-                const plan = checkout.plans[0];
-                container.innerHTML = `
-                    <div class="fixed-amount-display">
-                        <div class="fixed-amount-value">$${plan.price.toFixed(2)}</div>
-                        <div class="fixed-amount-currency">${escapeHtml(plan.currency)}</div>
-                    </div>
-                `;
-                return;
-            }
-
-            container.innerHTML = checkout.plans.map(plan => `
-                <div class="plan-card ${(checkout.selectedPlan?.id === plan.id) ? 'selected' : 'unselected'}" data-plan-id="${escapeHtml(plan.id)}" onclick="selectPlan('${escapeHtml(plan.id)}')">
-                    <div class="plan-radio"></div>
-                    <div class="plan-details">
-                        <div class="plan-name">${escapeHtml(plan.name)}</div>
-                        <div class="plan-desc">${escapeHtml(plan.description)}</div>
-                    </div>
-                    <div class="plan-price">
-                        <div class="plan-amount">$${plan.price.toFixed(2)}</div>
-                        <div class="plan-period">${escapeHtml(plan.period)}</div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function renderFeatures() {
-            const list = document.getElementById('features-list');
-            const featuresTitle = document.getElementById('features-title');
-            const isSingle = checkout.plans.length <= 1 || checkout.mode === 'fixed';
-
-            if (isSingle) {
-                const features = checkout.selectedPlan?.features;
-                if (features && features.length > 0) {
-                    list.innerHTML = features.map(f => `<li>${escapeHtml(f)}</li>`).join('');
-                } else {
-                    featuresTitle.style.display = 'none';
-                    list.style.display = 'none';
-                }
-                return;
-            }
-
-            featuresTitle.style.display = '';
-            list.style.display = '';
-            const features = checkout.selectedPlan?.features;
-            if (!features || features.length === 0) {
-                featuresTitle.style.display = 'none';
-                list.style.display = 'none';
-                return;
-            }
-            list.innerHTML = features.map(f => `<li>${escapeHtml(f)}</li>`).join('');
-        }
-
-        function updateTotal() {
-            if (checkout.mode === 'catalog') {
-                const total = checkout.catalogTotal;
-                document.getElementById('total-amount').textContent = '$' + total.toFixed(2);
-                document.getElementById('total-currency').textContent = checkout.getCurrency();
-                return;
-            }
-            if (!selectedPlan) return;
-            document.getElementById('total-amount').textContent = '$' + selectedPlan.price.toFixed(2);
-            document.getElementById('total-currency').textContent = selectedPlan.currency;
-        }
-
-        // ============================================
-        // EVENT LISTENERS
-        // ============================================
-
-        function setupEventListeners() {
-            document.querySelectorAll('.crypto-option').forEach(opt => {
-                opt.addEventListener('click', () => {
-                    if (opt.classList.contains('crypto-more')) return;
-                    document.querySelectorAll('.crypto-option').forEach(o => o.classList.remove('active'));
-                    opt.classList.add('active');
-                    selectedChain = opt.dataset.chain;
-                    updateReceiverAddress();
-                });
-            });
-        }
-
-        function switchTab(method) {
-            document.querySelectorAll('.pay-method-tab').forEach(t => t.classList.remove('active'));
-            document.querySelector(`[data-method="${method}"]`).classList.add('active');
-
-            const viewCrypto = document.getElementById('view-crypto');
-            const viewQR = document.getElementById('view-qrcode');
-
-            if (method === 'qrcode') {
-                viewCrypto.style.display = 'none';
-                viewQR.style.display = 'block';
-                generateInlineQR();
-            } else {
-                viewCrypto.style.display = 'block';
-                viewQR.style.display = 'none';
-            }
-        }
-
-        function generateInlineQR() {
-            if (checkout.mode === 'catalog') {
-                if (checkout.catalogTotal <= 0) return;
-            } else if (!selectedPlan) {
-                document.getElementById('qr-inline-placeholder').style.display = 'block';
-                document.getElementById('qr-inline-wrapper').style.display = 'none';
-                document.getElementById('qr-inline-info').style.display = 'none';
-                return;
-            }
-
-            const amount = checkout.mode === 'catalog' ? checkout.catalogTotal : selectedPlan.price;
-            if (!amount || amount <= 0) return;
-
-            try {
-                checkout.selectChain(selectedChain);
-                const address = receiverAddress || 'Endereço não configurado';
-                const data = checkout.buildCheckoutData(address);
-
-                paymentData = {
-                    receiver: data.receiver.name,
-                    plan: data.plan?.id || '',
-                    amount: data.amount,
-                    currency: data.currency,
-                    chain: data.chain,
-                    address: data.address,
-                    paymentLink: data.paymentLink,
-                    nonce: data.nonce,
-                };
-
-                document.getElementById('qr-inline-placeholder').style.display = 'none';
-                document.getElementById('qr-inline-wrapper').style.display = 'inline-block';
-                document.getElementById('qr-inline-info').style.display = 'block';
-
-                document.getElementById('qr-amount-inline').textContent = `$${data.amount.toFixed(2)} ${data.currency}`;
-                document.getElementById('qr-chain-inline').textContent = getChainLabel(data.chain);
-                document.getElementById('qr-address-inline').textContent = address;
-
-                const qrData = `ghostpay:payment?receiver=${encodeURIComponent(data.receiver.name)}&amount=${data.amount}&currency=${data.currency}&chain=${data.chain}&address=${encodeURIComponent(data.address)}&nonce=${data.nonce}`;
-                document.getElementById('qr-code-inline').setAttribute('data', qrData);
-            } catch (e) {
-                console.error('Erro ao gerar QR Code:', e);
-            }
-        }
-
-        function selectPlan(planId) {
-            selectedPlan = checkout.selectPlan(planId);
-
-            document.querySelectorAll('.plan-card').forEach(card => {
-                if (card.dataset.planId === planId) {
-                    card.classList.add('selected');
-                    card.classList.remove('unselected');
-                } else {
-                    card.classList.remove('selected');
-                    card.classList.add('unselected');
-                }
-            });
-
-            updateTotal();
-            renderFeatures();
-
-            const qrTab = document.querySelector('[data-method="qrcode"]');
-            if (qrTab && qrTab.classList.contains('active')) {
-                generateInlineQR();
-            }
-        }
-
-        function updateReceiverAddress() {
-            receiverAddress = paramAddress || null;
-        }
-
-        // ============================================
-        // PAYMENT
-        // ============================================
-
-        async function handlePayment() {
-            if (checkout.mode === 'catalog') {
-                if (checkout.catalogTotal <= 0) {
-                    showToast('Selecione pelo menos um produto', 'error');
-                    return;
-                }
-            } else if (!selectedPlan) {
-                showToast('Selecione um plano', 'error');
-                return;
-            }
-
-            if (!receiverAddress && !paramApiKey) {
-                showToast('Endereço do recebedor não configurado', 'error');
-                return;
-            }
-
-            const amount = checkout.mode === 'catalog' ? checkout.catalogTotal : selectedPlan.price;
-            if (!amount || amount <= 0) {
-                showToast('Valor inválido', 'error');
-                return;
-            }
-
-            try {
-                checkout.selectChain(selectedChain);
-                const data = checkout.buildCheckoutData(receiverAddress || '');
-
-                paymentData = {
-                    receiver: data.receiver.name,
-                    receiverEmail: data.receiver.email,
-                    plan: data.plan?.id || '',
-                    planName: data.plan?.name || '',
-                    amount: data.amount,
-                    currency: data.currency,
-                    chain: data.chain,
-                    address: data.address,
-                    timestamp: data.timestamp,
-                    nonce: data.nonce,
-                    paymentLink: data.paymentLink,
-                };
-
-                if (paramApiKey) {
-                    await sendPaymentViaP2P(data);
-                } else {
-                    showQRModal();
-                }
-            } catch (e) {
-                console.error('Erro ao processar pagamento:', e);
-                showToast('Erro ao processar pagamento. Verifique os dados e tente novamente.', 'error');
-            }
-        }
-
-        async function sendPaymentViaP2P(data) {
-            showToast('Conectando ao receptor via rede P2P...', 'info');
-
-            try {
-                const network = new SDK.MeshNetwork();
-                await network.start();
-                await network.connectToPeer(paramApiKey);
-
-                network.on('peer:connected', () => {
-                    showToast('Conectado ao receptor! Enviando pagamento...', 'success');
-
-                    network.createPaymentIntent({
-                        receiver: data.receiver.name,
-                        amount: data.amount,
-                        currency: data.currency,
-                        chain: data.chain,
-                        address: data.address,
-                        nodeId: paramApiKey,
-                    });
-
-                    showQRModal();
-
-                    document.getElementById('status-text').textContent = 'Pagamento enviado via P2P';
-                    document.getElementById('payment-status').className = 'status-badge pending';
-                });
-
-                network.on('mesh:intent-created', () => {
-                    showToast('Intenção de pagamento enviada!', 'success');
-                });
-
-                setTimeout(() => {
-                    if (!document.getElementById('payment-status').textContent.includes('Conectado')) {
-                        showToast('Timeout: receptor não encontrado. Tentando QR Code...', 'error');
-                        showQRModal();
-                    }
-                }, 10000);
-            } catch (e) {
-                console.error('Erro P2P:', e);
-                showToast('Erro ao conectar via P2P. Usando QR Code...', 'error');
-                showQRModal();
-            }
-        }
-
-        function showQRModal() {
-            const modal = document.getElementById('qr-modal');
-            modal.classList.add('active');
-
-            const amount = checkout.mode === 'catalog' ? checkout.catalogTotal : selectedPlan.price;
-            const currency = checkout.mode === 'catalog' ? checkout.getCurrency() : selectedPlan.currency;
-            document.getElementById('qr-amount-display').textContent = `$${amount.toFixed(2)} ${currency}`;
-            document.getElementById('qr-chain-display').textContent = getChainLabel(selectedChain);
-            document.getElementById('qr-address-display').textContent = receiverAddress || 'Endereço não configurado';
-
-            const linkTimestamp = Date.now();
-            const linkTTL = 300000;
-            const qrData = `ghostpay:payment?receiver=${encodeURIComponent(paymentData.receiver)}&amount=${paymentData.amount}&currency=${paymentData.currency}&chain=${paymentData.chain}&address=${encodeURIComponent(paymentData.address)}&nonce=${paymentData.nonce}&timestamp=${linkTimestamp}&ttl=${linkTTL}`;
-            document.getElementById('qr-code').setAttribute('data', qrData);
-
-            startStatusPolling();
-        }
-
-        function getChainLabel(chain) {
-            const labels = {
-                bitcoin: 'Bitcoin (BTC)',
-                ethereum: 'Ethereum (ETH)',
-                solana: 'Solana (SOL)',
-                polygon: 'Polygon (MATIC)',
-                bsc: 'BNB Chain (BNB)',
-                avalanche: 'Avalanche (AVAX)',
-                cardano: 'Cardano (ADA)',
-                polkadot: 'Polkadot (DOT)',
-                dogecoin: 'Dogecoin (DOGE)',
-                tron: 'Tron (TRX)',
-                cosmos: 'Cosmos (ATOM)',
-                litecoin: 'Litecoin (LTC)',
-                fantom: 'Fantom (FTM)',
-                algorand: 'Algorand (ALGO)',
-                stellar: 'Stellar (XLM)',
-                monero: 'Monero (XMR)',
-                dash: 'Dash (DASH)',
-                near: 'NEAR Protocol (NEAR)',
-                arbitrum: 'Arbitrum (ARB)',
-                optimism: 'Optimism (OP)',
-                aptos: 'Aptos (APT)',
-                sui: 'Sui (SUI)',
-                celestia: 'Celestia (TIA)',
-                sei: 'Sei (SEI)',
-                injective: 'Injective (INJ)',
+        // Crypto selection
+        document.querySelectorAll('.crypto-btn:not(.crypto-more)').forEach(btn => {
+            btn.onclick = () => {
+                document.querySelectorAll('.crypto-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                selectedChain = btn.dataset.chain;
             };
-            return labels[chain] || chain;
-        }
+        });
 
-        function setLastTxHash(hash) {
-            lastTxHash = hash;
-        }
+        // More crypto button
+        document.getElementById('moreCryptoBtn').addEventListener('click', openCoinModal);
 
-        function startStatusPolling() {
-            if (statusPollingInterval) clearInterval(statusPollingInterval);
-            statusPollingInterval = setInterval(async () => {
-                if (!lastTxHash || !paymentData) return;
+        // Pay button
+        document.getElementById('payBtn').onclick = () => {
+            if (amount <= 0 || !receiverAddress) return;
+            const btn = document.getElementById('payBtn');
+            btn.disabled = true;
+            btn.textContent = 'Gerando...';
 
-                try {
-                    const broadcaster = new SDK.BlockchainBroadcaster();
-                    const result = await broadcaster.isSecurelyConfirmed(lastTxHash, selectedChain);
-                    if (result.secure) {
-                        updatePaymentStatus('confirmed');
-                    } else if (result.confirmations > 0) {
-                        updatePaymentStatus('pending');
-                    }
-                } catch {
-                    try {
-                        const txs = JSON.parse(localStorage.getItem('ghost_transactions') || '[]');
-                        const found = txs.find(tx =>
-                            tx.nonce === paymentData.nonce || tx.hash === lastTxHash
-                        );
-                        if (found && found.status === 'confirmed') {
-                            updatePaymentStatus('confirmed');
-                        }
-                    } catch { /* ignore */ }
-                }
-            }, 15000);
-        }
+            try {
+                const checkout = SDK.Checkout.fromJSON({
+                    receiver: { name: paramReceiver },
+                    mode: 'fixed',
+                    plans: [{ id: 'fixed', name: 'Pagamento', price: amount, currency: currency, selected: true }],
+                    supportedChains: ['bitcoin','ethereum','solana','polygon','bsc'],
+                });
+                checkout.selectChain(selectedChain);
+                const data = checkout.buildCheckoutData(receiverAddress);
 
-        function updatePaymentStatus(status) {
-            const badge = document.getElementById('payment-status');
-            const text = document.getElementById('status-text');
-            if (badge && text) {
-                badge.className = 'status-badge ' + status;
-                text.textContent = status === 'confirmed' ? 'Pagamento confirmado' : 'Aguardando pagamento';
+                const ts = Date.now();
+                const qrData = `ghostpay:payment?receiver=${encodeURIComponent(data.receiver.name)}&amount=${data.amount}&currency=${data.currency}&chain=${data.chain}&address=${encodeURIComponent(data.address)}&nonce=${data.nonce}&timestamp=${ts}&ttl=300000`;
+                paymentLink = data.paymentLink;
+
+                const qrSection = document.getElementById('qrSection');
+                qrSection.style.display = 'block';
+                document.getElementById('qrAddress').textContent = receiverAddress;
+
+                const container = document.getElementById('qrContainer');
+                container.innerHTML = '';
+                QRCode.toCanvas(qrData, { width: 180, margin: 2, color: { dark: '#000000', light: '#FFFFFF' } }, (err, canvas) => {
+                    if (!err && canvas) { canvas.style.borderRadius = '12px'; container.appendChild(canvas); }
+                });
+
+                // Also show QR modal
+                showQRModal(qrData);
+
+            } catch (e) {
+                console.error(e);
+                showError('Erro ao gerar pagamento.');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Pagar Agora';
+                updateBtn();
             }
+        };
 
-            const badgeInline = document.getElementById('payment-status-inline');
-            const textInline = document.getElementById('status-text-inline');
-            if (badgeInline && textInline) {
-                badgeInline.className = 'status-badge ' + status;
-                textInline.textContent = status === 'confirmed' ? 'Pagamento confirmado' : 'Aguardando pagamento';
-            }
+        function showQRModal(qrData) {
+            const modal = document.getElementById('qrModal');
+            modal.classList.add('active');
+            document.getElementById('qrModalAddress').textContent = receiverAddress;
+
+            const container = document.getElementById('qrModalContainer');
+            container.innerHTML = '';
+            QRCode.toCanvas(qrData, { width: 200, margin: 2, color: { dark: '#000000', light: '#FFFFFF' } }, (err, canvas) => {
+                if (!err && canvas) { canvas.style.borderRadius = '12px'; container.appendChild(canvas); }
+            });
         }
 
-        // ============================================
-        // COIN MODAL
-        // ============================================
+        function closeQRModal() {
+            document.getElementById('qrModal').classList.remove('active');
+        }
 
+        function showError(msg) {
+            const el = document.getElementById('errorBox');
+            el.textContent = msg;
+            el.style.display = 'block';
+        }
+
+        async function copyAddress() {
+            if (!receiverAddress) return;
+            try { await navigator.clipboard.writeText(receiverAddress); showToast('Endereco copiado!'); }
+            catch { showToast('Erro ao copiar', 'error'); }
+        }
+
+        async function copyLink() {
+            if (!paymentLink) return;
+            try { await navigator.clipboard.writeText(paymentLink); showToast('Link copiado!'); }
+            catch { showToast('Erro ao copiar', 'error'); }
+        }
+
+        function showToast(msg, type = 'success') {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.className = 'toast ' + type + ' show';
+            setTimeout(() => t.classList.remove('show'), 3000);
+        }
+
+        // ========= COIN MODAL =========
         const MORE_COINS = [
             { chain: 'avalanche', name: 'Avalanche', symbol: 'AVAX', icon: 'https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/avax.svg' },
             { chain: 'cardano', name: 'Cardano', symbol: 'ADA', icon: 'https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/ada.svg' },
@@ -2018,36 +622,30 @@
             { chain: 'dash', name: 'Dash', symbol: 'DASH', icon: 'https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/dash.svg' },
         ];
 
-        const COIN_ICONS_WITH_SVG = ['btc','eth','sol','matic','bnb','avax','ada','dot','doge','trx','atom','ltc','algo','xlm','xmr','dash'];
-
         function openCoinModal() {
-            document.getElementById('coin-modal').classList.add('active');
+            document.getElementById('coinModal').classList.add('active');
             renderCoinList('');
-            document.getElementById('coin-search-input').value = '';
-            setTimeout(() => document.getElementById('coin-search-input').focus(), 100);
+            document.getElementById('coinSearchInput').value = '';
+            document.getElementById('coinSearchInput').focus();
         }
 
         function closeCoinModal() {
-            document.getElementById('coin-modal').classList.remove('active');
+            document.getElementById('coinModal').classList.remove('active');
         }
 
         function filterCoins() {
-            const query = document.getElementById('coin-search-input').value.toLowerCase();
-            renderCoinList(query);
+            renderCoinList(document.getElementById('coinSearchInput').value.toLowerCase());
         }
 
         function renderCoinList(query) {
-            const list = document.getElementById('coin-list');
-            const filtered = query
-                ? MORE_COINS.filter(c => c.name.toLowerCase().includes(query) || c.symbol.toLowerCase().includes(query))
-                : MORE_COINS;
-
-            list.innerHTML = filtered.map(coin => `
-                <div class="coin-list-item ${selectedChain === coin.chain ? 'selected' : ''}" onclick="selectMoreCoin('${coin.chain}')">
-                    <div class="coin-list-icon"><img src="${coin.icon}" width="20" height="20" alt="${coin.symbol}"></div>
+            const list = document.getElementById('coinList');
+            const coins = query ? MORE_COINS.filter(c => c.name.toLowerCase().includes(query) || c.symbol.toLowerCase().includes(query)) : MORE_COINS;
+            list.innerHTML = coins.map(c => `
+                <div class="coin-list-item ${selectedChain === c.chain ? 'selected' : ''}" onclick="selectMoreCoin('${c.chain}')">
+                    <div class="coin-list-icon"><img src="${c.icon}" width="32" height="32" alt="${c.symbol}"></div>
                     <div class="coin-list-info">
-                        <div class="coin-list-name">${coin.name}</div>
-                        <div class="coin-list-symbol">${coin.symbol}</div>
+                        <div class="coin-list-name">${c.name}</div>
+                        <div class="coin-list-symbol">${c.symbol}</div>
                     </div>
                     <div class="coin-list-check"></div>
                 </div>
@@ -2057,218 +655,28 @@
         function selectMoreCoin(chain) {
             const coin = MORE_COINS.find(c => c.chain === chain);
             if (!coin) return;
-
             selectedChain = chain;
-
-            const optionsContainer = document.getElementById('crypto-options');
-            optionsContainer.querySelectorAll('.crypto-option').forEach(o => o.classList.remove('active'));
-
-            const existingBtn = optionsContainer.querySelector(`[data-chain="${chain}"]`);
-            if (existingBtn) {
-                existingBtn.classList.add('active');
+            const grid = document.getElementById('cryptoGrid');
+            grid.querySelectorAll('.crypto-btn').forEach(b => b.classList.remove('active'));
+            const existing = grid.querySelector(`[data-chain="${chain}"]`);
+            if (existing) {
+                existing.classList.add('active');
             } else {
-                const moreBtn = optionsContainer.querySelector('.crypto-more');
-                if (moreBtn) {
-                    const newBtn = document.createElement('button');
-                    newBtn.className = 'crypto-option active';
-                    newBtn.setAttribute('data-chain', chain);
-                    const iconHtml = COIN_ICONS_WITH_SVG.includes(coin.symbol.toLowerCase())
-                        ? `<img src="https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/${coin.symbol.toLowerCase()}.svg" width="28" height="28" alt="${coin.symbol}">`
-                        : `<span style="font-weight:700;font-size:14px;color:#fff;">${coin.symbol.charAt(0)}</span>`;
-                    newBtn.innerHTML = `
-                        <div class="crypto-icon">${iconHtml}</div>
-                        <div class="crypto-name">${coin.symbol}</div>
-                    `;
-                    newBtn.onclick = () => {
-                        optionsContainer.querySelectorAll('.crypto-option').forEach(o => o.classList.remove('active'));
-                        newBtn.classList.add('active');
-                        selectedChain = chain;
-                        updateReceiverAddress();
-                    };
-                    optionsContainer.insertBefore(newBtn, moreBtn);
-                }
+                const moreBtn = grid.querySelector('.crypto-more');
+                const newBtn = document.createElement('button');
+                newBtn.className = 'crypto-btn active';
+                newBtn.setAttribute('data-chain', chain);
+                newBtn.innerHTML = '<div class="crypto-icon"><img src="' + coin.icon + '" width="28" height="28" alt="' + coin.symbol + '"></div><div class="crypto-name">' + coin.symbol + '</div>';
+                newBtn.onclick = () => {
+                    grid.querySelectorAll('.crypto-btn').forEach(b => b.classList.remove('active'));
+                    newBtn.classList.add('active');
+                    selectedChain = chain;
+                };
+                grid.insertBefore(newBtn, moreBtn);
             }
-
-            updateReceiverAddress();
             closeCoinModal();
-            showToast(`${coin.name} selecionado`);
-
-            const qrTab = document.querySelector('[data-method="qrcode"]');
-            if (qrTab && qrTab.classList.contains('active')) {
-                generateInlineQR();
-            }
+            showToast(coin.name + ' selecionado');
         }
-
-        // ============================================
-        // CATALOG MODAL
-        // ============================================
-
-        function openCatalogModal() {
-            document.getElementById('catalog-modal').classList.add('active');
-            renderCatalogProducts();
-            updateCatalogTotal();
-        }
-
-        function closeCatalogModal() {
-            document.getElementById('catalog-modal').classList.remove('active');
-            renderCatalogSelectedInfo();
-            updateTotal();
-
-            const qrTab = document.querySelector('[data-method="qrcode"]');
-            if (qrTab && qrTab.classList.contains('active')) {
-                generateInlineQR();
-            }
-        }
-
-        function renderCatalogProducts() {
-            const grid = document.getElementById('catalog-grid');
-            const products = checkout.catalogProducts;
-
-            if (!products.length) {
-                grid.innerHTML = '<div class="catalog-empty">Nenhum produto disponível</div>';
-                return;
-            }
-
-            grid.innerHTML = products.map(product => {
-                const item = checkout.selectedItems.find(i => i.product.id === product.id);
-                const qty = item ? item.quantity : 0;
-                const outOfStock = product.inStock === false;
-
-                return `
-                    <div class="catalog-item" data-product-id="${escapeHtml(product.id)}" style="${outOfStock ? 'opacity:0.5;' : ''}">
-                        ${product.image
-                            ? `<img class="catalog-item-image" src="${escapeHtml(product.image)}" alt="${escapeHtml(product.name)}" onerror="this.outerHTML='<div class=\\'catalog-item-image-placeholder\\'>📦</div>'">`
-                            : '<div class="catalog-item-image-placeholder">📦</div>'
-                        }
-                        <div class="catalog-item-info">
-                            <div class="catalog-item-name">${escapeHtml(product.name)}</div>
-                            ${product.description ? `<div class="catalog-item-desc">${escapeHtml(product.description)}</div>` : ''}
-                            <div class="catalog-item-bottom">
-                                <div class="catalog-item-price">$${product.price.toFixed(2)}</div>
-                                ${outOfStock
-                                    ? '<span style="font-size:11px;color:var(--error);">Esgotado</span>'
-                                    : `<div class="catalog-qty-controls">
-                                        <button class="catalog-qty-btn" onclick="catalogChangeQty('${escapeHtml(product.id)}', -1)">−</button>
-                                        <span class="catalog-qty-value">${qty}</span>
-                                        <button class="catalog-qty-btn" onclick="catalogChangeQty('${escapeHtml(product.id)}', 1)">+</button>
-                                    </div>`
-                                }
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function catalogChangeQty(productId, delta) {
-            const item = checkout.selectedItems.find(i => i.product.id === productId);
-            const currentQty = item ? item.quantity : 0;
-            const newQty = currentQty + delta;
-
-            if (newQty <= 0) {
-                checkout.removeCatalogItem(productId);
-            } else if (item) {
-                checkout.setCatalogItemQuantity(productId, newQty);
-            } else {
-                checkout.addCatalogItem(productId, newQty);
-            }
-
-            renderCatalogProducts();
-            updateCatalogTotal();
-            renderCatalogSelectedInfo();
-        }
-
-        function updateCatalogTotal() {
-            const total = checkout.catalogTotal;
-            document.getElementById('catalog-total').textContent = `$${total.toFixed(2)}`;
-            document.getElementById('catalog-confirm-btn').disabled = total <= 0;
-        }
-
-        function confirmCatalog() {
-            closeCatalogModal();
-        }
-
-        function renderCatalogSelectedInfo() {
-            const container = document.getElementById('catalog-items-list');
-            const items = checkout.selectedItems;
-            const total = checkout.catalogTotal;
-
-            if (items.length === 0) {
-                container.innerHTML = '';
-                return;
-            }
-
-            let html = '<div class="catalog-items-header">Itens no Carrinho</div>';
-
-            for (const item of items) {
-                const imgHtml = item.product.image
-                    ? `<img class="catalog-item-row-img" src="${escapeHtml(item.product.image)}" alt="${escapeHtml(item.product.name)}" onerror="this.outerHTML='<div class=\\'catalog-item-row-img-placeholder\\'>📦</div>'">`
-                    : '<div class="catalog-item-row-img-placeholder">📦</div>';
-
-                html += `
-                    <div class="catalog-item-row">
-                        <div class="catalog-item-row-left">
-                            ${imgHtml}
-                            <div class="catalog-item-row-name">${escapeHtml(item.product.name)}</div>
-                        </div>
-                        <div class="catalog-item-row-right">
-                            <span class="catalog-item-row-qty">x${item.quantity}</span>
-                            <span class="catalog-item-row-price">$${(item.product.price * item.quantity).toFixed(2)}</span>
-                        </div>
-                    </div>
-                `;
-            }
-
-            html += `
-                <div class="catalog-items-total">
-                    <div class="catalog-items-total-label">Total</div>
-                    <div class="catalog-items-total-value">$${total.toFixed(2)}</div>
-                </div>
-            `;
-
-            container.innerHTML = html;
-        }
-
-        // ============================================
-        // UTILITIES
-        // ============================================
-
-        async function copyAddress() {
-            if (!receiverAddress) return;
-            try {
-                await navigator.clipboard.writeText(receiverAddress);
-                showToast('Endereço copiado!');
-            } catch {
-                showToast('Erro ao copiar', 'error');
-            }
-        }
-
-        async function copyPaymentLink() {
-            if (!paymentData) return;
-            try {
-                await navigator.clipboard.writeText(paymentData.paymentLink);
-                showToast('Link de pagamento copiado!');
-            } catch {
-                showToast('Erro ao copiar', 'error');
-            }
-        }
-
-        function closeModal() {
-            document.getElementById('qr-modal').classList.remove('active');
-        }
-
-        function showToast(message, type = 'success') {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.className = 'toast ' + type + ' show';
-            setTimeout(() => toast.classList.remove('show'), 3000);
-        }
-
-        // ============================================
-        // INITIALIZE
-        // ============================================
-
-        init();
     </script>
 </body>
 </html>
