@@ -40,6 +40,8 @@
     { "src": "/scan", "dest": "/pages/scan.html" },
     { "src": "/donate", "dest": "/pages/donate.html" },
     { "src": "/checkout", "dest": "/pages/payment.html" },
+    { "src": "/payment-mobile", "dest": "/pages/payment-mobile.html" },
+    { "src": "/donate-mobile", "dest": "/pages/donate-mobile.html" },
     { "src": "/sdk", "dest": "/index.html", "status": 302 },
     { "src": "/docs", "dest": "/index.html", "status": 302 }
   ]

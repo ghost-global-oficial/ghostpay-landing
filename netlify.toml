@@ -48,6 +48,16 @@
   status = 200
 
 [[redirects]]
+  from = "/payment-mobile"
+  to = "/pages/payment-mobile.html"
+  status = 200
+
+[[redirects]]
+  from = "/donate-mobile"
+  to = "/pages/donate-mobile.html"
+  status = 200
+
+[[redirects]]
   from = "/sdk"
   to = "https://github.com/ghostpay/sdk"
   status = 302

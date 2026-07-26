@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' https://cdn.jsdelivr.net https://s2.coinmarketcap.com data: blob:; connect-src 'self' https://cdn.jsdelivr.net;">
+    <title>Ghost Pay - Donate</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.1/build/qrcode.min.js"></script>
+    <script src="/components/ghost-qrcode.js?v=3"></script>
+    <script src="/sdk/ghostpay-sdk.js?v=3"></script>
+    <style>
+        :root {
+            --bg: #0A0A0A;
+            --surface: #111111;
+            --surface-2: #1A1A1A;
+            --surface-3: #222222;
+            --border: #2A2A2A;
+            --text: #FFFFFF;
+            --text-secondary: #B0B0B0;
+            --text-muted: #666666;
+            --accent: #FFFFFF;
+            --accent-hover: #E0E0E0;
+            --accent-glow: rgba(255, 255, 255, 0.08);
+            --success: #00FF88;
+            --error: #FF4444;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            padding-top: 60px;
+            padding-bottom: env(safe-area-inset-bottom, 0);
+        }
+
+        /* Brand Header */
+        .brand-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: var(--bg);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            z-index: 100;
+        }
+
+        .brand-logo {
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: 2px;
+            color: var(--text);
+        }
+
+        /* Main Container */
+        .main-container {
+            padding: 16px;
+            max-width: 480px;
+            margin: 0 auto;
+        }
+
+        /* Title Section */
+        .title-section {
+            margin-bottom: 24px;
+        }
+
+        .title-section h1 {
+            font-family: 'Space Mono', monospace;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .title-section p {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Card */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+
+        .card-label {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+
+        /* Receiver Card */
+        .receiver-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .receiver-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--surface-2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Space Mono', monospace;
+            font-weight: 700;
+            font-size: 18px;
+            color: var(--accent);
+            flex-shrink: 0;
+        }
+
+        .receiver-info h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+
+        .receiver-info p {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* Preset Amounts */
+        .preset-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .preset-btn {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 14px 8px;
+            font-family: 'Space Mono', monospace;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .preset-btn:hover {
+            border-color: var(--accent);
+        }
+
+        .preset-btn.active {
+            background: var(--accent);
+            color: var(--bg);
+            border-color: var(--accent);
+        }
+
+        .more-btn {
+            background: transparent;
+            border: 1px dashed var(--border);
+            border-radius: var(--radius-md);
+            padding: 14px 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .more-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* Cryptocurrency Selection */
+        .crypto-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .crypto-btn {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 14px 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-height: 72px;
+            justify-content: center;
+        }
+
+        .crypto-btn:hover {
+            border-color: var(--accent);
+        }
+
+        .crypto-btn.active {
+            border-color: var(--accent);
+            background: var(--accent-glow);
+        }
+
+        .crypto-icon {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
+        }
+
+        .crypto-name {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+        }
+
+        .crypto-btn.active .crypto-name {
+            color: var(--accent);
+        }
+
+        /* Total Section */
+        .total-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-top: 1px solid var(--border);
+            margin-top: 8px;
+        }
+
+        .total-label {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .total-value {
+            font-family: 'Space Mono', monospace;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .network-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--surface-2);
+            border-radius: var(--radius-sm);
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .network-badge .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--success);
+        }
+
+        /* Error Display */
+        .error-box {
+            background: rgba(255, 68, 68, 0.1);
+            border: 1px solid var(--error);
+            border-radius: var(--radius-md);
+            padding: 14px 16px;
+            margin-bottom: 16px;
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .error-box.visible {
+            display: flex;
+        }
+
+        .error-box svg {
+            width: 18px;
+            height: 18px;
+            color: var(--error);
+            flex-shrink: 0;
+        }
+
+        .error-box span {
+            font-size: 13px;
+            color: var(--error);
+        }
+
+        /* Donate Button */
+        .donate-btn {
+            width: 100%;
+            background: var(--accent);
+            color: var(--bg);
+            border: none;
+            border-radius: var(--radius-md);
+            padding: 16px;
+            font-family: 'Space Mono', monospace;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-height: 52px;
+        }
+
+        .donate-btn:hover:not(:disabled) {
+            background: var(--accent-hover);
+        }
+
+        .donate-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        /* QR Section */
+        .qr-section {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            text-align: center;
+            display: none;
+            margin-top: 16px;
+        }
+
+        .qr-section.visible {
+            display: block;
+        }
+
+        .qr-section h3 {
+            font-family: 'Space Mono', monospace;
+            font-size: 16px;
+            margin-bottom: 16px;
+        }
+
+        .qr-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        .qr-container canvas,
+        .qr-container ghost-qrcode {
+            border-radius: var(--radius-md);
+        }
+
+        .copy-link-section {
+            display: none;
+            align-items: center;
+            gap: 10px;
+            background: var(--surface-2);
+            border-radius: var(--radius-sm);
+            padding: 12px;
+            margin-top: 12px;
+        }
+
+        .copy-link-section.visible {
+            display: flex;
+        }
+
+        .copy-link-text {
+            flex: 1;
+            font-size: 11px;
+            color: var(--text-secondary);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            word-break: break-all;
+        }
+
+        .copy-link-btn {
+            background: var(--accent);
+            color: var(--bg);
+            border: none;
+            border-radius: var(--radius-sm);
+            padding: 8px 14px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            flex-shrink: 0;
+            min-height: 36px;
+        }
+
+        /* Security Note */
+        .security-note {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-top: 24px;
+            padding: 14px;
+            background: var(--surface);
+            border-radius: var(--radius-md);
+        }
+
+        .security-note svg {
+            width: 16px;
+            height: 16px;
+            color: var(--text-muted);
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .security-note p {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Bottom Sheet Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 200;
+            display: none;
+            align-items: flex-end;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-sheet {
+            width: 100%;
+            max-width: 480px;
+            max-height: 85vh;
+            background: var(--surface);
+            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+            padding: 20px;
+            padding-bottom: calc(20px + env(safe-area-inset-bottom, 0));
+            overflow-y: auto;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { transform: translateY(100%); }
+            to { transform: translateY(0); }
+        }
+
+        .modal-handle {
+            width: 40px;
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            margin: 0 auto 16px;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .modal-title {
+            font-family: 'Space Mono', monospace;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 4px;
+            min-width: 36px;
+            min-height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Coin Modal */
+        .coin-search {
+            width: 100%;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 12px 14px;
+            font-size: 14px;
+            color: var(--text);
+            margin-bottom: 16px;
+            outline: none;
+        }
+
+        .coin-search::placeholder {
+            color: var(--text-muted);
+        }
+
+        .coin-search:focus {
+            border-color: var(--accent);
+        }
+
+        .coin-list {
+            max-height: 50vh;
+            overflow-y: auto;
+        }
+
+        .coin-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: background 0.15s ease;
+        }
+
+        .coin-item:hover {
+            background: var(--surface-2);
+        }
+
+        .coin-item-icon {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+
+        .coin-item-info {
+            flex: 1;
+        }
+
+        .coin-item-name {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .coin-item-symbol {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .coin-item-check {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .coin-item.selected .coin-item-check {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .coin-item.selected .coin-item-check::after {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--bg);
+            border-radius: 50%;
+        }
+
+        /* Custom Amount Modal */
+        .custom-amount-input-wrapper {
+            display: flex;
+            align-items: center;
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 0 14px;
+            margin-bottom: 16px;
+        }
+
+        .custom-amount-prefix {
+            font-family: 'Space Mono', monospace;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+
+        .custom-amount-input {
+            flex: 1;
+            background: none;
+            border: none;
+            padding: 16px 8px;
+            font-family: 'Space Mono', monospace;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text);
+            outline: none;
+        }
+
+        .custom-amount-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .custom-amount-min {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .modal-btn {
+            flex: 1;
+            padding: 14px;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-height: 48px;
+        }
+
+        .modal-btn-cancel {
+            background: var(--surface-2);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+
+        .modal-btn-confirm {
+            background: var(--accent);
+            border: none;
+            color: var(--bg);
+        }
+
+        /* Success Modal */
+        .success-content {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .success-icon {
+            width: 64px;
+            height: 64px;
+            background: rgba(0, 255, 136, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .success-icon svg {
+            width: 32px;
+            height: 32px;
+            color: var(--success);
+        }
+
+        .success-message {
+            font-size: 16px;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+        }
+
+        .success-close {
+            width: 100%;
+            background: var(--accent);
+            color: var(--bg);
+            border: none;
+            border-radius: var(--radius-md);
+            padding: 14px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            min-height: 48px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Brand Header -->
+    <header class="brand-header">
+        <div class="brand-logo">GHOST PAY</div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="main-container">
+
+        <!-- Title Section -->
+        <div class="title-section">
+            <h1>Donate</h1>
+            <p>Choose an amount and support with crypto</p>
+        </div>
+
+        <!-- Receiver Card (hidden by default) -->
+        <div class="card receiver-card" id="receiverCard" style="display: none;">
+            <div class="receiver-avatar" id="receiverAvatar"></div>
+            <div class="receiver-info">
+                <h3 id="receiverName"></h3>
+                <p id="receiverDesc"></p>
+            </div>
+        </div>
+
+        <!-- Preset Amounts -->
+        <div class="card">
+            <div class="card-label">Amount</div>
+            <div class="preset-grid" id="presetGrid"></div>
+            <button class="more-btn" id="moreAmountBtn" onclick="openMoreModal()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                Enter custom amount
+            </button>
+        </div>
+
+        <!-- Cryptocurrency Selection -->
+        <div class="card">
+            <div class="card-label">Select Cryptocurrency</div>
+            <div class="crypto-grid" id="cryptoGrid">
+                <button class="crypto-btn active" data-chain="bitcoin" onclick="selectChain('bitcoin', this)">
+                    <img class="crypto-icon" src="https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/btc.svg" alt="BTC">
+                    <span class="crypto-name">BTC</span>
+                </button>
+                <button class="crypto-btn" data-chain="ethereum" onclick="selectChain('ethereum', this)">
+                    <img class="crypto-icon" src="https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/eth.svg" alt="ETH">
+                    <span class="crypto-name">ETH</span>
+                </button>
+                <button class="crypto-btn" data-chain="solana" onclick="selectChain('solana', this)">
+                    <img class="crypto-icon" src="https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/sol.svg" alt="SOL">
+                    <span class="crypto-name">SOL</span>
+                </button>
+                <button class="crypto-btn" data-chain="polygon" onclick="selectChain('polygon', this)">
+                    <img class="crypto-icon" src="https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/matic.svg" alt="MATIC">
+                    <span class="crypto-name">MATIC</span>
+                </button>
+                <button class="crypto-btn" data-chain="bsc" onclick="selectChain('bsc', this)">
+                    <img class="crypto-icon" src="https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/bnb.svg" alt="BNB">
+                    <span class="crypto-name">BNB</span>
+                </button>
+            </div>
+            <button class="more-btn" id="moreCoinsBtn" onclick="openCoinModal()">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                More coins
+            </button>
+        </div>
+
+        <!-- Total Section -->
+        <div class="card">
+            <div class="total-section">
+                <div>
+                    <div class="total-label">Total</div>
+                    <div class="total-value" id="totalValue">$0.00</div>
+                </div>
+                <div class="network-badge" id="networkBadge">
+                    <span class="dot"></span>
+                    <span id="networkName">Bitcoin</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Error Display -->
+        <div class="error-box" id="errorBox">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="15" y1="9" x2="9" y2="15"></line><line x1="9" y1="9" x2="15" y2="15"></line></svg>
+            <span id="errorText"></span>
+        </div>
+
+        <!-- Donate Button -->
+        <button class="donate-btn" id="donateBtn" disabled>Donate Now</button>
+
+        <!-- QR Section -->
+        <div class="qr-section" id="qrSection">
+            <h3>Scan to Donate</h3>
+            <div class="qr-container" id="qrContainer"></div>
+            <div class="copy-link-section" id="copyLink">
+                <span class="copy-link-text" id="donateLink"></span>
+                <button class="copy-link-btn" onclick="copyDonateLink()">Copy</button>
+            </div>
+        </div>
+
+        <!-- Security Note -->
+        <div class="security-note">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+            <p>Your donation is processed directly on-chain. Ghost Pay never holds your funds. Always verify the wallet address before sending.</p>
+        </div>
+
+    </main>
+
+    <!-- Coin Modal -->
+    <div class="modal-overlay" id="coinModal">
+        <div class="modal-sheet">
+            <div class="modal-handle"></div>
+            <div class="modal-header">
+                <span class="modal-title">Select Coin</span>
+                <button class="modal-close" onclick="closeCoinModal()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            <input class="coin-search" type="text" placeholder="Search coins..." id="coinSearchInput" oninput="filterCoins()">
+            <div class="coin-list" id="coinList"></div>
+        </div>
+    </div>
+
+    <!-- Custom Amount Modal -->
+    <div class="modal-overlay" id="moreModal">
+        <div class="modal-sheet">
+            <div class="modal-handle"></div>
+            <div class="modal-header">
+                <span class="modal-title">Enter Amount</span>
+                <button class="modal-close" onclick="closeMoreModal()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                </button>
+            </div>
+            <div class="custom-amount-input-wrapper">
+                <span class="custom-amount-prefix">$</span>
+                <input class="custom-amount-input" type="number" id="customAmountInput" placeholder="0.00" min="0.01" step="0.01">
+            </div>
+            <div class="custom-amount-min">Minimum amount: $0.01</div>
+            <div class="modal-buttons">
+                <button class="modal-btn modal-btn-cancel" onclick="closeMoreModal()">Cancel</button>
+                <button class="modal-btn modal-btn-confirm" onclick="confirmCustomAmount()">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal-overlay" id="successModal">
+        <div class="modal-sheet">
+            <div class="modal-handle"></div>
+            <div class="success-content">
+                <div class="success-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                </div>
+                <p class="success-message" id="modalText">Donation created successfully.</p>
+                <button class="success-close" onclick="document.getElementById('successModal').classList.remove('active')">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+
+        let selectedChain = params.get('chain') || 'bitcoin';
+        let selectedAmount = 0;
+        let receiverName = params.get('receiver') || '';
+        let receiverDesc = params.get('description') || '';
+        let presetAmounts = [5, 10, 25, 50, 100];
+        const donateAddress = params.get('address') || '';
+
+        const chainNames = {
+            bitcoin: 'Bitcoin',
+            ethereum: 'Ethereum',
+            solana: 'Solana',
+            polygon: 'Polygon',
+            bsc: 'BSC'
+        };
+
+        const MORE_COINS = [
+            { chain: 'avalanche-2', name: 'Avalanche', symbol: 'AVAX', icon: 'https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/avax.svg' },
+            { chain: 'cardano', name: 'Cardano', symbol: 'ADA', icon: 'https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/ada.svg' },
+            { chain: 'polkadot', name: 'Polkadot', symbol: 'DOT', icon: 'https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/dot.svg' },
+            { chain: 'dogecoin', name: 'Dogecoin', symbol: 'DOGE', icon: 'https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/doge.svg' },
+            { chain: 'tron', name: 'Tron', symbol: 'TRX', icon: 'https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/trx.svg' },
+            { chain: 'cosmos', name: 'Cosmos', symbol: 'ATOM', icon: 'https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/atom.svg' },
+            { chain: 'litecoin', name: 'Litecoin', symbol: 'LTC', icon: 'https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/ltc.svg' },
+            { chain: 'fantom', name: 'Fantom', symbol: 'FTM', icon: 'https://s2.coinmarketcap.com/static/img/coins/64x64/3513.png' },
+            { chain: 'algorand', name: 'Algorand', symbol: 'ALGO', icon: 'https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/algo.svg' },
+            { chain: 'stellar', name: 'Stellar', symbol: 'XLM', icon: 'https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/xlm.svg' },
+            { chain: 'monero', name: 'Monero', symbol: 'XMR', icon: 'https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/xmr.svg' },
+            { chain: 'dash', name: 'Dash', symbol: 'DASH', icon: 'https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/dash.svg' }
+        ];
+
+        function init() {
+            const presetsParam = params.get('presets');
+            if (presetsParam) {
+                try {
+                    const parsed = JSON.parse(presetsParam);
+                    if (Array.isArray(parsed) && parsed.length > 0) {
+                        presetAmounts = parsed.map(Number).filter(n => n > 0);
+                    }
+                } catch (e) {
+                    console.warn('Invalid presets param, using defaults');
+                }
+            }
+
+            const amountParam = params.get('amount');
+            if (amountParam) {
+                const parsedAmount = parseFloat(amountParam);
+                if (!isNaN(parsedAmount) && parsedAmount > 0) {
+                    selectedAmount = parsedAmount;
+                }
+            }
+
+            renderPresetButtons();
+            renderReceiverCard();
+            setInitialChain();
+            updateTotal();
+            updateBtnState();
+
+            if (!donateAddress) {
+                showError('No wallet address configured. Add &address=YOUR_WALLET to the URL.');
+            }
+        }
+
+        function renderPresetButtons() {
+            const grid = document.getElementById('presetGrid');
+            grid.innerHTML = '';
+            presetAmounts.forEach(amount => {
+                const btn = document.createElement('button');
+                btn.className = 'preset-btn' + (selectedAmount === amount ? ' active' : '');
+                btn.textContent = '$' + amount;
+                btn.onclick = function () {
+                    selectPreset(amount, this);
+                };
+                grid.appendChild(btn);
+            });
+        }
+
+        function renderReceiverCard() {
+            if (!receiverName) return;
+            const card = document.getElementById('receiverCard');
+            card.style.display = 'flex';
+            document.getElementById('receiverName').textContent = receiverName;
+            document.getElementById('receiverAvatar').textContent = receiverName.charAt(0).toUpperCase();
+            if (receiverDesc) {
+                document.getElementById('receiverDesc').textContent = receiverDesc;
+            } else {
+                document.getElementById('receiverDesc').style.display = 'none';
+            }
+        }
+
+        function setInitialChain() {
+            document.querySelectorAll('.crypto-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.chain === selectedChain) {
+                    btn.classList.add('active');
+                }
+            });
+            updateNetworkName();
+        }
+
+        function selectPreset(amount, btn) {
+            selectedAmount = amount;
+            document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            updateTotal();
+            updateBtnState();
+        }
+
+        function selectChain(chain, btn) {
+            selectedChain = chain;
+            document.querySelectorAll('.crypto-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            updateNetworkName();
+        }
+
+        function updateNetworkName() {
+            const name = chainNames[selectedChain] || selectedChain;
+            document.getElementById('networkName').textContent = name;
+        }
+
+        function updateTotal() {
+            document.getElementById('totalValue').textContent = '$' + selectedAmount.toFixed(2);
+        }
+
+        function updateBtnState() {
+            const btn = document.getElementById('donateBtn');
+            btn.disabled = !donateAddress || selectedAmount <= 0;
+        }
+
+        function showError(msg) {
+            document.getElementById('errorText').textContent = msg;
+            document.getElementById('errorBox').classList.add('visible');
+        }
+
+        function hideError() {
+            document.getElementById('errorBox').classList.remove('visible');
+        }
+
+        function openCoinModal() {
+            document.getElementById('coinModal').classList.add('active');
+            document.getElementById('coinSearchInput').value = '';
+            renderCoinList('');
+            document.getElementById('coinSearchInput').focus();
+        }
+
+        function closeCoinModal() {
+            document.getElementById('coinModal').classList.remove('active');
+        }
+
+        function filterCoins() {
+            const query = document.getElementById('coinSearchInput').value.toLowerCase();
+            renderCoinList(query);
+        }
+
+        function renderCoinList(query) {
+            const list = document.getElementById('coinList');
+            list.innerHTML = '';
+            const filtered = MORE_COINS.filter(c =>
+                c.name.toLowerCase().includes(query) ||
+                c.symbol.toLowerCase().includes(query)
+            );
+            filtered.forEach(coin => {
+                const item = document.createElement('div');
+                item.className = 'coin-item' + (selectedChain === coin.chain ? ' selected' : '');
+                item.onclick = function () {
+                    selectMoreCoin(coin.chain);
+                };
+                item.innerHTML =
+                    '<img class="coin-item-icon" src="' + coin.icon + '" alt="' + coin.symbol + '">' +
+                    '<div class="coin-item-info">' +
+                        '<div class="coin-item-name">' + coin.name + '</div>' +
+                        '<div class="coin-item-symbol">' + coin.symbol + '</div>' +
+                    '</div>' +
+                    '<div class="coin-item-check"></div>';
+                list.appendChild(item);
+            });
+        }
+
+        function selectMoreCoin(chain) {
+            selectedChain = chain;
+            document.querySelectorAll('.crypto-btn').forEach(b => {
+                b.classList.remove('active');
+                if (b.dataset.chain === chain) b.classList.add('active');
+            });
+            updateNetworkName();
+            closeCoinModal();
+        }
+
+        function openMoreModal() {
+            document.getElementById('moreModal').classList.add('active');
+            const input = document.getElementById('customAmountInput');
+            input.value = selectedAmount > 0 ? selectedAmount : '';
+            input.focus();
+        }
+
+        function closeMoreModal() {
+            document.getElementById('moreModal').classList.remove('active');
+        }
+
+        function confirmCustomAmount() {
+            const input = document.getElementById('customAmountInput');
+            const val = parseFloat(input.value);
+            if (isNaN(val) || val < 0.01) {
+                input.style.borderColor = 'var(--error)';
+                return;
+            }
+            selectedAmount = val;
+            document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+            updateTotal();
+            updateBtnState();
+            closeMoreModal();
+        }
+
+        function copyDonateLink() {
+            const link = document.getElementById('donateLink').textContent;
+            navigator.clipboard.writeText(link).then(() => {
+                document.getElementById('modalText').textContent = 'Link copied to clipboard.';
+                document.getElementById('successModal').classList.add('active');
+            });
+        }
+
+        document.getElementById('donateBtn').onclick = function () {
+            if (selectedAmount <= 0) return;
+            hideError();
+
+            if (!donateAddress) {
+                showError('No wallet address configured. Add &address=YOUR_WALLET to the URL.');
+                return;
+            }
+
+            const btn = document.getElementById('donateBtn');
+            btn.disabled = true;
+            btn.textContent = 'Generating...';
+
+            try {
+                const donate = new SDK.Donate({
+                    receiver: { name: receiverName },
+                    presetAmounts: presetAmounts,
+                    currency: 'USD',
+                    defaultChain: selectedChain,
+                    description: receiverDesc
+                });
+
+                donate.selectChain(selectedChain);
+                donate.setCustomAmount(selectedAmount);
+
+                const signingKey = params.get('signingKey') || undefined;
+                const link = donate.generateDonateLink(donateAddress, signingKey);
+
+                const qrSection = document.getElementById('qrSection');
+                qrSection.style.display = 'block';
+                qrSection.classList.add('visible');
+
+                const qrContainer = document.getElementById('qrContainer');
+                qrContainer.innerHTML = '';
+
+                if (typeof QRCode !== 'undefined') {
+                    QRCode.toCanvas(link, {
+                        width: 200,
+                        margin: 2,
+                        color: { dark: '#000000', light: '#FFFFFF' }
+                    }, function (err, canvas) {
+                        if (!err && canvas) {
+                            canvas.style.borderRadius = '12px';
+                            qrContainer.appendChild(canvas);
+                        }
+                    });
+                } else {
+                    const ghostQR = document.createElement('ghost-qrcode');
+                    ghostQR.setAttribute('data', link);
+                    ghostQR.setAttribute('size', '200');
+                    qrContainer.appendChild(ghostQR);
+                }
+
+                const copyLink = document.getElementById('copyLink');
+                copyLink.style.display = 'flex';
+                copyLink.classList.add('visible');
+                document.getElementById('donateLink').textContent = link;
+
+                document.getElementById('modalText').textContent = 'Donation of $' + selectedAmount.toFixed(2) + ' on ' + (chainNames[selectedChain] || selectedChain) + ' created.';
+                document.getElementById('successModal').classList.add('active');
+
+                qrSection.scrollIntoView({ behavior: 'smooth' });
+            } catch (err) {
+                console.error('Donate error:', err);
+                showError('Failed to generate donation link. Please try again.');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'Donate Now';
+                updateBtnState();
+            }
+        };
+
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', function (e) {
+                if (e.target === overlay) {
+                    overlay.classList.remove('active');
+                }
+            });
+        });
+
+        init();
+    </script>
+</body>
+</html>

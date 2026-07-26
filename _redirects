@@ -4,6 +4,8 @@
 /scan       /pages/scan.html       200
 /donate     /pages/donate.html     200
 /checkout   /pages/payment.html    200
+/payment-mobile  /pages/payment-mobile.html  200
+/donate-mobile   /pages/donate-mobile.html   200
 /sdk        https://github.com/ghostpay/sdk   302
 /docs       /#features                         302
 
