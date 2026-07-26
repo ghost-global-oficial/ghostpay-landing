@@ -654,28 +654,79 @@
             pendingPayment = false;
         }
 
-        // Biometric (simulated)
+        // Biometric (real WebAuthn)
         async function startBiometric() {
             const btn = document.getElementById('bioBtn');
             btn.disabled = true;
-            btn.textContent = 'Scanning...';
+            btn.textContent = 'Verifying...';
             document.getElementById('bioError').style.display = 'none';
 
-            const icon = document.getElementById('bioIcon');
+            try {
+                const available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
 
-            // Simulate scanning animation
-            await sleep(800);
-            icon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>';
-            icon.classList.add('success');
-            btn.textContent = 'Identity Verified';
-            btn.style.background = 'var(--success)';
-            btn.style.color = '#000';
+                if (!available) {
+                    const errEl = document.getElementById('bioError');
+                    errEl.textContent = 'Device does not support biometric authentication. Use PIN instead.';
+                    errEl.style.display = 'block';
+                    btn.disabled = false;
+                    btn.textContent = 'Verify Fingerprint';
+                    return;
+                }
 
-            await sleep(600);
-            authSuccess();
+                const challenge = new Uint8Array(32);
+                crypto.getRandomValues(challenge);
+
+                const userId = new Uint8Array(16);
+                crypto.getRandomValues(userId);
+
+                const cred = await navigator.credentials.create({
+                    publicKey: {
+                        challenge,
+                        rp: {
+                            name: 'Ghost Pay',
+                            id: location.hostname
+                        },
+                        user: {
+                            id: userId,
+                            name: 'ghostpay-user-' + location.hostname,
+                            displayName: 'Ghost Pay User'
+                        },
+                        pubKeyCredParams: [
+                            { alg: -7, type: 'public-key' },
+                            { alg: -257, type: 'public-key' }
+                        ],
+                        authenticatorSelection: {
+                            authenticatorAttachment: 'platform',
+                            userVerification: 'required',
+                            residentKey: 'preferred'
+                        },
+                        timeout: 60000,
+                        attestation: 'none'
+                    }
+                });
+
+                if (cred) {
+                    authSuccess();
+                }
+            } catch (err) {
+                console.error('[GhostPay] Biometric error:', err);
+                const errEl = document.getElementById('bioError');
+
+                if (err.name === 'NotAllowedError') {
+                    errEl.textContent = 'Fingerprint rejected. Please try again or use PIN.';
+                } else if (err.name === 'SecurityError') {
+                    errEl.textContent = 'Security error. Use PIN instead.';
+                } else if (err.name === 'NotSupportedError' || err.name === 'InvalidStateError') {
+                    errEl.textContent = 'Biometric not available on this device. Use PIN instead.';
+                } else {
+                    errEl.textContent = 'Biometric failed (' + err.name + '). Use PIN instead.';
+                }
+
+                errEl.style.display = 'block';
+                btn.disabled = false;
+                btn.textContent = 'Verify Fingerprint';
+            }
         }
-
-        function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
         function skipToPin() {
             document.getElementById('authStep1').style.display = 'none';
