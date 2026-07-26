@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="description" content="Ghost Pay - Pagamento">
+    <meta name="description" content="Ghost Pay - Payment">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' https://cdn.jsdelivr.net https://s2.coinmarketcap.com data: blob:; connect-src 'self' https://cdn.jsdelivr.net;">
-    <title>Ghost Pay - Pagamento</title>
+    <title>Ghost Pay - Payment</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -34,18 +34,14 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100dvh;
-            line-height: 1.6;
-            padding-top: 60px;
+            background: var(--bg); color: var(--text);
+            min-height: 100dvh; line-height: 1.6; padding-top: 56px;
         }
 
         .header-bar {
             position: fixed; top: 0; left: 0; right: 0; height: 56px;
-            background: rgba(10, 10, 10, 0.95);
-            -webkit-backdrop-filter: blur(12px);
-            backdrop-filter: blur(12px);
+            background: rgba(10,10,10,0.95);
+            -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
             display: flex; align-items: center; padding: 0 16px; z-index: 100;
         }
 
@@ -62,12 +58,7 @@
             font-size: 15px; font-weight: 700; letter-spacing: -0.5px;
         }
 
-        .content { padding: 20px 16px; padding-bottom: 40px; }
-
-        .section-title {
-            font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px;
-            color: var(--text-muted); margin-bottom: 12px;
-        }
+        .content { padding: 20px 16px 40px; }
 
         .receiver-card {
             background: var(--surface); border: 1px solid var(--border);
@@ -81,17 +72,18 @@
 
         .receiver-name { font-size: 16px; font-weight: 600; }
 
-        .amount-display {
-            text-align: center; padding: 32px 0; margin-bottom: 20px;
-        }
+        .amount-display { text-align: center; padding: 32px 0; margin-bottom: 20px; }
 
         .amount-value {
             font-family: 'Space Mono', monospace;
             font-size: 48px; font-weight: 700; line-height: 1;
         }
 
-        .amount-currency {
-            font-size: 14px; color: var(--text-muted); margin-top: 4px;
+        .amount-currency { font-size: 14px; color: var(--text-muted); margin-top: 4px; }
+
+        .section-title {
+            font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px;
+            color: var(--text-muted); margin-bottom: 12px;
         }
 
         .crypto-grid {
@@ -107,20 +99,10 @@
         }
 
         .crypto-btn:active { transform: scale(0.96); }
-
-        .crypto-btn.active {
-            border-color: var(--accent); background: var(--accent-glow);
-        }
-
-        .crypto-icon {
-            display: flex; align-items: center; justify-content: center;
-            margin-bottom: 6px; height: 32px;
-        }
-
+        .crypto-btn.active { border-color: var(--accent); background: var(--accent-glow); }
+        .crypto-icon { display: flex; align-items: center; justify-content: center; margin-bottom: 6px; height: 32px; }
         .crypto-icon img { border-radius: 50%; }
-
         .crypto-name { font-size: 11px; font-weight: 600; }
-
         .crypto-more { border-style: dashed; }
 
         .total-section {
@@ -130,19 +112,13 @@
         }
 
         .total-label { font-size: 14px; color: var(--text-secondary); }
-
-        .total-value {
-            font-family: 'Space Mono', monospace;
-            font-size: 20px; font-weight: 700;
-        }
+        .total-value { font-family: 'Space Mono', monospace; font-size: 20px; font-weight: 700; }
 
         .pay-btn {
             width: 100%; background: var(--accent); color: #000;
-            border: none; border-radius: var(--radius-md);
-            padding: 16px; font-size: 16px; font-weight: 600;
-            cursor: pointer; transition: all 0.15s;
-            -webkit-tap-highlight-color: transparent;
-            margin-bottom: 12px;
+            border: none; border-radius: var(--radius-md); padding: 16px;
+            font-size: 16px; font-weight: 600; cursor: pointer;
+            transition: all 0.15s; -webkit-tap-highlight-color: transparent; margin-bottom: 12px;
         }
 
         .pay-btn:active { transform: scale(0.98); opacity: 0.9; }
@@ -163,11 +139,17 @@
 
         .qr-hint { font-size: 12px; color: var(--text-muted); margin-top: 12px; }
 
+        .qr-address {
+            font-family: 'Space Mono', monospace; font-size: 11px;
+            color: var(--text-muted); word-break: break-all;
+            margin: 8px 0; padding: 8px; background: var(--surface-2);
+            border-radius: var(--radius-sm);
+        }
+
         .copy-link {
             display: flex; align-items: center; gap: 8px;
             background: var(--surface-2); border: 1px solid var(--border);
-            border-radius: var(--radius-md); padding: 12px 16px;
-            margin-top: 12px; cursor: pointer;
+            border-radius: var(--radius-md); padding: 12px 16px; margin-top: 12px; cursor: pointer;
         }
 
         .copy-link span {
@@ -175,6 +157,27 @@
             font-size: 11px; color: var(--text-secondary);
             overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
         }
+
+        .modal-actions { display: flex; gap: 10px; margin-top: 12px; }
+
+        .modal-btn {
+            flex: 1; background: var(--surface-2); border: 1px solid var(--border);
+            border-radius: var(--radius-md); padding: 12px;
+            color: var(--text); font-size: 13px; font-weight: 600; cursor: pointer; text-align: center;
+        }
+
+        .modal-btn.primary { background: var(--accent); color: #000; border-color: var(--accent); }
+
+        .status-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600; margin-top: 12px;
+        }
+
+        .status-badge.pending { background: rgba(255,170,0,0.1); color: var(--text-secondary); }
+        .status-badge.confirmed { background: rgba(0,255,136,0.1); color: var(--success); }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; }
+        .status-badge.pending .status-dot { background: var(--text-muted); }
+        .status-badge.confirmed .status-dot { background: var(--success); }
 
         .security-note {
             display: flex; align-items: center; gap: 8px;
@@ -185,7 +188,7 @@
 
         .security-note svg { width: 16px; height: 16px; flex-shrink: 0; }
 
-        /* Modal */
+        /* ===== BOTTOM SHEET MODAL ===== */
         .modal-overlay {
             display: none; position: fixed; inset: 0;
             background: rgba(0,0,0,0.8); z-index: 200;
@@ -196,7 +199,7 @@
 
         .modal-sheet {
             background: var(--surface); border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-            width: 100%; max-width: 480px; max-height: 80vh;
+            width: 100%; max-width: 480px; max-height: 85vh;
             display: flex; flex-direction: column;
             padding-bottom: env(safe-area-inset-bottom, 0);
         }
@@ -213,11 +216,10 @@
             font-size: 24px; cursor: pointer; padding: 4px 8px;
         }
 
-        .modal-body { padding: 0 20px 20px; overflow-y: auto; }
+        .modal-body { padding: 0 20px 24px; overflow-y: auto; }
 
-        .coin-search {
-            padding: 0 20px 12px;
-        }
+        /* ===== COIN MODAL ===== */
+        .coin-search { padding: 0 20px 12px; }
 
         .coin-search input {
             width: 100%; background: var(--surface-2); border: 1px solid var(--border);
@@ -258,52 +260,116 @@
             background: var(--accent); border-color: var(--accent);
         }
 
+        /* ===== AUTH MODAL ===== */
+        .auth-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(0,0,0,0.95); z-index: 300;
+            align-items: center; justify-content: center;
+        }
+
+        .auth-overlay.active { display: flex; }
+
+        .auth-box {
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: var(--radius-xl); width: 90%; max-width: 360px;
+            padding: 32px 24px; text-align: center;
+        }
+
+        .auth-icon {
+            width: 64px; height: 64px; margin: 0 auto 20px;
+            background: var(--surface-2); border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        .auth-icon svg { width: 32px; height: 32px; color: var(--accent); }
+        .auth-icon.success svg { color: var(--success); }
+        .auth-icon.error svg { color: var(--error); }
+
+        .auth-title {
+            font-family: 'Space Mono', monospace;
+            font-size: 18px; font-weight: 700; margin-bottom: 8px;
+        }
+
+        .auth-subtitle {
+            font-size: 14px; color: var(--text-secondary); margin-bottom: 24px;
+        }
+
+        .auth-btn {
+            width: 100%; background: var(--accent); color: #000;
+            border: none; border-radius: var(--radius-md); padding: 16px;
+            font-size: 16px; font-weight: 600; cursor: pointer;
+            -webkit-tap-highlight-color: transparent; margin-bottom: 12px;
+            transition: all 0.15s;
+        }
+
+        .auth-btn:active { transform: scale(0.98); }
+        .auth-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        .auth-btn.secondary {
+            background: transparent; color: var(--text-secondary);
+            border: 1px solid var(--border);
+        }
+
+        .auth-error {
+            display: none; font-size: 13px; color: var(--error);
+            margin-bottom: 12px;
+        }
+
+        /* ===== PIN INPUT ===== */
+        .pin-dots {
+            display: flex; gap: 12px; justify-content: center; margin-bottom: 24px;
+        }
+
+        .pin-dot {
+            width: 16px; height: 16px; border-radius: 50%;
+            border: 2px solid var(--border); transition: all 0.2s;
+        }
+
+        .pin-dot.filled { background: var(--accent); border-color: var(--accent); }
+        .pin-dot.error { border-color: var(--error); background: var(--error); }
+        .pin-dot.success { border-color: var(--success); background: var(--success); }
+
+        .pin-keypad {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 10px; max-width: 280px; margin: 0 auto;
+        }
+
+        .pin-key {
+            height: 56px; border-radius: var(--radius-md);
+            background: var(--surface-2); border: 1px solid var(--border);
+            color: var(--text); font-size: 22px; font-weight: 600;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            -webkit-tap-highlight-color: transparent; transition: all 0.1s;
+            font-family: 'Space Mono', monospace;
+        }
+
+        .pin-key:active { background: var(--surface-3); transform: scale(0.95); }
+        .pin-key.empty { background: transparent; border-color: transparent; cursor: default; }
+        .pin-key.backspace { font-size: 18px; }
+        .pin-key.biometric { background: var(--surface-3); }
+
+        .pin-cancel {
+            margin-top: 16px; font-size: 14px; color: var(--text-muted);
+            background: none; border: none; cursor: pointer;
+        }
+
+        .auth-info {
+            font-size: 11px; color: var(--text-muted);
+            margin-top: 16px; line-height: 1.5;
+        }
+
+        /* ===== TOAST ===== */
         .toast {
             position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%);
             background: var(--surface-2); border: 1px solid var(--border);
             border-radius: var(--radius-md); padding: 12px 20px;
-            font-size: 13px; z-index: 300; transition: bottom 0.3s;
+            font-size: 13px; z-index: 400; transition: bottom 0.3s;
             max-width: 90vw; text-align: center;
         }
 
         .toast.show { bottom: 24px; }
         .toast.error { border-color: var(--error); color: var(--error); }
         .toast.success { border-color: var(--success); color: var(--success); }
-        .toast.info { border-color: var(--accent); color: var(--text); }
-
-        .qr-address {
-            font-family: 'Space Mono', monospace; font-size: 11px;
-            color: var(--text-muted); word-break: break-all;
-            margin: 8px 0; padding: 8px; background: var(--surface-2);
-            border-radius: var(--radius-sm);
-        }
-
-        .modal-actions { display: flex; gap: 10px; margin-top: 12px; }
-
-        .modal-btn {
-            flex: 1; background: var(--surface-2); border: 1px solid var(--border);
-            border-radius: var(--radius-md); padding: 12px;
-            color: var(--text); font-size: 13px; font-weight: 600;
-            cursor: pointer; text-align: center;
-        }
-
-        .modal-btn.primary { background: var(--accent); color: #000; border-color: var(--accent); }
-
-        .status-badge {
-            display: inline-flex; align-items: center; gap: 6px;
-            padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 600;
-            margin-top: 12px;
-        }
-
-        .status-badge.pending { background: rgba(255,170,0,0.1); color: var(--text-secondary); }
-        .status-badge.confirmed { background: rgba(0,255,136,0.1); color: var(--success); }
-
-        .status-dot {
-            width: 8px; height: 8px; border-radius: 50%;
-        }
-
-        .status-badge.pending .status-dot { background: var(--text-muted); }
-        .status-badge.confirmed .status-dot { background: var(--success); }
     </style>
 </head>
 <body>
@@ -316,7 +382,7 @@
 
     <div class="content">
         <div class="receiver-card" id="receiverCard" style="display: none;">
-            <div class="receiver-label">Pagar a</div>
+            <div class="receiver-label">Pay to</div>
             <div class="receiver-name" id="receiverName"></div>
         </div>
 
@@ -325,7 +391,7 @@
             <div class="amount-currency" id="amountCurrency">USD</div>
         </div>
 
-        <div class="section-title">Selecionar Moeda</div>
+        <div class="section-title">Select Cryptocurrency</div>
         <div class="crypto-grid" id="cryptoGrid">
             <button class="crypto-btn active" data-chain="bitcoin">
                 <div class="crypto-icon"><img src="https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/btc.svg" width="28" height="28" alt="BTC"></div>
@@ -358,20 +424,20 @@
             <span class="total-value" id="totalDisplay">$0.00</span>
         </div>
 
-        <button class="pay-btn" id="payBtn" disabled>Pagar Agora</button>
+        <button class="pay-btn" id="payBtn" disabled>Pay Now</button>
         <div class="error-box" id="errorBox"></div>
 
         <div class="qr-section" id="qrSection">
             <div id="qrContainer"></div>
-            <div class="qr-hint">Escaneia com Ghost Wallet</div>
+            <div class="qr-hint">Scan with Ghost Wallet</div>
             <div class="qr-address" id="qrAddress"></div>
             <div class="modal-actions">
-                <button class="modal-btn" onclick="copyAddress()">Copiar Endereco</button>
-                <button class="modal-btn primary" onclick="copyLink()">Copiar Link</button>
+                <button class="modal-btn" onclick="copyAddress()">Copy Address</button>
+                <button class="modal-btn primary" onclick="copyLink()">Copy Link</button>
             </div>
             <div class="status-badge pending" id="statusBadge">
                 <span class="status-dot"></span>
-                <span id="statusText">Aguardando pagamento</span>
+                <span id="statusText">Awaiting payment</span>
             </div>
         </div>
 
@@ -379,43 +445,86 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
             </svg>
-            Pagamento encriptado e seguro via mesh network
+            Encrypted payment secured via mesh network
         </div>
     </div>
 
-    <!-- Coin Modal -->
+    <!-- ===== AUTH MODAL (Biometric + PIN) ===== -->
+    <div class="auth-overlay" id="authOverlay">
+        <div class="auth-box">
+            <!-- Step 1: Biometric -->
+            <div id="authStep1">
+                <div class="auth-icon" id="bioIcon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04c.655-2.265.998-4.688.998-7.185C6.805 9 8.485 7.34 10.564 7.34c1.252 0 2.397.67 3.036 1.686m2.68 5.154A9.005 9.005 0 0112 3a9.005 9.005 0 01-6.946 3.127"/>
+                        <path d="M16 12a4 4 0 01-8 0"/>
+                        <circle cx="12" cy="12" r="1"/>
+                    </svg>
+                </div>
+                <div class="auth-title">Confirm Identity</div>
+                <div class="auth-subtitle">Verify your fingerprint to authorize this payment</div>
+                <button class="auth-btn" id="bioBtn" onclick="startBiometric()">
+                    Verify Fingerprint
+                </button>
+                <div class="auth-error" id="bioError"></div>
+                <button class="auth-btn secondary" onclick="skipToPin()">
+                    Use PIN Instead
+                </button>
+                <button class="auth-btn secondary" onclick="cancelAuth()">Cancel</button>
+            </div>
+
+            <!-- Step 2: PIN -->
+            <div id="authStep2" style="display: none;">
+                <div class="auth-icon" id="pinIcon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <rect x="5" y="11" width="14" height="10" rx="2"/>
+                        <path d="M8 11V7a4 4 0 018 0v4"/>
+                        <circle cx="12" cy="16" r="1"/>
+                    </svg>
+                </div>
+                <div class="auth-title">Enter PIN</div>
+                <div class="auth-subtitle">Enter your 6-digit PIN to confirm payment</div>
+                <div class="pin-dots" id="pinDots">
+                    <div class="pin-dot"></div>
+                    <div class="pin-dot"></div>
+                    <div class="pin-dot"></div>
+                    <div class="pin-dot"></div>
+                    <div class="pin-dot"></div>
+                    <div class="pin-dot"></div>
+                </div>
+                <div class="pin-keypad" id="pinKeypad"></div>
+                <div class="auth-error" id="pinError"></div>
+                <button class="pin-cancel" onclick="cancelAuth()">Cancel</button>
+                <div class="auth-info">
+                    PIN is stored locally on this device only.<br>
+                    Never shared with any server.
+                </div>
+            </div>
+
+            <!-- Step 3: Success -->
+            <div id="authStep3" style="display: none;">
+                <div class="auth-icon success">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 6L9 17l-5-5"/>
+                    </svg>
+                </div>
+                <div class="auth-title">Payment Authorized</div>
+                <div class="auth-subtitle">Your identity has been verified. Processing payment...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== COIN MODAL ===== -->
     <div class="modal-overlay" id="coinModal" onclick="if(event.target===this)closeCoinModal()">
         <div class="modal-sheet">
             <div class="modal-header">
-                <div class="modal-title">Selecionar Moeda</div>
+                <div class="modal-title">Select Coin</div>
                 <button class="modal-close" onclick="closeCoinModal()">&times;</button>
             </div>
             <div class="coin-search">
-                <input type="text" id="coinSearchInput" placeholder="Pesquisar moeda..." oninput="filterCoins()">
+                <input type="text" id="coinSearchInput" placeholder="Search coin..." oninput="filterCoins()">
             </div>
             <div class="coin-list" id="coinList"></div>
-        </div>
-    </div>
-
-    <!-- QR Modal (for payment confirmation) -->
-    <div class="modal-overlay" id="qrModal" onclick="if(event.target===this)closeQRModal()">
-        <div class="modal-sheet">
-            <div class="modal-header">
-                <div class="modal-title">Pagar com Criptomoeda</div>
-                <button class="modal-close" onclick="closeQRModal()">&times;</button>
-            </div>
-            <div class="modal-body" style="text-align: center;">
-                <div id="qrModalContainer"></div>
-                <div class="qr-address" id="qrModalAddress" style="margin: 12px 0;"></div>
-                <div class="modal-actions">
-                    <button class="modal-btn" onclick="copyAddress()">Copiar Endereco</button>
-                    <button class="modal-btn primary" onclick="copyLink()">Copiar Link</button>
-                </div>
-                <div class="status-badge pending" id="qrModalStatus" style="margin-top: 12px;">
-                    <span class="status-dot"></span>
-                    <span id="qrModalStatusText">Aguardando pagamento</span>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -427,11 +536,18 @@
     <script>
         const SDK = window.GhostPaySDK;
 
-        function escapeHtml(str) {
-            if (!str) return '';
-            return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+        function escapeHtml(s) {
+            if (!s) return '';
+            return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
         }
 
+        function hexToBytes(hex) {
+            const b = new Uint8Array(hex.length / 2);
+            for (let i = 0; i < hex.length; i += 2) b[i / 2] = parseInt(hex.substr(i, 2), 16);
+            return b;
+        }
+
+        // ===== URL PARAMS =====
         const urlParams = new URLSearchParams(window.location.search);
         const paramReceiver = urlParams.get('receiver');
         const paramAmount = urlParams.get('amount');
@@ -447,7 +563,7 @@
         if (paramTimestamp) {
             const age = Date.now() - parseInt(paramTimestamp, 10);
             if (age > parseInt(paramTTL || '300000', 10)) {
-                document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;color:#fff;background:#000;padding:2rem;text-align:center;"><div><h1 style="font-size:1.5rem;margin-bottom:1rem;">Link expirado</h1><p style="color:#999;">Este link de pagamento expirou.</p></div></div>';
+                document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;color:#fff;background:#000;padding:2rem;text-align:center;"><div><h1 style="font-size:1.5rem;margin-bottom:1rem;">Link Expired</h1><p style="color:#999;">This payment link has expired.</p></div></div>';
                 throw new Error('Expired');
             }
         }
@@ -461,10 +577,9 @@
                     vp.delete('sig'); vp.delete('key');
                     const enc = new TextEncoder();
                     const key = await crypto.subtle.importKey('raw', enc.encode(vk), {name:'HMAC',hash:'SHA-256'}, false, ['verify']);
-                    const sigBytes = hexToBytes(paramSig);
-                    const valid = await crypto.subtle.verify('HMAC', key, sigBytes, enc.encode(vp.toString()));
+                    const valid = await crypto.subtle.verify('HMAC', key, hexToBytes(paramSig), enc.encode(vp.toString()));
                     if (!valid) {
-                        document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;color:#fff;background:#000;padding:2rem;text-align:center;"><div><h1 style="font-size:1.5rem;margin-bottom:1rem;">Link adulterado</h1><p style="color:#FF4444;">Assinatura invalida. Link modificado.</p></div></div>';
+                        document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;color:#fff;background:#000;padding:2rem;text-align:center;"><div><h1 style="font-size:1.5rem;margin-bottom:1rem;">Tampered Link</h1><p style="color:#FF4444;">Invalid signature. The link was modified.</p></div></div>';
                         throw new Error('Invalid HMAC');
                     }
                 } catch (e) { if (e.message === 'Invalid HMAC') throw e; }
@@ -472,44 +587,38 @@
         }
 
         if (!paramReceiver || !paramAmount) {
-            document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;color:#fff;background:#000;padding:2rem;text-align:center;"><div><h1 style="font-size:1.5rem;margin-bottom:1rem;">Link invalido</h1><p style="color:#999;">Parametros receiver e amount sao obrigatorios.</p></div></div>';
+            document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;color:#fff;background:#000;padding:2rem;text-align:center;"><div><h1 style="font-size:1.5rem;margin-bottom:1rem;">Invalid Link</h1><p style="color:#999;">Parameters receiver and amount are required.</p></div></div>';
             throw new Error('Missing params');
         }
 
-        function hexToBytes(hex) {
-            const bytes = new Uint8Array(hex.length / 2);
-            for (let i = 0; i < hex.length; i += 2) bytes[i / 2] = parseInt(hex.substr(i, 2), 16);
-            return bytes;
-        }
-
+        // ===== STATE =====
         const chainNames = { bitcoin:'Bitcoin', ethereum:'Ethereum', solana:'Solana', polygon:'Polygon', bsc:'BSC' };
         const amount = parseFloat(paramAmount) || 0;
         const currency = paramCurrency || 'USD';
         let selectedChain = paramChain || 'bitcoin';
-        let receiverAddress = paramAddress || '';
+        const receiverAddress = paramAddress || '';
         let paymentLink = '';
+        let pin = '';
+        const PIN_KEY = 'ghostpay_pin_hash';
 
-        // Init
+        // ===== INIT =====
         document.getElementById('receiverName').textContent = paramReceiver;
         document.getElementById('receiverCard').style.display = 'block';
         document.getElementById('amountDisplay').textContent = `$${amount.toFixed(2)}`;
         document.getElementById('amountCurrency').textContent = currency;
         document.getElementById('totalDisplay').textContent = `$${amount.toFixed(2)}`;
 
-        // Set initial chain
         document.querySelectorAll('.crypto-btn').forEach(b => {
             b.classList.remove('active');
             if (b.dataset.chain === selectedChain) b.classList.add('active');
         });
-
         updateBtn();
 
         function updateBtn() {
-            const btn = document.getElementById('payBtn');
-            btn.disabled = amount <= 0 || !receiverAddress;
+            document.getElementById('payBtn').disabled = amount <= 0 || !receiverAddress;
         }
 
-        // Crypto selection
+        // ===== CRYPTO SELECTION =====
         document.querySelectorAll('.crypto-btn:not(.crypto-more)').forEach(btn => {
             btn.onclick = () => {
                 document.querySelectorAll('.crypto-btn').forEach(b => b.classList.remove('active'));
@@ -518,21 +627,190 @@
             };
         });
 
-        // More crypto button
         document.getElementById('moreCryptoBtn').addEventListener('click', openCoinModal);
 
-        // Pay button
+        // ===== PAY BUTTON =====
         document.getElementById('payBtn').onclick = () => {
             if (amount <= 0 || !receiverAddress) return;
+            showAuthModal();
+        };
+
+        // ===== AUTH SYSTEM =====
+        let pendingPayment = false;
+
+        function showAuthModal() {
+            document.getElementById('authOverlay').classList.add('active');
+            document.getElementById('authStep1').style.display = '';
+            document.getElementById('authStep2').style.display = 'none';
+            document.getElementById('authStep3').style.display = 'none';
+            document.getElementById('bioError').style.display = 'none';
+            document.getElementById('pinError').style.display = 'none';
+            pin = '';
+            renderPinDots();
+        }
+
+        function cancelAuth() {
+            document.getElementById('authOverlay').classList.remove('active');
+            pendingPayment = false;
+        }
+
+        // Biometric
+        async function startBiometric() {
+            const btn = document.getElementById('bioBtn');
+            btn.disabled = true;
+            btn.textContent = 'Verifying...';
+            document.getElementById('bioError').style.display = 'none';
+
+            try {
+                if (!window.PublicKeyCredential) {
+                    skipToPin();
+                    return;
+                }
+
+                const available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+                if (!available) {
+                    skipToPin();
+                    return;
+                }
+
+                const challenge = new Uint8Array(32);
+                crypto.getRandomValues(challenge);
+
+                const cred = await navigator.credentials.create({
+                    publicKey: {
+                        challenge,
+                        rp: { name: 'Ghost Pay', id: location.hostname },
+                        user: {
+                            id: new Uint8Array(16),
+                            name: 'ghostpay-user',
+                            displayName: 'Ghost Pay User'
+                        },
+                        pubKeyCredParams: [{ alg: -7, type: 'public-key' }],
+                        authenticatorSelection: {
+                            authenticatorAttachment: 'platform',
+                            userVerification: 'required'
+                        },
+                        timeout: 60000,
+                    }
+                });
+
+                if (cred) {
+                    authSuccess();
+                }
+            } catch (err) {
+                console.error('Biometric error:', err);
+                const errEl = document.getElementById('bioError');
+                if (err.name === 'NotAllowedError') {
+                    errEl.textContent = 'Fingerprint rejected. Use PIN instead.';
+                } else {
+                    errEl.textContent = 'Biometric not available. Use PIN instead.';
+                }
+                errEl.style.display = 'block';
+                document.getElementById('bioBtn').disabled = false;
+                document.getElementById('bioBtn').textContent = 'Verify Fingerprint';
+            }
+        }
+
+        function skipToPin() {
+            document.getElementById('authStep1').style.display = 'none';
+            document.getElementById('authStep2').style.display = '';
+            pin = '';
+            renderPinDots();
+            renderPinKeypad();
+        }
+
+        // PIN
+        function renderPinDots() {
+            const dots = document.querySelectorAll('#pinDots .pin-dot');
+            dots.forEach((d, i) => {
+                d.className = 'pin-dot' + (i < pin.length ? ' filled' : '');
+            });
+        }
+
+        function renderPinKeypad() {
+            const keypad = document.getElementById('pinKeypad');
+            const keys = ['1','2','3','4','5','6','7','8','9','','0','⌫'];
+            keypad.innerHTML = keys.map(k => {
+                if (k === '') return '<div class="pin-key empty"></div>';
+                if (k === '⌫') return `<button class="pin-key backspace" onclick="pinBackspace()">${k}</button>`;
+                return `<button class="pin-key" onclick="pinInput('${k}')">${k}</button>`;
+            }).join('');
+        }
+
+        function pinInput(digit) {
+            if (pin.length >= 6) return;
+            pin += digit;
+            renderPinDots();
+
+            if (pin.length === 6) {
+                setTimeout(() => verifyPin(), 200);
+            }
+        }
+
+        function pinBackspace() {
+            pin = pin.slice(0, -1);
+            renderPinDots();
+            document.getElementById('pinError').style.display = 'none';
+        }
+
+        async function verifyPin() {
+            const stored = localStorage.getItem(PIN_KEY);
+
+            if (!stored) {
+                // First time: save this PIN
+                const hash = await hashPin(pin);
+                localStorage.setItem(PIN_KEY, hash);
+                authSuccess();
+                return;
+            }
+
+            const hash = await hashPin(pin);
+            if (hash === stored) {
+                authSuccess();
+            } else {
+                const errEl = document.getElementById('pinError');
+                errEl.textContent = 'Incorrect PIN. Try again.';
+                errEl.style.display = 'block';
+
+                // Shake animation
+                const dots = document.querySelectorAll('#pinDots .pin-dot');
+                dots.forEach(d => d.classList.add('error'));
+                setTimeout(() => {
+                    pin = '';
+                    renderPinDots();
+                    dots.forEach(d => d.classList.remove('error'));
+                }, 800);
+            }
+        }
+
+        async function hashPin(p) {
+            const enc = new TextEncoder();
+            const hash = await crypto.subtle.digest('SHA-256', enc.encode('ghostpay_salt_' + p));
+            return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        function authSuccess() {
+            document.getElementById('authStep1').style.display = 'none';
+            document.getElementById('authStep2').style.display = 'none';
+            document.getElementById('authStep3').style.display = '';
+
+            setTimeout(() => {
+                document.getElementById('authOverlay').classList.remove('active');
+                executePayment();
+            }, 1200);
+        }
+
+        // ===== PAYMENT EXECUTION =====
+        function executePayment() {
             const btn = document.getElementById('payBtn');
             btn.disabled = true;
-            btn.textContent = 'Gerando...';
+            btn.textContent = 'Processing...';
 
             try {
                 const checkout = SDK.Checkout.fromJSON({
                     receiver: { name: paramReceiver },
                     mode: 'fixed',
-                    plans: [{ id: 'fixed', name: 'Pagamento', price: amount, currency: currency, selected: true }],
+                    plans: [{ id: 'fixed', name: 'Payment', price: amount, currency: currency, selected: true }],
                     supportedChains: ['bitcoin','ethereum','solana','polygon','bsc'],
                 });
                 checkout.selectChain(selectedChain);
@@ -552,33 +830,15 @@
                     if (!err && canvas) { canvas.style.borderRadius = '12px'; container.appendChild(canvas); }
                 });
 
-                // Also show QR modal
-                showQRModal(qrData);
-
+                showToast('Payment link generated!', 'success');
             } catch (e) {
                 console.error(e);
-                showError('Erro ao gerar pagamento.');
+                showError('Failed to generate payment.');
             } finally {
                 btn.disabled = false;
-                btn.textContent = 'Pagar Agora';
+                btn.textContent = 'Pay Now';
                 updateBtn();
             }
-        };
-
-        function showQRModal(qrData) {
-            const modal = document.getElementById('qrModal');
-            modal.classList.add('active');
-            document.getElementById('qrModalAddress').textContent = receiverAddress;
-
-            const container = document.getElementById('qrModalContainer');
-            container.innerHTML = '';
-            QRCode.toCanvas(qrData, { width: 200, margin: 2, color: { dark: '#000000', light: '#FFFFFF' } }, (err, canvas) => {
-                if (!err && canvas) { canvas.style.borderRadius = '12px'; container.appendChild(canvas); }
-            });
-        }
-
-        function closeQRModal() {
-            document.getElementById('qrModal').classList.remove('active');
         }
 
         function showError(msg) {
@@ -589,14 +849,14 @@
 
         async function copyAddress() {
             if (!receiverAddress) return;
-            try { await navigator.clipboard.writeText(receiverAddress); showToast('Endereco copiado!'); }
-            catch { showToast('Erro ao copiar', 'error'); }
+            try { await navigator.clipboard.writeText(receiverAddress); showToast('Address copied!'); }
+            catch { showToast('Failed to copy', 'error'); }
         }
 
         async function copyLink() {
             if (!paymentLink) return;
-            try { await navigator.clipboard.writeText(paymentLink); showToast('Link copiado!'); }
-            catch { showToast('Erro ao copiar', 'error'); }
+            try { await navigator.clipboard.writeText(paymentLink); showToast('Link copied!'); }
+            catch { showToast('Failed to copy', 'error'); }
         }
 
         function showToast(msg, type = 'success') {
@@ -606,7 +866,7 @@
             setTimeout(() => t.classList.remove('show'), 3000);
         }
 
-        // ========= COIN MODAL =========
+        // ===== COIN MODAL =====
         const MORE_COINS = [
             { chain: 'avalanche', name: 'Avalanche', symbol: 'AVAX', icon: 'https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/avax.svg' },
             { chain: 'cardano', name: 'Cardano', symbol: 'ADA', icon: 'https://cdn.jsdelivr.net/gh/spothq/cryptocurrency-icons@master/svg/color/ada.svg' },
@@ -675,7 +935,7 @@
                 grid.insertBefore(newBtn, moreBtn);
             }
             closeCoinModal();
-            showToast(coin.name + ' selecionado');
+            showToast(coin.name + ' selected');
         }
     </script>
 </body>
