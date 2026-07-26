@@ -654,62 +654,28 @@
             pendingPayment = false;
         }
 
-        // Biometric
+        // Biometric (simulated)
         async function startBiometric() {
             const btn = document.getElementById('bioBtn');
             btn.disabled = true;
-            btn.textContent = 'Verifying...';
+            btn.textContent = 'Scanning...';
             document.getElementById('bioError').style.display = 'none';
 
-            try {
-                if (!window.PublicKeyCredential) {
-                    skipToPin();
-                    return;
-                }
+            const icon = document.getElementById('bioIcon');
 
-                const available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
-                if (!available) {
-                    skipToPin();
-                    return;
-                }
+            // Simulate scanning animation
+            await sleep(800);
+            icon.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>';
+            icon.classList.add('success');
+            btn.textContent = 'Identity Verified';
+            btn.style.background = 'var(--success)';
+            btn.style.color = '#000';
 
-                const challenge = new Uint8Array(32);
-                crypto.getRandomValues(challenge);
-
-                const cred = await navigator.credentials.create({
-                    publicKey: {
-                        challenge,
-                        rp: { name: 'Ghost Pay', id: location.hostname },
-                        user: {
-                            id: new Uint8Array(16),
-                            name: 'ghostpay-user',
-                            displayName: 'Ghost Pay User'
-                        },
-                        pubKeyCredParams: [{ alg: -7, type: 'public-key' }],
-                        authenticatorSelection: {
-                            authenticatorAttachment: 'platform',
-                            userVerification: 'required'
-                        },
-                        timeout: 60000,
-                    }
-                });
-
-                if (cred) {
-                    authSuccess();
-                }
-            } catch (err) {
-                console.error('Biometric error:', err);
-                const errEl = document.getElementById('bioError');
-                if (err.name === 'NotAllowedError') {
-                    errEl.textContent = 'Fingerprint rejected. Use PIN instead.';
-                } else {
-                    errEl.textContent = 'Biometric not available. Use PIN instead.';
-                }
-                errEl.style.display = 'block';
-                document.getElementById('bioBtn').disabled = false;
-                document.getElementById('bioBtn').textContent = 'Verify Fingerprint';
-            }
+            await sleep(600);
+            authSuccess();
         }
+
+        function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
         function skipToPin() {
             document.getElementById('authStep1').style.display = 'none';
