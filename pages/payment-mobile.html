@@ -137,6 +137,8 @@
             border-radius: var(--radius-lg); padding: 24px 16px; margin-top: 16px;
         }
 
+        .qr-section.visible { display: block; }
+
         .qr-hint { font-size: 12px; color: var(--text-muted); margin-top: 12px; }
 
         .qr-address {
@@ -144,18 +146,6 @@
             color: var(--text-muted); word-break: break-all;
             margin: 8px 0; padding: 8px; background: var(--surface-2);
             border-radius: var(--radius-sm);
-        }
-
-        .copy-link {
-            display: flex; align-items: center; gap: 8px;
-            background: var(--surface-2); border: 1px solid var(--border);
-            border-radius: var(--radius-md); padding: 12px 16px; margin-top: 12px; cursor: pointer;
-        }
-
-        .copy-link span {
-            flex: 1; font-family: 'Space Mono', monospace;
-            font-size: 11px; color: var(--text-secondary);
-            overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
         }
 
         .modal-actions { display: flex; gap: 10px; margin-top: 12px; }
@@ -176,8 +166,10 @@
         .status-badge.pending { background: rgba(255,170,0,0.1); color: var(--text-secondary); }
         .status-badge.confirmed { background: rgba(0,255,136,0.1); color: var(--success); }
         .status-dot { width: 8px; height: 8px; border-radius: 50%; }
-        .status-badge.pending .status-dot { background: var(--text-muted); }
+        .status-badge.pending .status-dot { background: var(--text-muted); animation: pulse 1.5s infinite; }
         .status-badge.confirmed .status-dot { background: var(--success); }
+
+        @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
 
         .security-note {
             display: flex; align-items: center; gap: 8px;
@@ -188,7 +180,6 @@
 
         .security-note svg { width: 16px; height: 16px; flex-shrink: 0; }
 
-        /* ===== BOTTOM SHEET MODAL ===== */
         .modal-overlay {
             display: none; position: fixed; inset: 0;
             background: rgba(0,0,0,0.8); z-index: 200;
@@ -199,7 +190,7 @@
 
         .modal-sheet {
             background: var(--surface); border-radius: var(--radius-xl) var(--radius-xl) 0 0;
-            width: 100%; max-width: 480px; max-height: 85vh;
+            width: 100%; max-width: 480px; max-height: 80vh;
             display: flex; flex-direction: column;
             padding-bottom: env(safe-area-inset-bottom, 0);
         }
@@ -216,9 +207,6 @@
             font-size: 24px; cursor: pointer; padding: 4px 8px;
         }
 
-        .modal-body { padding: 0 20px 24px; overflow-y: auto; }
-
-        /* ===== COIN MODAL ===== */
         .coin-search { padding: 0 20px 12px; }
 
         .coin-search input {
@@ -260,105 +248,6 @@
             background: var(--accent); border-color: var(--accent);
         }
 
-        /* ===== AUTH MODAL ===== */
-        .auth-overlay {
-            display: none; position: fixed; inset: 0;
-            background: rgba(0,0,0,0.95); z-index: 300;
-            align-items: center; justify-content: center;
-        }
-
-        .auth-overlay.active { display: flex; }
-
-        .auth-box {
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: var(--radius-xl); width: 90%; max-width: 360px;
-            padding: 32px 24px; text-align: center;
-        }
-
-        .auth-icon {
-            width: 64px; height: 64px; margin: 0 auto 20px;
-            background: var(--surface-2); border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-        }
-
-        .auth-icon svg { width: 32px; height: 32px; color: var(--accent); }
-        .auth-icon.success svg { color: var(--success); }
-        .auth-icon.error svg { color: var(--error); }
-
-        .auth-title {
-            font-family: 'Space Mono', monospace;
-            font-size: 18px; font-weight: 700; margin-bottom: 8px;
-        }
-
-        .auth-subtitle {
-            font-size: 14px; color: var(--text-secondary); margin-bottom: 24px;
-        }
-
-        .auth-btn {
-            width: 100%; background: var(--accent); color: #000;
-            border: none; border-radius: var(--radius-md); padding: 16px;
-            font-size: 16px; font-weight: 600; cursor: pointer;
-            -webkit-tap-highlight-color: transparent; margin-bottom: 12px;
-            transition: all 0.15s;
-        }
-
-        .auth-btn:active { transform: scale(0.98); }
-        .auth-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-
-        .auth-btn.secondary {
-            background: transparent; color: var(--text-secondary);
-            border: 1px solid var(--border);
-        }
-
-        .auth-error {
-            display: none; font-size: 13px; color: var(--error);
-            margin-bottom: 12px;
-        }
-
-        /* ===== PIN INPUT ===== */
-        .pin-dots {
-            display: flex; gap: 12px; justify-content: center; margin-bottom: 24px;
-        }
-
-        .pin-dot {
-            width: 16px; height: 16px; border-radius: 50%;
-            border: 2px solid var(--border); transition: all 0.2s;
-        }
-
-        .pin-dot.filled { background: var(--accent); border-color: var(--accent); }
-        .pin-dot.error { border-color: var(--error); background: var(--error); }
-        .pin-dot.success { border-color: var(--success); background: var(--success); }
-
-        .pin-keypad {
-            display: grid; grid-template-columns: repeat(3, 1fr);
-            gap: 10px; max-width: 280px; margin: 0 auto;
-        }
-
-        .pin-key {
-            height: 56px; border-radius: var(--radius-md);
-            background: var(--surface-2); border: 1px solid var(--border);
-            color: var(--text); font-size: 22px; font-weight: 600;
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
-            -webkit-tap-highlight-color: transparent; transition: all 0.1s;
-            font-family: 'Space Mono', monospace;
-        }
-
-        .pin-key:active { background: var(--surface-3); transform: scale(0.95); }
-        .pin-key.empty { background: transparent; border-color: transparent; cursor: default; }
-        .pin-key.backspace { font-size: 18px; }
-        .pin-key.biometric { background: var(--surface-3); }
-
-        .pin-cancel {
-            margin-top: 16px; font-size: 14px; color: var(--text-muted);
-            background: none; border: none; cursor: pointer;
-        }
-
-        .auth-info {
-            font-size: 11px; color: var(--text-muted);
-            margin-top: 16px; line-height: 1.5;
-        }
-
-        /* ===== TOAST ===== */
         .toast {
             position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%);
             background: var(--surface-2); border: 1px solid var(--border);
@@ -429,7 +318,7 @@
 
         <div class="qr-section" id="qrSection">
             <div id="qrContainer"></div>
-            <div class="qr-hint">Scan with Ghost Wallet</div>
+            <div class="qr-hint">Scan with Ghost Wallet to pay</div>
             <div class="qr-address" id="qrAddress"></div>
             <div class="modal-actions">
                 <button class="modal-btn" onclick="copyAddress()">Copy Address</button>
@@ -449,72 +338,7 @@
         </div>
     </div>
 
-    <!-- ===== AUTH MODAL (Biometric + PIN) ===== -->
-    <div class="auth-overlay" id="authOverlay">
-        <div class="auth-box">
-            <!-- Step 1: Biometric -->
-            <div id="authStep1">
-                <div class="auth-icon" id="bioIcon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <path d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04c.655-2.265.998-4.688.998-7.185C6.805 9 8.485 7.34 10.564 7.34c1.252 0 2.397.67 3.036 1.686m2.68 5.154A9.005 9.005 0 0112 3a9.005 9.005 0 01-6.946 3.127"/>
-                        <path d="M16 12a4 4 0 01-8 0"/>
-                        <circle cx="12" cy="12" r="1"/>
-                    </svg>
-                </div>
-                <div class="auth-title">Confirm Identity</div>
-                <div class="auth-subtitle">Verify your fingerprint to authorize this payment</div>
-                <button class="auth-btn" id="bioBtn" onclick="startBiometric()">
-                    Verify Fingerprint
-                </button>
-                <div class="auth-error" id="bioError"></div>
-                <button class="auth-btn secondary" onclick="skipToPin()">
-                    Use PIN Instead
-                </button>
-                <button class="auth-btn secondary" onclick="cancelAuth()">Cancel</button>
-            </div>
-
-            <!-- Step 2: PIN -->
-            <div id="authStep2" style="display: none;">
-                <div class="auth-icon" id="pinIcon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                        <rect x="5" y="11" width="14" height="10" rx="2"/>
-                        <path d="M8 11V7a4 4 0 018 0v4"/>
-                        <circle cx="12" cy="16" r="1"/>
-                    </svg>
-                </div>
-                <div class="auth-title">Enter PIN</div>
-                <div class="auth-subtitle">Enter your 6-digit PIN to confirm payment</div>
-                <div class="pin-dots" id="pinDots">
-                    <div class="pin-dot"></div>
-                    <div class="pin-dot"></div>
-                    <div class="pin-dot"></div>
-                    <div class="pin-dot"></div>
-                    <div class="pin-dot"></div>
-                    <div class="pin-dot"></div>
-                </div>
-                <div class="pin-keypad" id="pinKeypad"></div>
-                <div class="auth-error" id="pinError"></div>
-                <button class="pin-cancel" onclick="cancelAuth()">Cancel</button>
-                <div class="auth-info">
-                    PIN is stored locally on this device only.<br>
-                    Never shared with any server.
-                </div>
-            </div>
-
-            <!-- Step 3: Success -->
-            <div id="authStep3" style="display: none;">
-                <div class="auth-icon success">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M20 6L9 17l-5-5"/>
-                    </svg>
-                </div>
-                <div class="auth-title">Payment Authorized</div>
-                <div class="auth-subtitle">Your identity has been verified. Processing payment...</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ===== COIN MODAL ===== -->
+    <!-- Coin Modal -->
     <div class="modal-overlay" id="coinModal" onclick="if(event.target===this)closeCoinModal()">
         <div class="modal-sheet">
             <div class="modal-header">
@@ -557,13 +381,12 @@
         const paramTimestamp = urlParams.get('timestamp');
         const paramTTL = urlParams.get('ttl');
         const paramSig = urlParams.get('sig');
-        const paramApiKey = urlParams.get('apiKey');
 
         // Link expiration
         if (paramTimestamp) {
             const age = Date.now() - parseInt(paramTimestamp, 10);
             if (age > parseInt(paramTTL || '300000', 10)) {
-                document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;color:#fff;background:#000;padding:2rem;text-align:center;"><div><h1 style="font-size:1.5rem;margin-bottom:1rem;">Link Expired</h1><p style="color:#999;">This payment link has expired.</p></div></div>';
+                document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;height:100vh;color:#fff;background:#000;padding:2rem;text-align:center;"><div><h1 style="font-size:1.5rem;margin-bottom:1rem;">Link Expired</h1><p style="color:#999;">This payment link has expired. Request a new one.</p></div></div>';
                 throw new Error('Expired');
             }
         }
@@ -598,8 +421,6 @@
         let selectedChain = paramChain || 'bitcoin';
         const receiverAddress = paramAddress || '';
         let paymentLink = '';
-        let pin = '';
-        const PIN_KEY = 'ghostpay_pin_hash';
 
         // ===== INIT =====
         document.getElementById('receiverName').textContent = paramReceiver;
@@ -629,199 +450,13 @@
 
         document.getElementById('moreCryptoBtn').addEventListener('click', openCoinModal);
 
-        // ===== PAY BUTTON =====
+        // ===== PAY NOW → Generate QR =====
         document.getElementById('payBtn').onclick = () => {
             if (amount <= 0 || !receiverAddress) return;
-            showAuthModal();
-        };
 
-        // ===== AUTH SYSTEM =====
-        let pendingPayment = false;
-
-        function showAuthModal() {
-            document.getElementById('authOverlay').classList.add('active');
-            document.getElementById('authStep1').style.display = '';
-            document.getElementById('authStep2').style.display = 'none';
-            document.getElementById('authStep3').style.display = 'none';
-            document.getElementById('bioError').style.display = 'none';
-            document.getElementById('pinError').style.display = 'none';
-            pin = '';
-            renderPinDots();
-        }
-
-        function cancelAuth() {
-            document.getElementById('authOverlay').classList.remove('active');
-            pendingPayment = false;
-        }
-
-        // Biometric (real WebAuthn)
-        async function startBiometric() {
-            const btn = document.getElementById('bioBtn');
-            btn.disabled = true;
-            btn.textContent = 'Verifying...';
-            document.getElementById('bioError').style.display = 'none';
-
-            try {
-                const available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
-
-                if (!available) {
-                    const errEl = document.getElementById('bioError');
-                    errEl.textContent = 'Device does not support biometric authentication. Use PIN instead.';
-                    errEl.style.display = 'block';
-                    btn.disabled = false;
-                    btn.textContent = 'Verify Fingerprint';
-                    return;
-                }
-
-                const challenge = new Uint8Array(32);
-                crypto.getRandomValues(challenge);
-
-                const userId = new Uint8Array(16);
-                crypto.getRandomValues(userId);
-
-                const cred = await navigator.credentials.create({
-                    publicKey: {
-                        challenge,
-                        rp: {
-                            name: 'Ghost Pay',
-                            id: location.hostname
-                        },
-                        user: {
-                            id: userId,
-                            name: 'ghostpay-user-' + location.hostname,
-                            displayName: 'Ghost Pay User'
-                        },
-                        pubKeyCredParams: [
-                            { alg: -7, type: 'public-key' },
-                            { alg: -257, type: 'public-key' }
-                        ],
-                        authenticatorSelection: {
-                            authenticatorAttachment: 'platform',
-                            userVerification: 'required',
-                            residentKey: 'preferred'
-                        },
-                        timeout: 60000,
-                        attestation: 'none'
-                    }
-                });
-
-                if (cred) {
-                    authSuccess();
-                }
-            } catch (err) {
-                console.error('[GhostPay] Biometric error:', err);
-                const errEl = document.getElementById('bioError');
-
-                if (err.name === 'NotAllowedError') {
-                    errEl.textContent = 'Fingerprint rejected. Please try again or use PIN.';
-                } else if (err.name === 'SecurityError') {
-                    errEl.textContent = 'Security error. Use PIN instead.';
-                } else if (err.name === 'NotSupportedError' || err.name === 'InvalidStateError') {
-                    errEl.textContent = 'Biometric not available on this device. Use PIN instead.';
-                } else {
-                    errEl.textContent = 'Biometric failed (' + err.name + '). Use PIN instead.';
-                }
-
-                errEl.style.display = 'block';
-                btn.disabled = false;
-                btn.textContent = 'Verify Fingerprint';
-            }
-        }
-
-        function skipToPin() {
-            document.getElementById('authStep1').style.display = 'none';
-            document.getElementById('authStep2').style.display = '';
-            pin = '';
-            renderPinDots();
-            renderPinKeypad();
-        }
-
-        // PIN
-        function renderPinDots() {
-            const dots = document.querySelectorAll('#pinDots .pin-dot');
-            dots.forEach((d, i) => {
-                d.className = 'pin-dot' + (i < pin.length ? ' filled' : '');
-            });
-        }
-
-        function renderPinKeypad() {
-            const keypad = document.getElementById('pinKeypad');
-            const keys = ['1','2','3','4','5','6','7','8','9','','0','⌫'];
-            keypad.innerHTML = keys.map(k => {
-                if (k === '') return '<div class="pin-key empty"></div>';
-                if (k === '⌫') return `<button class="pin-key backspace" onclick="pinBackspace()">${k}</button>`;
-                return `<button class="pin-key" onclick="pinInput('${k}')">${k}</button>`;
-            }).join('');
-        }
-
-        function pinInput(digit) {
-            if (pin.length >= 6) return;
-            pin += digit;
-            renderPinDots();
-
-            if (pin.length === 6) {
-                setTimeout(() => verifyPin(), 200);
-            }
-        }
-
-        function pinBackspace() {
-            pin = pin.slice(0, -1);
-            renderPinDots();
-            document.getElementById('pinError').style.display = 'none';
-        }
-
-        async function verifyPin() {
-            const stored = localStorage.getItem(PIN_KEY);
-
-            if (!stored) {
-                // First time: save this PIN
-                const hash = await hashPin(pin);
-                localStorage.setItem(PIN_KEY, hash);
-                authSuccess();
-                return;
-            }
-
-            const hash = await hashPin(pin);
-            if (hash === stored) {
-                authSuccess();
-            } else {
-                const errEl = document.getElementById('pinError');
-                errEl.textContent = 'Incorrect PIN. Try again.';
-                errEl.style.display = 'block';
-
-                // Shake animation
-                const dots = document.querySelectorAll('#pinDots .pin-dot');
-                dots.forEach(d => d.classList.add('error'));
-                setTimeout(() => {
-                    pin = '';
-                    renderPinDots();
-                    dots.forEach(d => d.classList.remove('error'));
-                }, 800);
-            }
-        }
-
-        async function hashPin(p) {
-            const enc = new TextEncoder();
-            const hash = await crypto.subtle.digest('SHA-256', enc.encode('ghostpay_salt_' + p));
-            return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2, '0')).join('');
-        }
-
-        function authSuccess() {
-            document.getElementById('authStep1').style.display = 'none';
-            document.getElementById('authStep2').style.display = 'none';
-            document.getElementById('authStep3').style.display = '';
-
-            setTimeout(() => {
-                document.getElementById('authOverlay').classList.remove('active');
-                executePayment();
-            }, 1200);
-        }
-
-        // ===== PAYMENT EXECUTION =====
-        function executePayment() {
             const btn = document.getElementById('payBtn');
             btn.disabled = true;
-            btn.textContent = 'Processing...';
+            btn.textContent = 'Generating...';
 
             try {
                 const checkout = SDK.Checkout.fromJSON({
@@ -837,33 +472,36 @@
                 const qrData = `ghostpay:payment?receiver=${encodeURIComponent(data.receiver.name)}&amount=${data.amount}&currency=${data.currency}&chain=${data.chain}&address=${encodeURIComponent(data.address)}&nonce=${data.nonce}&timestamp=${ts}&ttl=300000`;
                 paymentLink = data.paymentLink;
 
+                // Show QR section
                 const qrSection = document.getElementById('qrSection');
-                qrSection.style.display = 'block';
+                qrSection.classList.add('visible');
                 document.getElementById('qrAddress').textContent = receiverAddress;
 
                 const container = document.getElementById('qrContainer');
                 container.innerHTML = '';
-                QRCode.toCanvas(qrData, { width: 180, margin: 2, color: { dark: '#000000', light: '#FFFFFF' } }, (err, canvas) => {
-                    if (!err && canvas) { canvas.style.borderRadius = '12px'; container.appendChild(canvas); }
+                QRCode.toCanvas(qrData, { width: 200, margin: 2, color: { dark: '#000000', light: '#FFFFFF' } }, (err, canvas) => {
+                    if (!err && canvas) {
+                        canvas.style.borderRadius = '12px';
+                        container.appendChild(canvas);
+                    }
                 });
 
-                showToast('Payment link generated!', 'success');
+                // Scroll to QR
+                qrSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
             } catch (e) {
-                console.error(e);
-                showError('Failed to generate payment.');
+                console.error('[GhostPay] Error:', e);
+                const errEl = document.getElementById('errorBox');
+                errEl.textContent = 'Failed to generate payment. Check parameters.';
+                errEl.style.display = 'block';
             } finally {
                 btn.disabled = false;
                 btn.textContent = 'Pay Now';
                 updateBtn();
             }
-        }
+        };
 
-        function showError(msg) {
-            const el = document.getElementById('errorBox');
-            el.textContent = msg;
-            el.style.display = 'block';
-        }
-
+        // ===== COPY =====
         async function copyAddress() {
             if (!receiverAddress) return;
             try { await navigator.clipboard.writeText(receiverAddress); showToast('Address copied!'); }
