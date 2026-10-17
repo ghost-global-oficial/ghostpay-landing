@@ -871,6 +871,17 @@
     <script>
         const params = new URLSearchParams(window.location.search);
 
+        // XSS prevention: escape HTML entities
+        function escapeHtml(str) {
+            if (str == null) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
         let selectedChain = params.get('chain') || 'bitcoin';
         let selectedAmount = 0;
         let receiverName = params.get('receiver') || '';
@@ -1038,10 +1049,10 @@
                     selectMoreCoin(coin.chain);
                 };
                 item.innerHTML =
-                    '<img class="coin-item-icon" src="' + coin.icon + '" alt="' + coin.symbol + '">' +
+                    '<img class="coin-item-icon" src="' + escapeHtml(coin.icon) + '" alt="' + escapeHtml(coin.symbol) + '">' +
                     '<div class="coin-item-info">' +
-                        '<div class="coin-item-name">' + coin.name + '</div>' +
-                        '<div class="coin-item-symbol">' + coin.symbol + '</div>' +
+                        '<div class="coin-item-name">' + escapeHtml(coin.name) + '</div>' +
+                        '<div class="coin-item-symbol">' + escapeHtml(coin.symbol) + '</div>' +
                     '</div>' +
                     '<div class="coin-item-check"></div>';
                 list.appendChild(item);

@@ -361,8 +361,8 @@
         const SDK = window.GhostPaySDK;
 
         function escapeHtml(s) {
-            if (!s) return '';
-            return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+            if (s == null) return '';
+            return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
         }
 
         function hexToBytes(hex) {
@@ -556,11 +556,11 @@
             const list = document.getElementById('coinList');
             const coins = query ? MORE_COINS.filter(c => c.name.toLowerCase().includes(query) || c.symbol.toLowerCase().includes(query)) : MORE_COINS;
             list.innerHTML = coins.map(c => `
-                <div class="coin-list-item ${selectedChain === c.chain ? 'selected' : ''}" onclick="selectMoreCoin('${c.chain}')">
-                    <div class="coin-list-icon"><img src="${c.icon}" width="32" height="32" alt="${c.symbol}"></div>
+                <div class="coin-list-item ${selectedChain === c.chain ? 'selected' : ''}" onclick="selectMoreCoin('${escapeHtml(c.chain)}')">
+                    <div class="coin-list-icon"><img src="${escapeHtml(c.icon)}" width="32" height="32" alt="${escapeHtml(c.symbol)}"></div>
                     <div class="coin-list-info">
-                        <div class="coin-list-name">${c.name}</div>
-                        <div class="coin-list-symbol">${c.symbol}</div>
+                        <div class="coin-list-name">${escapeHtml(c.name)}</div>
+                        <div class="coin-list-symbol">${escapeHtml(c.symbol)}</div>
                     </div>
                     <div class="coin-list-check"></div>
                 </div>
@@ -581,7 +581,7 @@
                 const newBtn = document.createElement('button');
                 newBtn.className = 'crypto-btn active';
                 newBtn.setAttribute('data-chain', chain);
-                newBtn.innerHTML = '<div class="crypto-icon"><img src="' + coin.icon + '" width="28" height="28" alt="' + coin.symbol + '"></div><div class="crypto-name">' + coin.symbol + '</div>';
+                newBtn.innerHTML = '<div class="crypto-icon"><img src="' + escapeHtml(coin.icon) + '" width="28" height="28" alt="' + escapeHtml(coin.symbol) + '"></div><div class="crypto-name">' + escapeHtml(coin.symbol) + '</div>';
                 newBtn.onclick = () => {
                     grid.querySelectorAll('.crypto-btn').forEach(b => b.classList.remove('active'));
                     newBtn.classList.add('active');

@@ -1,258 +1,452 @@
 <!DOCTYPE html>
-<html lang="pt">
+<html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ghost Pay - Pagamentos Cripto Anónimos</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
-    <link rel="stylesheet" href="styles.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ghost Pay — Pagamentos em cripto, direto na sua carteira</title>
+<meta name="description" content="Ghost Pay é um processador de pagamentos em criptomoedas descentralizado. Receba direto na sua carteira, sem custódia e com taxas transparentes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============ Variáveis de design ============ */
+:root{
+  --bg:#0A0A0A; --bg-2:#111111; --surface:#151515;
+  --line:rgba(255,255,255,.08); --line-strong:rgba(255,255,255,.16);
+  --text:#F5F5F5; --muted:#A1A1AA; --white:#FFFFFF;
+  --radius:14px; --radius-sm:10px;
+  --s-1:.5rem; --s-2:1rem; --s-3:1.5rem; --s-4:2rem; --s-5:3rem; --s-6:5rem; --s-7:7.5rem;
+  --max:1160px; --ease:cubic-bezier(.2,.7,.2,1); --dur:250ms;
+  --font:'Manrope',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{background:var(--bg);color:var(--text);font-family:var(--font);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--white);outline-offset:3px;border-radius:6px}
+.container{width:100%;max-width:var(--max);margin:0 auto;padding:0 var(--s-3)}
+.skip{position:absolute;left:-999px;top:0;background:var(--white);color:var(--bg);padding:.5rem 1rem;z-index:100}
+.skip:focus{left:1rem;top:1rem}
+
+/* ============ Tipografia ============ */
+h1,h2,h3{font-weight:600;letter-spacing:-.025em;line-height:1.15}
+h1{font-size:clamp(2.25rem,6vw,4rem)}
+h2{font-size:clamp(1.75rem,4vw,2.5rem)}
+h3{font-size:1.125rem}
+.eyebrow{font-size:.8125rem;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;font-weight:500;margin-bottom:var(--s-2)}
+.lead{color:var(--muted);font-size:clamp(1rem,2vw,1.175rem);max-width:38rem}
+.section{padding:var(--s-6) 0;border-top:1px solid var(--line)}
+.section-head{margin-bottom:var(--s-5);max-width:40rem}
+.section-head p{color:var(--muted);margin-top:var(--s-2)}
+
+/* ============ Botões ============ */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;height:46px;padding:0 1.35rem;border-radius:999px;font-weight:600;font-size:.9375rem;transition:background var(--dur) var(--ease),color var(--dur) var(--ease),border-color var(--dur) var(--ease),transform var(--dur) var(--ease)}
+.btn-primary{background:var(--white);color:var(--bg)}
+.btn-primary:hover{background:#E4E4E7;transform:translateY(-1px)}
+.btn-ghost{border:1px solid var(--line-strong);color:var(--text)}
+.btn-ghost:hover{border-color:rgba(255,255,255,.4);background:rgba(255,255,255,.03)}
+.btn-sm{height:38px;padding:0 1rem;font-size:.875rem}
+
+/* ============ Header ============ */
+.header{position:fixed;inset:0 0 auto;z-index:50;background:rgba(10,10,10,.75);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.header .container{display:flex;align-items:center;justify-content:space-between;height:68px}
+.logo{display:flex;align-items:center;gap:.6rem;font-weight:700;letter-spacing:-.02em}
+.logo svg{width:24px;height:24px}
+.nav{display:none}
+.nav ul{display:flex;gap:var(--s-4);list-style:none}
+.nav a{color:var(--muted);font-size:.9rem;transition:color var(--dur)}
+.nav a:hover{color:var(--text)}
+.header-cta{display:none}
+.burger{width:42px;height:42px;display:grid;place-items:center;border-radius:10px;border:1px solid var(--line)}
+.burger span{display:block;width:18px;height:1.5px;background:var(--text);position:relative;transition:background var(--dur)}
+.burger span::before,.burger span::after{content:"";position:absolute;left:0;width:18px;height:1.5px;background:var(--text);transition:transform var(--dur) var(--ease)}
+.burger span::before{top:-6px}.burger span::after{top:6px}
+.burger[aria-expanded="true"] span{background:transparent}
+.burger[aria-expanded="true"] span::before{transform:translateY(6px) rotate(45deg)}
+.burger[aria-expanded="true"] span::after{transform:translateY(-6px) rotate(-45deg)}
+.mobile-menu{position:fixed;top:68px;left:0;right:0;background:var(--bg);border-bottom:1px solid var(--line);padding:var(--s-3);display:none;z-index:49}
+.mobile-menu.open{display:block}
+.mobile-menu ul{list-style:none;display:grid;gap:.25rem;margin-bottom:var(--s-3)}
+.mobile-menu a:not(.btn){display:block;padding:.75rem 0;color:var(--muted);border-bottom:1px solid var(--line)}
+.mobile-menu .btn{width:100%}
+@media (min-width:900px){.nav,.header-cta{display:block}.burger,.mobile-menu{display:none!important}}
+
+/* ============ Hero ============ */
+.hero{padding:calc(68px + var(--s-6)) 0 var(--s-6);position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 70% 30%,rgba(255,255,255,.05),transparent 70%);pointer-events:none}
+.hero-grid{display:grid;gap:var(--s-5);align-items:center;position:relative}
+.hero h1{margin-bottom:var(--s-3)}
+.hero h1 span{color:var(--muted)}
+.hero-actions{display:flex;flex-wrap:wrap;gap:.75rem;margin-top:var(--s-4)}
+.hero-note{margin-top:var(--s-3);font-size:.8125rem;color:var(--muted)}
+.badge{display:inline-flex;align-items:center;gap:.5rem;padding:.35rem .8rem;border:1px solid var(--line);border-radius:999px;font-size:.8rem;color:var(--muted);margin-bottom:var(--s-3)}
+.badge i{width:6px;height:6px;border-radius:50%;background:var(--text);opacity:.7}
+.hero-visual{display:grid;place-items:center;position:relative;aspect-ratio:1;max-width:420px;width:100%;margin:0 auto}
+.hero-visual svg{width:100%;height:auto}
+.ghost-float{animation:float 6s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@media (min-width:900px){.hero{padding-top:calc(68px + var(--s-7))}.hero-grid{grid-template-columns:1.2fr 1fr}}
+
+/* ============ Passos ============ */
+.steps{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;list-style:none}
+.step{background:var(--bg);padding:var(--s-4) var(--s-3)}
+.step-num{font-size:.8125rem;color:var(--muted);font-weight:500;margin-bottom:var(--s-4);display:inline-block;padding:.2rem .6rem;border:1px solid var(--line);border-radius:999px}
+.step h3{margin-bottom:.5rem}
+.step p{color:var(--muted);font-size:.9375rem}
+@media (min-width:640px){.steps{grid-template-columns:repeat(2,1fr)}}
+@media (min-width:1024px){.steps{grid-template-columns:repeat(4,1fr)}}
+
+/* ============ Cards ============ */
+.cards{display:grid;gap:var(--s-2)}
+.card{background:linear-gradient(180deg,var(--surface),var(--bg-2));border:1px solid var(--line);border-radius:var(--radius);padding:var(--s-4) var(--s-3);transition:border-color var(--dur) var(--ease),transform var(--dur) var(--ease)}
+.card:hover{border-color:var(--line-strong);transform:translateY(-2px)}
+.icon{width:40px;height:40px;border-radius:10px;border:1px solid var(--line);display:grid;place-items:center;margin-bottom:var(--s-3)}
+.icon svg{width:20px;height:20px;stroke:var(--text);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.card h3{margin-bottom:.5rem}
+.card p{color:var(--muted);font-size:.9375rem}
+@media (min-width:640px){.cards{grid-template-columns:repeat(2,1fr)}}
+@media (min-width:1024px){.cards{grid-template-columns:repeat(4,1fr)}}
+
+/* ============ Segurança ============ */
+.split{display:grid;gap:var(--s-5);align-items:start}
+.checklist{list-style:none;display:grid;gap:var(--s-3)}
+.checklist li{display:grid;grid-template-columns:24px 1fr;gap:var(--s-2)}
+.checklist svg{width:20px;height:20px;stroke:var(--text);fill:none;stroke-width:1.5;margin-top:2px}
+.checklist strong{display:block;font-weight:600;margin-bottom:.15rem}
+.checklist span{color:var(--muted);font-size:.9375rem}
+.flow{border:1px solid var(--line);border-radius:var(--radius);padding:var(--s-4) var(--s-3);background:var(--bg-2)}
+.flow-row{display:flex;align-items:center;justify-content:space-between;gap:var(--s-2);padding:var(--s-2) 0}
+.flow-row+.flow-row{border-top:1px dashed var(--line)}
+.flow-label{font-size:.8125rem;color:var(--muted)}
+.flow-value{font-weight:600;font-size:.9375rem;text-align:right}
+.flow-caption{margin-top:var(--s-3);font-size:.8125rem;color:var(--muted)}
+@media (min-width:900px){.split{grid-template-columns:1fr 1fr;gap:var(--s-6)}}
+
+/* ============ Redes ============ */
+.chips-group+.chips-group{margin-top:var(--s-4)}
+.chips-group h3{font-size:.875rem;color:var(--muted);font-weight:500;margin-bottom:var(--s-2)}
+.chips{display:flex;flex-wrap:wrap;gap:.5rem;list-style:none}
+.chips li{padding:.55rem 1rem;border:1px solid var(--line);border-radius:999px;font-size:.9rem;transition:border-color var(--dur)}
+.chips li:hover{border-color:var(--line-strong)}
+
+/* ============ Calculadora ============ */
+.calc{display:grid;gap:var(--s-4);border:1px solid var(--line);border-radius:var(--radius);padding:var(--s-4) var(--s-3);background:linear-gradient(180deg,var(--surface),var(--bg-2))}
+.field label{display:block;font-size:.875rem;color:var(--muted);margin-bottom:.5rem}
+.input-wrap{position:relative}
+.input-wrap span{position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:var(--muted)}
+.input-wrap input{width:100%;height:56px;padding:0 1rem 0 2.75rem;background:var(--bg);border:1px solid var(--line-strong);border-radius:var(--radius-sm);color:var(--text);font:inherit;font-size:1.25rem;font-weight:600;transition:border-color var(--dur)}
+.input-wrap input:focus{outline:none;border-color:var(--white)}
+.calc-hint{font-size:.8125rem;color:var(--muted);margin-top:.5rem}
+.results{display:grid;gap:1px;background:var(--line);border-radius:var(--radius-sm);overflow:hidden;border:1px solid var(--line)}
+.result{background:var(--bg);padding:var(--s-3)}
+.result dt{font-size:.8125rem;color:var(--muted)}
+.result dd{font-size:1.5rem;font-weight:600;letter-spacing:-.02em;margin-top:.25rem}
+@media (min-width:768px){.calc{grid-template-columns:1fr 1fr;align-items:center;padding:var(--s-5)}}
+
+/* ============ FAQ ============ */
+.faq{max-width:48rem;border-top:1px solid var(--line)}
+.faq-item{border-bottom:1px solid var(--line)}
+.faq-q{width:100%;display:flex;justify-content:space-between;align-items:center;gap:var(--s-2);padding:var(--s-3) 0;text-align:left;font-weight:500;font-size:1.0625rem}
+.faq-q svg{width:18px;height:18px;flex-shrink:0;stroke:var(--muted);fill:none;stroke-width:1.5;transition:transform var(--dur) var(--ease)}
+.faq-q[aria-expanded="true"] svg{transform:rotate(45deg)}
+.faq-a{display:grid;grid-template-rows:0fr;transition:grid-template-rows 300ms var(--ease)}
+.faq-a>div{overflow:hidden}
+.faq-a p{color:var(--muted);padding-bottom:var(--s-3);max-width:42rem}
+.faq-item.open .faq-a{grid-template-rows:1fr}
+
+/* ============ CTA ============ */
+.cta{text-align:center;padding:var(--s-7) 0;border-top:1px solid var(--line);background:radial-gradient(ellipse 50% 60% at 50% 100%,rgba(255,255,255,.05),transparent 70%)}
+.cta h2{max-width:34rem;margin:0 auto var(--s-2)}
+.cta p{color:var(--muted);margin-bottom:var(--s-4)}
+
+/* ============ Footer ============ */
+.footer{border-top:1px solid var(--line);padding:var(--s-5) 0 var(--s-4)}
+.footer-grid{display:grid;gap:var(--s-4);grid-template-columns:1fr 1fr}
+.footer-brand{grid-column:1/-1}
+.footer-brand p{color:var(--muted);font-size:.875rem;margin-top:var(--s-2);max-width:20rem}
+.footer h4{font-size:.8125rem;font-weight:600;margin-bottom:var(--s-2)}
+.footer ul{list-style:none;display:grid;gap:.6rem}
+.footer ul a{color:var(--muted);font-size:.875rem;transition:color var(--dur)}
+.footer ul a:hover{color:var(--text)}
+.footer-bottom{margin-top:var(--s-5);padding-top:var(--s-3);border-top:1px solid var(--line);display:flex;flex-wrap:wrap;justify-content:space-between;gap:var(--s-2);font-size:.8125rem;color:var(--muted)}
+.socials{display:flex;gap:.75rem}
+.socials a{width:36px;height:36px;display:grid;place-items:center;border:1px solid var(--line);border-radius:50%;transition:border-color var(--dur)}
+.socials a:hover{border-color:var(--line-strong)}
+.socials svg{width:16px;height:16px;fill:var(--muted)}
+@media (min-width:768px){.footer-grid{grid-template-columns:2fr 1fr 1fr 1fr}.footer-brand{grid-column:auto}}
+
+/* ============ Animações ao rolar ============ */
+.reveal{opacity:0;transform:translateY(16px);transition:opacity 700ms var(--ease),transform 700ms var(--ease)}
+.reveal.visible{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .reveal{opacity:1;transform:none}
+}
+</style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="nav-container">
-            <a href="#" class="logo">
-                <span class="logo-text">GHOST</span>
-                <span class="logo-pay">PAY</span>
-            </a>
-            <div class="nav-right">
-                <ul class="nav-links">
-                    <li><a href="#features">Funcionalidades</a></li>
-                    <li><a href="#how-it-works">Como Funciona</a></li>
-                    <li><a href="#security">Segurança</a></li>
-                </ul>
-                <div class="dropdown">
-                    <button class="dropdown-toggle" id="downloadDropdown">
-                        <i class="ti ti-download"></i>
-                        Download
-                        <i class="ti ti-chevron-down"></i>
-                    </button>
-                    <div class="dropdown-menu" id="dropdownMenu">
-                        <a href="#" class="dropdown-item">
-                            <i class="ti ti-brand-windows"></i>
-                            Download for Windows
-                        </a>
-                        <a href="#" class="dropdown-item">
-                            <i class="ti ti-device-mobile"></i>
-                            Download for Android
-                        </a>
-                    </div>
-                </div>
-            </div>
-            <button class="menu-toggle" aria-label="Menu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-        </div>
+<a href="#main" class="skip">Pular para o conteúdo</a>
+
+<!-- ============ Header ============ -->
+<header class="header">
+  <div class="container">
+    <a href="#" class="logo" aria-label="Ghost Pay, página inicial">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a8 8 0 0 0-8 8v11l2.7-2 2.6 2 2.7-2 2.7 2 2.6-2L20 21V10a8 8 0 0 0-8-8Z" fill="#F5F5F5"/><circle cx="9.3" cy="10.5" r="1.3" fill="#0A0A0A"/><circle cx="14.7" cy="10.5" r="1.3" fill="#0A0A0A"/></svg>
+      Ghost Pay
+    </a>
+    <nav class="nav" aria-label="Navegação principal">
+      <ul>
+        <li><a href="#como-funciona">Como funciona</a></li>
+        <li><a href="#diferenciais">Diferenciais</a></li>
+        <li><a href="#seguranca">Segurança</a></li>
+        <li><a href="#taxas">Taxas</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
     </nav>
+    <a href="#comecar" class="btn btn-primary btn-sm header-cta">Começar</a>
+    <button class="burger" aria-label="Abrir menu" aria-expanded="false" aria-controls="mobile-menu"><span></span></button>
+  </div>
+</header>
+<div class="mobile-menu" id="mobile-menu">
+  <ul>
+    <li><a href="#como-funciona">Como funciona</a></li>
+    <li><a href="#diferenciais">Diferenciais</a></li>
+    <li><a href="#seguranca">Segurança</a></li>
+    <li><a href="#taxas">Taxas</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <a href="#comecar" class="btn btn-primary">Começar</a>
+</div>
 
-    <section class="hero">
-        <div class="hero-content">
-            <div class="hero-logo">
-                <div class="ghost-icon"></div>
-            </div>
-            <h1 class="hero-title">
-                <span class="title-ghost">GHOST</span>
-                <span class="title-pay">PAY</span>
-            </h1>
-            <p class="hero-tagline">Pagamentos Cripto Anónimos</p>
-            <p class="hero-subtitle">A revolução dos pagamentos peer-to-peer com total privacidade. Sem rastros. Sem limites. Apenas tú e a tua transação.</p>
-            <div class="hero-cta">
-                <a href="#download" class="btn btn-primary">Começar</a>
-                <a href="#how-it-works" class="btn btn-secondary">Saber Mais</a>
-            </div>
-            <div class="scroll-indicator">
-                <div class="scroll-line"></div>
-            </div>
+<main id="main">
+  <!-- ============ Hero ============ -->
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="container hero-grid">
+      <div class="reveal">
+        <span class="badge"><i></i>Sem custódia. Sem intermediários.</span>
+        <h1 id="hero-title">Receba em cripto.<br><span>Direto na sua carteira.</span></h1>
+        <p class="lead">Ghost Pay é um processador de pagamentos descentralizado para empresas e freelancers. Os pagamentos são liquidados na sua carteira — a plataforma nunca segura seus fundos.</p>
+        <div class="hero-actions">
+          <a href="#comecar" class="btn btn-primary">Começar agora</a>
+          <a href="#como-funciona" class="btn btn-ghost">Ver como funciona</a>
         </div>
-    </section>
+        <p class="hero-note">Sem cadastro com dados pessoais para receber.</p>
+      </div>
+      <!-- Elemento visual: fantasma minimalista sobre padrão de pontos -->
+      <div class="hero-visual reveal" aria-hidden="true">
+        <svg viewBox="0 0 400 400">
+          <defs>
+            <pattern id="dots" width="16" height="16" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1" fill="rgba(255,255,255,.12)"/></pattern>
+            <radialGradient id="fade" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#000"/></radialGradient>
+            <mask id="m"><rect width="400" height="400" fill="url(#fade)"/></mask>
+            <linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c1c1c"/><stop offset="1" stop-color="#0d0d0d"/></linearGradient>
+          </defs>
+          <rect width="400" height="400" fill="url(#dots)" mask="url(#m)"/>
+          <circle cx="200" cy="200" r="150" fill="none" stroke="rgba(255,255,255,.07)"/>
+          <circle cx="200" cy="200" r="110" fill="none" stroke="rgba(255,255,255,.05)"/>
+          <g class="ghost-float">
+            <path d="M200 110c-44 0-76 33-76 76v104l19-14 19 14 19-14 19 14 19-14 19 14 19-14 19 14V186c0-43-32-76-76-76Z" fill="url(#g)" stroke="rgba(255,255,255,.22)"/>
+            <ellipse cx="178" cy="190" rx="8" ry="11" fill="#F5F5F5"/>
+            <ellipse cx="222" cy="190" rx="8" ry="11" fill="#F5F5F5"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+  </section>
 
-    <section id="features" class="section features">
-        <div class="container">
-            <h2 class="section-title fade-in">Funcionalidades</h2>
-            <div class="features-grid">
-                <div class="feature-card fade-in">
-                    <div class="feature-icon">
-                        <i class="ti ti-eye-off"></i>
-                    </div>
-                    <h3>Pagamentos Anónimos</h3>
-                    <p>Transações 100% privadas protegidas por tecnologia de conhecimento zero. Ninguém te pode seguir.</p>
-                </div>
-                <div class="feature-card fade-in">
-                    <div class="feature-icon">
-                        <i class="ti ti-topology-ring"></i>
-                    </div>
-                    <h3>Rede Mesh P2P</h3>
-                    <p>Rede descentralizada onde cada dispositivo é um nó. Sem servidores centrais, sem pontos de falha.</p>
-                </div>
-                <div class="feature-card fade-in">
-                    <div class="feature-icon">
-                        <i class="ti ti-shield-lock"></i>
-                    </div>
-                    <h3>Segurança Avançada</h3>
-                    <p>Encriptação militar de ponta a ponta. As tuas chaves, o teu dinheiro. Sempre.</p>
-                </div>
-                <div class="feature-card fade-in">
-                    <div class="feature-icon">
-                        <i class="ti ti-code"></i>
-                    </div>
-                    <h3>SDK para Desenvolvedores</h3>
-                    <p>Integra pagamentos cripto na tua aplicação com o nosso SDK modular e bem documentado.</p>
-                </div>
-            </div>
+  <!-- ============ Como funciona ============ -->
+  <section class="section" id="como-funciona" aria-labelledby="como-title">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Como funciona</p>
+        <h2 id="como-title">Do primeiro link ao saque em quatro passos.</h2>
+      </div>
+      <ol class="steps reveal">
+        <li class="step"><span class="step-num">01</span><h3>Crie sua conta</h3><p>Conecte sua carteira. Não pedimos nome, documento ou endereço.</p></li>
+        <li class="step"><span class="step-num">02</span><h3>Gere um link ou integre</h3><p>Crie links de pagamento, use o plugin de e-commerce ou integre via API.</p></li>
+        <li class="step"><span class="step-num">03</span><h3>Receba o pagamento</h3><p>Seu cliente paga na rede e moeda que preferir, entre as suportadas.</p></li>
+        <li class="step"><span class="step-num">04</span><h3>Fundos na sua carteira</h3><p>A liquidação vai direto para o seu endereço. Nada a sacar, nada retido.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ============ Diferenciais ============ -->
+  <section class="section" id="diferenciais" aria-labelledby="dif-title">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Diferenciais</p>
+        <h2 id="dif-title">Feito para quem quer receber sem depender de terceiros.</h2>
+      </div>
+      <div class="cards">
+        <article class="card reveal">
+          <div class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="5" r="2"/><circle cx="5" cy="18" r="2"/><circle cx="19" cy="18" r="2"/><path d="M12 7v4m0 0-5.5 5.5M12 11l5.5 5.5"/></svg></div>
+          <h3>Descentralizado</h3><p>Pagamentos liquidados direto na carteira do recebedor, sem custódia da plataforma.</p>
+        </article>
+        <article class="card reveal">
+          <div class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><path d="M4 4l16 16"/></svg></div>
+          <h3>Privacidade</h3><p>Receba sem cadastro de dados pessoais. Você decide o que compartilhar.</p>
+        </article>
+        <article class="card reveal">
+          <div class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 5 5 19"/><circle cx="7" cy="7" r="2.5"/><circle cx="17" cy="17" r="2.5"/></svg></div>
+          <h3>Taxas transparentes</h3><p>Uma taxa fixa e baixa por transação, exibida antes de cada pagamento.</p>
+        </article>
+        <article class="card reveal">
+          <div class="icon"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 7-5 5 5 5M16 7l5 5-5 5"/></svg></div>
+          <h3>Integração simples</h3><p>API documentada, plugin para e-commerce e links de pagamento prontos.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Segurança ============ -->
+  <section class="section" id="seguranca" aria-labelledby="seg-title">
+    <div class="container split">
+      <div class="reveal">
+        <p class="eyebrow">Segurança e transparência</p>
+        <h2 id="seg-title">Seus fundos continuam sendo seus.</h2>
+        <p class="lead" style="margin:1rem 0 2rem">O Ghost Pay coordena o pagamento, mas não fica no meio do dinheiro. Cada transação vai do pagador para o seu endereço, registrada na blockchain.</p>
+        <ul class="checklist">
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg><div><strong>Sem custódia</strong><span>Não guardamos chaves privadas nem saldos de usuários.</span></div></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg><div><strong>Verificável</strong><span>Toda transação pode ser conferida em um explorador público da rede.</span></div></li>
+          <li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 5 5 9-10"/></svg><div><strong>Código aberto</strong><span>Os contratos e bibliotecas de integração estão disponíveis para auditoria.</span></div></li>
+        </ul>
+      </div>
+      <div class="flow reveal" role="img" aria-label="Exemplo de fluxo: o cliente paga 100 USDC e 99,50 USDC chegam na carteira do recebedor">
+        <div class="flow-row"><span class="flow-label">Pagador</span><span class="flow-value">0x8f3…a21c</span></div>
+        <div class="flow-row"><span class="flow-label">Valor enviado</span><span class="flow-value">100,00 USDC</span></div>
+        <div class="flow-row"><span class="flow-label">Taxa Ghost Pay</span><span class="flow-value">0,50 USDC</span></div>
+        <div class="flow-row"><span class="flow-label">Recebedor (sua carteira)</span><span class="flow-value">99,50 USDC</span></div>
+        <div class="flow-row"><span class="flow-label">Custódia da plataforma</span><span class="flow-value">Nenhuma</span></div>
+        <p class="flow-caption">Exemplo ilustrativo. Taxas de rede são pagas à própria blockchain.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Redes e moedas ============ -->
+  <section class="section" id="redes" aria-labelledby="redes-title">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Redes e moedas</p>
+        <h2 id="redes-title">Aceite onde seus clientes já estão.</h2>
+      </div>
+      <div class="chips-group reveal">
+        <h3>Redes</h3>
+        <ul class="chips"><li>Ethereum</li><li>Polygon</li><li>Arbitrum</li><li>Optimism</li><li>Base</li><li>BNB Chain</li><li>Solana</li><li>Tron</li><li>Bitcoin</li></ul>
+      </div>
+      <div class="chips-group reveal">
+        <h3>Moedas e stablecoins</h3>
+        <ul class="chips"><li>USDC</li><li>USDT</li><li>DAI</li><li>BTC</li><li>ETH</li><li>SOL</li><li>MATIC</li><li>BNB</li></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Calculadora ============ -->
+  <section class="section" id="taxas" aria-labelledby="taxas-title">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Taxas</p>
+        <h2 id="taxas-title">Uma taxa. Sem surpresas.</h2>
+        <p>0,5% por transação. Sem mensalidade, sem taxa de saque.</p>
+      </div>
+      <div class="calc reveal">
+        <div class="field">
+          <label for="amount">Valor do pagamento (USD)</label>
+          <div class="input-wrap"><span aria-hidden="true">$</span><input id="amount" type="number" inputmode="decimal" min="0" step="0.01" value="1000" aria-describedby="calc-hint"></div>
+          <p class="calc-hint" id="calc-hint">Estimativa sem taxas de rede, que variam conforme a blockchain.</p>
         </div>
-    </section>
+        <dl class="results" aria-live="polite">
+          <div class="result"><dt>Taxa estimada (0,5%)</dt><dd id="fee">$5,00</dd></div>
+          <div class="result"><dt>Você recebe</dt><dd id="net">$995,00</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
 
-    <section id="how-it-works" class="section how-it-works">
-        <div class="container">
-            <h2 class="section-title fade-in">Como Funciona</h2>
-            <div class="steps">
-                <div class="step fade-in">
-                    <div class="step-number">01</div>
-                    <div class="step-content">
-                        <h3>Cria a tua carteira</h3>
-                        <p>Gera as tuas chaves criptográficas locais. Nunca saem do teu dispositivo.</p>
-                    </div>
-                    <div class="step-line"></div>
-                </div>
-                <div class="step fade-in">
-                    <div class="step-number">02</div>
-                    <div class="step-content">
-                        <h3>Liga-te à rede</h3>
-                        <p>Conecta-te à rede mesh P2P. Quanto mais utilizadores, mais forte a rede.</p>
-                    </div>
-                    <div class="step-line"></div>
-                </div>
-                <div class="step fade-in">
-                    <div class="step-number">03</div>
-                    <div class="step-content">
-                        <h3>Envia ou recebe</h3>
-                        <p>Transfere valor de forma instantânea e anónima para qualquer pessoa no mundo.</p>
-                    </div>
-                    <div class="step-line"></div>
-                </div>
-                <div class="step fade-in">
-                    <div class="step-number">04</div>
-                    <div class="step-content">
-                        <h3>Sem rastros</h3>
-                        <p>Cada transação desaparece da rede como um fantasma. Impossível de rastrear.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+  <!-- ============ FAQ ============ -->
+  <section class="section" id="faq" aria-labelledby="faq-title">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">FAQ</p>
+        <h2 id="faq-title">Perguntas frequentes</h2>
+      </div>
+      <div class="faq reveal">
+        <div class="faq-item"><button class="faq-q" aria-expanded="false" aria-controls="a1" id="q1">O Ghost Pay guarda meus fundos?<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button><div class="faq-a" id="a1" role="region" aria-labelledby="q1"><div><p>Não. Os pagamentos são enviados diretamente para o endereço da sua carteira. A plataforma não tem acesso às suas chaves nem mantém saldos.</p></div></div></div>
+        <div class="faq-item"><button class="faq-q" aria-expanded="false" aria-controls="a2" id="q2">Preciso enviar documentos para usar?<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button><div class="faq-a" id="a2" role="region" aria-labelledby="q2"><div><p>Para receber pagamentos, basta conectar uma carteira. Lembre-se de que transações em blockchain são públicas, e você continua responsável pelas obrigações fiscais e legais do seu país.</p></div></div></div>
+        <div class="faq-item"><button class="faq-q" aria-expanded="false" aria-controls="a3" id="q3">Quais são as taxas?<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button><div class="faq-a" id="a3" role="region" aria-labelledby="q3"><div><p>Cobramos 0,5% por transação. As taxas de rede (gas) são pagas à blockchain e variam conforme a rede escolhida.</p></div></div></div>
+        <div class="faq-item"><button class="faq-q" aria-expanded="false" aria-controls="a4" id="q4">Como integro no meu site ou loja?<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button><div class="faq-a" id="a4" role="region" aria-labelledby="q4"><div><p>Você pode usar links de pagamento sem código, instalar o plugin de e-commerce ou integrar pela API REST com webhooks de confirmação.</p></div></div></div>
+        <div class="faq-item"><button class="faq-q" aria-expanded="false" aria-controls="a5" id="q5">Posso receber em stablecoins?<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button><div class="faq-a" id="a5" role="region" aria-labelledby="q5"><div><p>Sim. USDC, USDT e DAI são suportadas em várias redes, o que ajuda a evitar a volatilidade de preço.</p></div></div></div>
+        <div class="faq-item"><button class="faq-q" aria-expanded="false" aria-controls="a6" id="q6">E se o cliente pagar na rede errada?<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg></button><div class="faq-a" id="a6" role="region" aria-labelledby="q6"><div><p>A página de pagamento indica claramente a rede e a moeda aceitas para cada cobrança. Como não temos custódia, transações enviadas à rede errada podem não ser recuperáveis.</p></div></div></div>
+      </div>
+    </div>
+  </section>
 
-    <section id="security" class="section security">
-        <div class="container">
-            <h2 class="section-title fade-in">Segurança</h2>
-            <div class="security-content">
-                <div class="security-text fade-in">
-                    <div class="security-badge">
-                        <i class="ti ti-shield-check"></i>
-                    </div>
-                    <h3>Zero Knowledge Proof</h3>
-                    <p>Provas criptográficas que verificam transações sem revelar dados sensíveis. A rede sabe que a transação é válida, mas não sabe quem enviou, quem recebeu ou quanto foi transferido.</p>
-                    <ul class="security-list">
-                        <li><i class="ti ti-lock"></i> Encriptação AES-256</li>
-                        <li><i class="ti ti-signature"></i> Assinaturas Schnorr</li>
-                        <li><i class="ti ti-arrows-shuffle"></i> Mixers de transações</li>
-                        <li><i class="ti ti-eye-off"></i> Proteção contra análise de blockchain</li>
-                    </ul>
-                </div>
-                <div class="security-visual fade-in">
-                    <div class="shield-animation">
-                        <div class="shield-layer layer-1"></div>
-                        <div class="shield-layer layer-2"></div>
-                        <div class="shield-layer layer-3"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+  <!-- ============ CTA final ============ -->
+  <section class="cta" id="comecar" aria-labelledby="cta-title">
+    <div class="container reveal">
+      <h2 id="cta-title">Comece a receber em cripto hoje.</h2>
+      <p>Conecte sua carteira e crie seu primeiro link em minutos.</p>
+      <a href="#" class="btn btn-primary">Começar agora</a>
+    </div>
+  </section>
+</main>
 
-    <section id="download" class="section download">
-        <div class="container">
-            <h2 class="section-title fade-in">Descarregar</h2>
-            <p class="download-subtitle fade-in">Disponível para as plataformas que usas todos os dias.</p>
-            <div class="download-buttons fade-in">
-                <a href="#" class="download-btn android">
-                    <div class="btn-icon">
-                        <i class="ti ti-brand-android"></i>
-                    </div>
-                    <div class="btn-text">
-                        <span class="btn-label">Descarregar para</span>
-                        <span class="btn-platform">Android</span>
-                    </div>
-                    <div class="btn-arrow"><i class="ti ti-arrow-right"></i></div>
-                </a>
-                <a href="#" class="download-btn windows">
-                    <div class="btn-icon">
-                        <i class="ti ti-brand-windows"></i>
-                    </div>
-                    <div class="btn-text">
-                        <span class="btn-label">Descarregar para</span>
-                        <span class="btn-platform">Windows</span>
-                    </div>
-                    <div class="btn-arrow"><i class="ti ti-arrow-right"></i></div>
-                </a>
-            </div>
-            <div class="version-info fade-in">
-                <span class="version">v1.0.0-beta</span>
-                <span class="separator">•</span>
-                <span class="compatible">macOS e Linux em breve</span>
-            </div>
-        </div>
-    </section>
+<!-- ============ Footer ============ -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#" class="logo" aria-label="Ghost Pay">
+          <svg viewBox="0 0 24 24" aria-hidden="true" width="24" height="24"><path d="M12 2a8 8 0 0 0-8 8v11l2.7-2 2.6 2 2.7-2 2.7 2 2.6-2L20 21V10a8 8 0 0 0-8-8Z" fill="#F5F5F5"/><circle cx="9.3" cy="10.5" r="1.3" fill="#0A0A0A"/><circle cx="14.7" cy="10.5" r="1.3" fill="#0A0A0A"/></svg>
+          Ghost Pay
+        </a>
+        <p>Pagamentos em cripto, direto na sua carteira.</p>
+      </div>
+      <div><h4>Produto</h4><ul><li><a href="#">Documentação</a></li><li><a href="#">API</a></li><li><a href="#">Status</a></li></ul></div>
+      <div><h4>Legal</h4><ul><li><a href="#">Termos de uso</a></li><li><a href="#">Privacidade</a></li></ul></div>
+      <div><h4>Comunidade</h4><ul><li><a href="#">GitHub</a></li><li><a href="#">Blog</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span id="year">2026</span> Ghost Pay. Todos os direitos reservados.</span>
+      <div class="socials">
+        <a href="#" aria-label="GitHub"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5a11.5 11.5 0 0 0-3.6 22.4c.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.2c0 .3.2.7.8.6A11.5 11.5 0 0 0 12 .5Z"/></svg></a>
+        <a href="#" aria-label="X (Twitter)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.2 2h3.4l-7.4 8.5L23 22h-6.8l-5.3-7-6.1 7H1.4l7.9-9L1 2h7l4.8 6.4L18.2 2Zm-1.2 18h1.9L7.1 4H5.1L17 20Z"/></svg></a>
+        <a href="#" aria-label="Discord"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.3 4.4A19.8 19.8 0 0 0 15.4 3l-.6 1.3a18 18 0 0 0-5.6 0L8.6 3a19.7 19.7 0 0 0-4.9 1.5C.6 9 0 13.5.3 18a19.9 19.9 0 0 0 6 3l1.3-2a13 13 0 0 1-2-1l.5-.4a14.2 14.2 0 0 0 12.2 0l.5.4-2 1 1.3 2a19.8 19.8 0 0 0 6-3c.5-5.2-.8-9.7-3.8-13.6ZM8.5 15.3c-1.2 0-2.2-1.1-2.2-2.4s1-2.4 2.2-2.4 2.2 1.1 2.2 2.4-1 2.4-2.2 2.4Zm7 0c-1.2 0-2.2-1.1-2.2-2.4s1-2.4 2.2-2.4 2.2 1.1 2.2 2.4-1 2.4-2.2 2.4Z"/></svg></a>
+      </div>
+    </div>
+  </div>
+</footer>
 
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-brand">
-                    <span class="logo-text">GHOST</span>
-                    <span class="logo-pay">PAY</span>
-                    <p>A próxima geração de pagamentos criptográficos.</p>
-                </div>
-                <div class="footer-links">
-                    <h4>Produto</h4>
-                    <ul>
-                        <li><a href="#features">Funcionalidades</a></li>
-                        <li><a href="#security">Segurança</a></li>
-                        <li><a href="#download">Descarregar</a></li>
-                    </ul>
-                </div>
-                <div class="footer-links">
-                    <h4>Desenvolvedores</h4>
-                    <ul>
-                        <li><a href="/pages/payment.html">Demo Pagamento</a></li>
-                        <li><a href="/pages/scan.html">Demo Scanner</a></li>
-                        <li><a href="/pages/donate.html">Demo Donate</a></li>
-                        <li><a href="#">Documentação</a></li>
-                        <li><a href="#">API Reference</a></li>
-                        <li><a href="#">GitHub</a></li>
-                    </ul>
-                </div>
-                <div class="footer-links">
-                    <h4>Comunidade</h4>
-                    <ul>
-                        <li><a href="#">Discord</a></li>
-                        <li><a href="#">Telegram</a></li>
-                        <li><a href="#">Twitter</a></li>
-                    </ul>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2024 Ghost Pay. Todos os direitos reservados.</p>
-                <div class="footer-legal">
-                    <a href="#">Termos de Uso</a>
-                    <a href="#">Privacidade</a>
-                </div>
-            </div>
-        </div>
-    </footer>
+<script>
+/* ============ Menu mobile ============ */
+const burger=document.querySelector('.burger'),menu=document.getElementById('mobile-menu');
+function setMenu(open){burger.setAttribute('aria-expanded',open);burger.setAttribute('aria-label',open?'Fechar menu':'Abrir menu');menu.classList.toggle('open',open)}
+burger.addEventListener('click',()=>setMenu(burger.getAttribute('aria-expanded')!=='true'));
+menu.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>setMenu(false)));
+document.addEventListener('keydown',e=>{if(e.key==='Escape')setMenu(false)});
 
-    <script src="main.js"></script>
+/* ============ Calculadora de taxas (0,5%) ============ */
+const FEE_RATE=0.005,amount=document.getElementById('amount'),feeEl=document.getElementById('fee'),netEl=document.getElementById('net');
+const fmt=new Intl.NumberFormat('pt-BR',{style:'currency',currency:'USD'});
+function calc(){const v=Math.max(0,parseFloat(amount.value)||0),f=v*FEE_RATE;feeEl.textContent=fmt.format(f);netEl.textContent=fmt.format(v-f)}
+amount.addEventListener('input',calc);calc();
+
+/* ============ FAQ (acordeão) ============ */
+document.querySelectorAll('.faq-q').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const item=btn.parentElement,open=btn.getAttribute('aria-expanded')==='true';
+    btn.setAttribute('aria-expanded',!open);item.classList.toggle('open',!open);
+  });
+});
+
+/* ============ Fade-in ao rolar ============ */
+const reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const els=document.querySelectorAll('.reveal');
+if(reduce||!('IntersectionObserver' in window)){els.forEach(el=>el.classList.add('visible'))}
+else{const io=new IntersectionObserver(entries=>entries.forEach(en=>{if(en.isIntersecting){en.target.classList.add('visible');io.unobserve(en.target)}}),{threshold:.12});els.forEach(el=>io.observe(el))}
+
+document.getElementById('year').textContent=new Date().getFullYear();
+</script>
 </body>
 </html>

@@ -755,6 +755,17 @@
     <script>
         const SDK = window.GhostPaySDK;
 
+        // XSS prevention: escape HTML entities
+        function escapeHtml(str) {
+            if (str == null) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
         // State
         let selectedChain = 'bitcoin';
         let selectedAmount = 0;
@@ -802,13 +813,13 @@
                 : allCoins;
 
             list.innerHTML = filtered.map(coin => `
-                <div class="coin-list-item ${selectedChain === coin.chain ? 'selected' : ''}" onclick="selectMoreCoin('${coin.chain}')">
+                <div class="coin-list-item ${selectedChain === coin.chain ? 'selected' : ''}" onclick="selectMoreCoin('${escapeHtml(coin.chain)}')">
                     <div class="coin-list-icon">
-                        <img src="${coin.icon}" width="32" height="32" alt="${coin.symbol}">
+                        <img src="${escapeHtml(coin.icon)}" width="32" height="32" alt="${escapeHtml(coin.symbol)}">
                     </div>
                     <div class="coin-list-info">
-                        <div class="coin-list-name">${coin.name}</div>
-                        <div class="coin-list-symbol">${coin.symbol}</div>
+                        <div class="coin-list-name">${escapeHtml(coin.name)}</div>
+                        <div class="coin-list-symbol">${escapeHtml(coin.symbol)}</div>
                     </div>
                     <div class="coin-list-check"></div>
                 </div>
@@ -832,10 +843,10 @@
                     const newBtn = document.createElement('button');
                     newBtn.className = 'crypto-btn active';
                     newBtn.setAttribute('data-chain', chain);
-                    const iconHtml = `<img src="${coin.icon}" width="28" height="28" alt="${coin.symbol}" style="border-radius: 50%;">`;
+                    const iconHtml = `<img src="${escapeHtml(coin.icon)}" width="28" height="28" alt="${escapeHtml(coin.symbol)}" style="border-radius: 50%;">`;
                     newBtn.innerHTML = `
                         <div class="crypto-icon">${iconHtml}</div>
-                        <div class="crypto-name">${coin.symbol}</div>
+                        <div class="crypto-name">${escapeHtml(coin.symbol)}</div>
                     `;
                     newBtn.onclick = () => {
                         grid.querySelectorAll('.crypto-btn').forEach(b => b.classList.remove('active'));
