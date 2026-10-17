@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ghost Pay – Sign Up</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #000;
+    --surface: #1c1c1c;
+    --border: #2e2e2e;
+    --text: #fff;
+    --muted: #a3a3a3;
+    --danger: #ef4444;
+    --success: #22c55e;
+  }
+
+  body {
+    font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+
+  button { font-family: inherit; }
+
+  .page {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 100vh;
+    padding: 8px;
+    gap: 8px;
+  }
+
+  .hero {
+    position: relative;
+    border-radius: 28px;
+    overflow: hidden;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 0 40px 56px;
+    background:
+      linear-gradient(180deg,
+        #ffffff 0%,
+        #f2f2f2 10%,
+        #d9d9d9 24%,
+        #a6a6a6 38%,
+        #5c5c5c 55%,
+        #262626 72%,
+        #0a0a0a 90%,
+        #000 100%);
+  }
+
+  .hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: .35;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 244px;
+    min-width: 244px;
+    text-align: center;
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 15px;
+    margin-bottom: 22px;
+  }
+
+  .brand-logo {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 4px solid #fff;
+  }
+
+  .hero h1 {
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+    margin-left: -20px;
+    margin-right: -20px;
+  }
+
+  .hero p {
+    margin: 14px 0 34px;
+    color: #d4d4d4;
+    font-size: 15px;
+    line-height: 1.4;
+  }
+
+  .steps { display: flex; flex-direction: column; gap: 8px; }
+
+  .step {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 16px;
+    height: 45px;
+    border-radius: 8px;
+    background: rgba(40, 40, 40, .85);
+    color: #a3a3a3;
+    font-size: 13px;
+    font-weight: 500;
+    text-align: left;
+    transition: background .4s ease, color .4s ease, transform .4s ease;
+  }
+
+  .step .num {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #444;
+    color: #d4d4d4;
+    font-size: 10px;
+    font-weight: 600;
+    display: grid;
+    place-items: center;
+    flex-shrink: 0;
+    transition: background .4s ease, color .4s ease, transform .4s ease;
+  }
+
+  .step.active { background: #fff; color: #000; }
+  .step.active .num { background: #000; color: #fff; }
+
+  .step.done { color: #e5e5e5; }
+  .step.done .num {
+    background: var(--success);
+    color: #fff;
+    font-size: 0;
+    transform: scale(1.08);
+  }
+  .step.done .num::after { content: "✓"; font-size: 10px; }
+
+  .form-side {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px;
+    overflow: hidden;
+  }
+
+  .form-wrap { width: 100%; max-width: 303px; min-width: 0; }
+
+  .view { display: none; }
+  .view.active { display: block; animation: viewIn .45s cubic-bezier(.22, 1, .36, 1); }
+  .view.leaving { animation: viewOut .28s ease forwards; }
+
+  .form-wrap[data-dir="back"] .view.active  { animation-name: viewInBack; }
+  .form-wrap[data-dir="back"] .view.leaving { animation-name: viewOutBack; }
+
+  @keyframes viewIn      { from { opacity: 0; transform: translateX(28px); }  to { opacity: 1; transform: none; } }
+  @keyframes viewOut     { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateX(-28px); } }
+  @keyframes viewInBack  { from { opacity: 0; transform: translateX(-28px); } to { opacity: 1; transform: none; } }
+  @keyframes viewOutBack { from { opacity: 1; transform: none; } to { opacity: 0; transform: translateX(28px); } }
+
+  .form-head { text-align: center; margin-bottom: 36px; }
+  .form-head h2 { font-size: 20px; font-weight: 600; letter-spacing: -0.01em; }
+  .form-head p { margin-top: 12px; font-size: 12.5px; color: var(--muted); }
+
+  .back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 22px;
+    padding: 0;
+    background: none;
+    border: 0;
+    color: var(--muted);
+    font-size: 12.5px;
+    cursor: pointer;
+    transition: color .15s;
+  }
+  .back:hover { color: #fff; }
+
+  .social { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  .btn-social {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 40px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-size: 12.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background .15s;
+  }
+  .btn-social:hover { background: #111; }
+  .btn-social svg { width: 14px; height: 14px; }
+
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 20px 0 24px;
+    color: var(--muted);
+    font-size: 11px;
+  }
+  .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+
+  form { display: flex; flex-direction: column; gap: 20px; }
+
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  .field label, .field .label-text {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 500;
+    margin-bottom: 8px;
+  }
+
+  .optional { color: var(--muted); font-weight: 400; }
+
+  .input { position: relative; }
+
+  .input input, .input textarea {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid transparent;
+    border-radius: 8px;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 12.5px;
+    outline: none;
+    transition: border-color .15s;
+  }
+  .input input { height: 40px; padding: 0 14px; }
+  .input textarea { min-height: 92px; padding: 12px 14px; resize: none; line-height: 1.45; }
+
+  .input input::placeholder, .input textarea::placeholder { color: #8a8a8a; }
+  .input input:focus, .input textarea:focus { border-color: #fff; }
+
+  .input input.invalid, .input textarea.invalid {
+    border-color: var(--danger);
+    animation: shake .4s ease;
+  }
+
+  .input.prefixed {
+    display: flex;
+    align-items: center;
+    background: var(--surface);
+    border: 1px solid transparent;
+    border-radius: 8px;
+    transition: border-color .15s;
+  }
+  .input.prefixed:focus-within { border-color: #fff; }
+  .input.prefixed:has(input.invalid) { border-color: var(--danger); }
+  .input.prefixed .prefix { padding-left: 14px; color: var(--muted); font-size: 12.5px; white-space: nowrap; }
+  .input.prefixed input { background: transparent; border: 0; padding-left: 2px; height: 38px; animation: none; }
+  .input.prefixed input:focus, .input.prefixed input.invalid { border: 0; }
+
+  .toggle-pass {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: 0;
+    color: #bdbdbd;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+  }
+  .toggle-pass svg { width: 16px; height: 16px; }
+
+  .hint { margin-top: 10px; font-size: 12px; color: var(--muted); }
+  .counter { margin-top: 6px; text-align: right; font-size: 11px; color: var(--muted); }
+
+  .chips { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; border-radius: 8px; }
+  .chip {
+    height: 40px;
+    background: var(--surface);
+    border: 1px solid transparent;
+    border-radius: 8px;
+    color: #d4d4d4;
+    font-size: 12.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: border-color .15s, background .15s, color .15s, transform .15s;
+  }
+  .chip:hover { background: #242424; }
+  .chip:active { transform: scale(.97); }
+  .chip.selected { border-color: #fff; background: #262626; color: #fff; }
+  .chips.invalid { animation: shake .4s ease; }
+  .chips.invalid .chip { border-color: var(--danger); }
+
+  .avatar-row { display: flex; align-items: center; gap: 16px; }
+  .avatar {
+    width: 56px;
+    height: 56px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: linear-gradient(135deg, #fff, #7a7a7a);
+    background-size: cover;
+    background-position: center;
+    color: #000;
+    font-size: 17px;
+    font-weight: 600;
+  }
+  .avatar-row .btn-social { padding: 0 14px; height: 36px; }
+  .avatar-note { margin-top: 6px; font-size: 11px; color: var(--muted); }
+
+  .wallet-options { display: flex; flex-direction: column; gap: 12px; border-radius: 10px; }
+
+  .wallet-card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 14px;
+    background: var(--surface);
+    border: 1px solid transparent;
+    border-radius: 10px;
+    color: var(--text);
+    text-align: left;
+    cursor: pointer;
+    transition: border-color .15s, background .15s, transform .15s;
+  }
+  .wallet-card:hover { background: #242424; }
+  .wallet-card:active { transform: scale(.99); }
+  .wallet-card.selected { border-color: #fff; background: #232323; }
+
+  .wallet-icon {
+    width: 36px;
+    height: 36px;
+    flex-shrink: 0;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    background: #2a2a2a;
+    color: #e5e5e5;
+  }
+  .wallet-icon.ghost { background: linear-gradient(135deg, #fff, #8a8a8a); color: #000; }
+  .wallet-icon svg { width: 20px; height: 20px; }
+
+  .wallet-text { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+  .wallet-text strong { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; }
+  .wallet-text small { font-size: 11.5px; color: var(--muted); }
+
+  .badge {
+    font-style: normal;
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: #323232;
+    color: #d4d4d4;
+  }
+
+  .radio {
+    position: relative;
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    border: 1.5px solid #555;
+    transition: border-color .15s;
+  }
+  .wallet-card.selected .radio { border-color: #fff; }
+  .wallet-card.selected .radio::after { content: ""; position: absolute; inset: 3px; border-radius: 50%; background: #fff; }
+
+  .wallet-options.invalid { animation: shake .4s ease; }
+  .wallet-options.invalid .wallet-card { border-color: var(--danger); }
+
+  .wallet-panel { display: flex; flex-direction: column; gap: 20px; animation: viewIn .35s cubic-bezier(.22, 1, .36, 1); }
+  .wallet-panel[hidden] { display: none; }
+
+  .view.sending .wallet-card { opacity: .6; transition: opacity .3s; }
+
+  .btn-primary {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+    width: 100%;
+    height: 40px;
+    margin-top: 4px;
+    background: #fff;
+    color: #000;
+    border: 0;
+    border-radius: 8px;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    overflow: hidden;
+    transition: width .4s cubic-bezier(.65, 0, .35, 1),
+                border-radius .4s cubic-bezier(.65, 0, .35, 1),
+                background .3s ease, transform .15s, opacity .15s;
+  }
+  .btn-primary:hover { opacity: .9; }
+  .btn-primary:active { transform: scale(.96); }
+
+  .btn-primary .label { transition: opacity .2s; }
+
+  .btn-primary .spinner,
+  .btn-primary .check,
+  .btn-primary .cross {
+    position: absolute;
+    opacity: 0;
+    transition: opacity .2s;
+  }
+
+  .btn-primary .spinner {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #c9c9c9;
+    border-top-color: #000;
+    border-radius: 50%;
+  }
+  .btn-primary .check, .btn-primary .cross { width: 20px; height: 20px; }
+
+  .btn-primary .check path { stroke-dasharray: 24; stroke-dashoffset: 24; transition: stroke-dashoffset .4s ease .1s; }
+  .btn-primary .cross path { stroke-dasharray: 20; stroke-dashoffset: 20; transition: stroke-dashoffset .25s ease .1s; }
+  .btn-primary .cross path + path { transition-delay: .3s; }
+
+  .btn-primary.loading { width: 40px; border-radius: 50%; pointer-events: none; }
+  .btn-primary.loading .label { opacity: 0; }
+  .btn-primary.loading .spinner { opacity: 1; animation: spin .7s linear infinite; }
+
+  .btn-primary.done { width: 40px; border-radius: 50%; background: var(--success); pointer-events: none; animation: pop .45s ease; }
+  .btn-primary.done .label, .btn-primary.done .spinner { opacity: 0; }
+  .btn-primary.done .check { opacity: 1; stroke: #fff; }
+  .btn-primary.done .check path { stroke-dashoffset: 0; }
+
+  .btn-primary.error { width: 40px; border-radius: 50%; background: var(--danger); pointer-events: none; animation: shake .5s ease; }
+  .btn-primary.error .label, .btn-primary.error .spinner { opacity: 0; }
+  .btn-primary.error .cross { opacity: 1; }
+  .btn-primary.error .cross path { stroke-dashoffset: 0; }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes pop { 0% { transform: scale(1); } 50% { transform: scale(1.18); } 100% { transform: scale(1); } }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-7px); }
+    40% { transform: translateX(6px); }
+    60% { transform: translateX(-4px); }
+    80% { transform: translateX(3px); }
+  }
+
+  .view.sending .input input,
+  .view.sending .input textarea,
+  .view.sending .chip { opacity: .6; transition: opacity .3s; }
+
+  .login-text { margin-top: 28px; text-align: center; font-size: 12.5px; color: var(--muted); }
+  .login-text a, .login-text button {
+    color: #fff;
+    font-weight: 600;
+    text-decoration: none;
+    background: none;
+    border: 0;
+    font-size: inherit;
+    cursor: pointer;
+  }
+  .login-text a:hover, .login-text button:hover { text-decoration: underline; }
+
+  .done-view { text-align: center; }
+  .big-check {
+    width: 68px;
+    height: 68px;
+    margin: 0 auto 28px;
+    border-radius: 50%;
+    background: var(--success);
+    display: grid;
+    place-items: center;
+  }
+  .big-check svg { width: 34px; height: 34px; }
+  .big-check path { stroke-dasharray: 30; stroke-dashoffset: 30; }
+  .view.active .big-check { animation: pop .6s ease .1s both; }
+  .view.active .big-check path { animation: draw .5s ease .35s forwards; }
+  @keyframes draw { to { stroke-dashoffset: 0; } }
+
+  .summary {
+    margin: 4px 0 24px;
+    padding: 14px 16px;
+    background: var(--surface);
+    border-radius: 8px;
+    text-align: left;
+    font-size: 12.5px;
+    line-height: 1.7;
+    color: var(--muted);
+  }
+  .summary strong { color: #fff; font-weight: 500; }
+
+  .glitch-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    visibility: hidden;
+    pointer-events: none;
+    overflow: hidden;
+    background: transparent;
+    transition: background .35s ease;
+  }
+  .glitch-overlay.on { visibility: visible; pointer-events: all; }
+  .glitch-overlay.dark { background: #000; }
+
+  .glitch-noise {
+    position: absolute;
+    inset: -20%;
+    opacity: 0;
+    mix-blend-mode: screen;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    background-size: 200px;
+  }
+  .glitch-overlay.hot .glitch-noise { opacity: .2; animation: gnoise .25s steps(4) infinite; }
+  @keyframes gnoise {
+    0%   { transform: translate(0, 0); }
+    25%  { transform: translate(-6%, 4%); }
+    50%  { transform: translate(5%, -7%); }
+    75%  { transform: translate(-3%, -4%); }
+    100% { transform: translate(4%, 6%); }
+  }
+
+  .glitch-scan {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    background: repeating-linear-gradient(0deg, rgba(0,0,0,.3) 0 1px, transparent 1px 3px);
+  }
+  .glitch-overlay.on .glitch-scan { opacity: 1; }
+  .glitch-scan::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0;
+    height: 18%;
+    background: linear-gradient(transparent, rgba(255,255,255,.08), transparent);
+    animation: groll 1.4s linear infinite;
+  }
+  @keyframes groll { from { top: -20%; } to { top: 110%; } }
+
+  .glitch-bars { position: absolute; inset: 0; overflow: hidden; }
+  .gbar { position: absolute; left: 0; width: 100%; }
+
+  .glitch-msg {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 16px;
+    text-align: center;
+    opacity: 0;
+  }
+  .glitch-overlay.msg-on .glitch-msg { opacity: 1; }
+
+  .glitch-text {
+    position: relative;
+    font-size: clamp(34px, 6vw, 72px);
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #fff;
+    animation: gjit .35s steps(2) infinite;
+  }
+  .glitch-text::before, .glitch-text::after {
+    content: attr(data-text);
+    position: absolute;
+    inset: 0;
+  }
+  .glitch-text::before { color: #00e5ff; transform: translateX(-3px); animation: gslice1 .6s steps(1) infinite; }
+  .glitch-text::after  { color: #ff2d55; transform: translateX(3px);  animation: gslice2 .5s steps(1) infinite; }
+
+  @keyframes gjit { 0% { transform: translate(0, 0); } 50% { transform: translate(2px, -1px); } 100% { transform: translate(-2px, 1px); } }
+  @keyframes gslice1 {
+    0%   { clip-path: inset(10% 0 70% 0); }
+    20%  { clip-path: inset(60% 0 10% 0); }
+    40%  { clip-path: inset(30% 0 40% 0); }
+    60%  { clip-path: inset(80% 0 2% 0); }
+    80%  { clip-path: inset(0 0 85% 0); }
+    100% { clip-path: inset(45% 0 30% 0); }
+  }
+  @keyframes gslice2 {
+    0%   { clip-path: inset(70% 0 5% 0); }
+    25%  { clip-path: inset(5% 0 75% 0); }
+    50%  { clip-path: inset(40% 0 35% 0); }
+    75%  { clip-path: inset(85% 0 0 0); }
+    100% { clip-path: inset(20% 0 55% 0); }
+  }
+
+  .glitch-sub {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 13px;
+    letter-spacing: .06em;
+    color: #b5b5b5;
+  }
+  .glitch-sub::after { content: "_"; animation: gblink .5s steps(1) infinite; }
+  @keyframes gblink { 50% { opacity: 0; } }
+
+  .glitch-line {
+    position: absolute;
+    left: 0; right: 0; top: 50%;
+    height: 2px;
+    background: #fff;
+    box-shadow: 0 0 18px 4px rgba(255,255,255,.7);
+    opacity: 0;
+    transform: translateY(-50%) scaleX(0);
+  }
+  .glitch-overlay.crt .glitch-line { opacity: 1; transform: translateY(-50%) scaleX(1); transition: transform .25s ease-out; }
+  .glitch-overlay.dark .glitch-line { opacity: 0; transition: opacity .3s ease; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .btn-primary, .btn-primary * { transition: none !important; animation: none !important; }
+    .view.active, .view.leaving { animation: none !important; }
+  }
+
+  @media (max-width: 860px) {
+    .page { grid-template-columns: 1fr; }
+    .hero { min-height: 420px; padding-top: 60px; }
+    .hero h1 { margin: 0; white-space: normal; }
+    .hero-content { min-width: 0; max-width: 320px; }
+  }
+</style>
+</head>
+<body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <filter id="glitch" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">
+      <feTurbulence id="gturb" type="fractalNoise" baseFrequency="0 0.02" numOctaves="1" seed="1" result="noise"/>
+      <feDisplacementMap id="gdisp" in="SourceGraphic" in2="noise" scale="0" xChannelSelector="R" yChannelSelector="G" result="displaced"/>
+      <feColorMatrix in="displaced" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 1 0" result="r"/>
+      <feColorMatrix in="displaced" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="g"/>
+      <feColorMatrix in="displaced" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="b"/>
+      <feOffset id="goffr" in="r" dx="0" dy="0" result="r2"/>
+      <feOffset id="goffb" in="b" dx="0" dy="0" result="b2"/>
+      <feBlend in="r2" in2="g" mode="screen" result="rg"/>
+      <feBlend in="rg" in2="b2" mode="screen"/>
+    </filter>
+  </svg>
+
+  <div class="glitch-overlay" id="glitch" aria-hidden="true">
+    <div class="glitch-noise"></div>
+    <div class="glitch-scan"></div>
+    <div class="glitch-bars" id="glitch-bars"></div>
+    <div class="glitch-msg">
+      <span class="glitch-text" data-text="System glitch">System glitch</span>
+      <span class="glitch-sub" id="glitch-sub">&gt; bug detected…</span>
+    </div>
+    <div class="glitch-line"></div>
+  </div>
+
+  <main class="page">
+    <section class="hero">
+      <div class="hero-content">
+        <div class="brand"><span class="brand-logo"></span> Ghost Pay</div>
+        <h1>Get Started with Us</h1>
+        <p>Complete these easy steps to register your account.</p>
+
+        <div class="steps">
+          <div class="step active"><span class="num">1</span> Sign up your account</div>
+          <div class="step"><span class="num">2</span> Set up your profile</div>
+          <div class="step"><span class="num">3</span> Connect your wallet</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="form-side">
+      <div class="form-wrap" data-dir="fwd">
+
+        <div class="view active" id="view-1">
+          <header class="form-head">
+            <h2>Sign Up Account</h2>
+            <p>Enter your personal data to create your account.</p>
+          </header>
+
+          <div class="social">
+            <button class="btn-social" type="button">
+              <svg viewBox="0 0 48 48" aria-hidden="true">
+                <path fill="#EA4335" d="M24 9.5c3.5 0 6.6 1.2 9.1 3.6l6.8-6.8C35.8 2.4 30.3 0 24 0 14.6 0 6.5 5.4 2.6 13.2l7.9 6.1C12.4 13.6 17.7 9.5 24 9.5z"/>
+                <path fill="#4285F4" d="M46.5 24.5c0-1.6-.1-3.1-.4-4.5H24v9h12.7c-.6 3-2.3 5.5-4.8 7.2l7.5 5.8c4.4-4.1 7.1-10.1 7.1-17.5z"/>
+                <path fill="#FBBC05" d="M10.5 28.7c-.5-1.5-.8-3-.8-4.7s.3-3.2.8-4.7l-7.9-6.1C.9 16.4 0 20.1 0 24s.9 7.6 2.6 10.8l7.9-6.1z"/>
+                <path fill="#34A853" d="M24 48c6.5 0 11.9-2.1 15.9-5.8l-7.5-5.8c-2.1 1.4-4.9 2.3-8.4 2.3-6.3 0-11.6-4.1-13.5-9.8l-7.9 6.1C6.5 42.6 14.6 48 24 48z"/>
+              </svg>
+              Google
+            </button>
+            <button class="btn-social" type="button">
+              <svg viewBox="0 0 24 24" fill="#fff" aria-hidden="true">
+                <path d="M12 .5C5.65.5.5 5.65.5 12c0 5.08 3.29 9.39 7.86 10.91.58.1.79-.25.79-.56v-2c-3.2.7-3.87-1.37-3.87-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.18 1.76 1.18 1.03 1.76 2.69 1.25 3.35.96.1-.74.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.28 1.18-3.09-.12-.29-.51-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.62 1.59.23 2.76.11 3.05.74.81 1.18 1.83 1.18 3.09 0 4.42-2.69 5.39-5.25 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.51 11.51 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5z"/>
+              </svg>
+              Github
+            </button>
+          </div>
+
+          <div class="divider">Or</div>
+
+          <form novalidate>
+            <div class="row">
+              <div class="field">
+                <label for="first">First Name</label>
+                <div class="input"><input id="first" type="text" placeholder="eg. John" autocomplete="given-name"></div>
+              </div>
+              <div class="field">
+                <label for="last">Last Name</label>
+                <div class="input"><input id="last" type="text" placeholder="eg. Francisco" autocomplete="family-name"></div>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="email">Email</label>
+              <div class="input"><input id="email" type="email" placeholder="eg. johnfrans@gmail.com" autocomplete="email"></div>
+            </div>
+
+            <div class="field">
+              <label for="password">Password</label>
+              <div class="input">
+                <input id="password" type="password" placeholder="Enter your password" autocomplete="new-password">
+                <button class="toggle-pass" type="button" aria-label="Mostrar/ocultar senha">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                    <line x1="1" y1="1" x2="23" y2="23"/>
+                  </svg>
+                </button>
+              </div>
+              <p class="hint">Must be at least 8 characters.</p>
+            </div>
+
+            <button class="btn-primary" type="button">
+              <span class="label">Sign Up</span>
+              <span class="spinner"></span>
+              <svg class="check" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+              <svg class="cross" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M6 6l12 12"/><path d="M18 6L6 18"/></svg>
+            </button>
+          </form>
+
+          <p class="login-text">Already have an account? <a href="#">Log in</a></p>
+        </div>
+
+        <div class="view" id="view-3">
+          <button class="back" type="button" data-back>Back</button>
+
+          <header class="form-head">
+            <h2>Set up your profile</h2>
+            <p>Tell us a bit about you.</p>
+          </header>
+
+          <form novalidate>
+            <div class="field">
+              <div class="avatar-row">
+                <div class="avatar" id="avatar">JF</div>
+                <div>
+                  <button class="btn-social" type="button" id="upload-btn">Upload photo</button>
+                  <p class="avatar-note">Optional · PNG or JPG</p>
+                  <input id="photo" type="file" accept="image/*" hidden>
+                </div>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="job">Job title</label>
+              <div class="input"><input id="job" type="text" placeholder="eg. Product Designer" autocomplete="organization-title"></div>
+            </div>
+
+            <button class="btn-primary" type="button">
+              <span class="label">Continue</span>
+              <span class="spinner"></span>
+              <svg class="check" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+              <svg class="cross" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M6 6l12 12"/><path d="M18 6L6 18"/></svg>
+            </button>
+          </form>
+        </div>
+
+        <div class="view" id="view-wallet">
+          <button class="back" type="button" data-back>Back</button>
+
+          <header class="form-head">
+            <h2>Connect your wallet</h2>
+            <p>Link a wallet to start using Ghost Pay.</p>
+          </header>
+
+          <form novalidate>
+            <div class="wallet-options" id="wallet-options" role="radiogroup" aria-label="Wallet type">
+              <button type="button" class="wallet-card" data-wallet="ghost" role="radio" aria-checked="false">
+                <span class="wallet-icon ghost">
+                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                    <path d="M12 2.5c-4.14 0-7.5 3.36-7.5 7.5v10.2c0 .9 1.05 1.38 1.73.8l1.52-1.3a.75.75 0 0 1 .98 0l1.7 1.45a.75.75 0 0 0 .98 0l1.7-1.45a.75.75 0 0 1 .98 0l1.52 1.3c.68.58 1.73.1 1.73-.8V10c0-4.14-3.36-7.5-7.5-7.5z"/>
+                    <circle cx="9.2" cy="10.2" r="1.25" fill="#fff"/><circle cx="14.8" cy="10.2" r="1.25" fill="#fff"/>
+                  </svg>
+                </span>
+                <span class="wallet-text">
+                  <strong>Ghost Wallet <em class="badge">Recommended</em></strong>
+                  <small>Connect in one click</small>
+                </span>
+                <span class="radio"></span>
+              </button>
+
+              <button type="button" class="wallet-card" data-wallet="custom" role="radio" aria-checked="false">
+                <span class="wallet-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M3.5 7.5A2.5 2.5 0 0 1 6 5h12a2.5 2.5 0 0 1 2.5 2.5v9A2.5 2.5 0 0 1 18 19H6a2.5 2.5 0 0 1-2.5-2.5v-9z"/>
+                    <path d="M3.5 9h17"/><circle cx="16.5" cy="13.5" r="1" fill="currentColor"/>
+                  </svg>
+                </span>
+                <span class="wallet-text">
+                  <strong>Custom wallet</strong>
+                  <small>Use your own address</small>
+                </span>
+                <span class="radio"></span>
+              </button>
+            </div>
+
+            <div class="wallet-panel" id="panel-ghost" hidden>
+              <p class="hint" style="margin-top:0">We only read your public address. No funds are moved and nothing is approved.</p>
+            </div>
+
+            <div class="wallet-panel" id="panel-custom" hidden>
+              <div class="field">
+                <label for="wallet-address">Wallet address</label>
+                <div class="input"><input id="wallet-address" type="text" placeholder="0x..." autocomplete="off" spellcheck="false"></div>
+                <p class="hint">Paste an address starting with 0x (42 characters).</p>
+              </div>
+              <div class="field">
+                <label for="wallet-label">Label <span class="optional">(optional)</span></label>
+                <div class="input"><input id="wallet-label" type="text" placeholder="eg. Main wallet" maxlength="30" autocomplete="off"></div>
+              </div>
+            </div>
+
+            <button class="btn-primary" type="button">
+              <span class="label">Connect wallet</span>
+              <span class="spinner"></span>
+              <svg class="check" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+              <svg class="cross" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><path d="M6 6l12 12"/><path d="M18 6L6 18"/></svg>
+            </button>
+          </form>
+        </div>
+
+        <div class="view done-view" id="view-done">
+          <div class="big-check">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+          </div>
+
+          <header class="form-head" style="margin-bottom: 24px;">
+            <h2 id="done-title">You're all set!</h2>
+            <p>Your account is ready to go.</p>
+          </header>
+
+          <div class="summary" id="summary"></div>
+
+          <button class="btn-primary" type="button" id="go-dashboard"><span class="label">Go to dashboard</span></button>
+
+          <p class="login-text"><button type="button" id="restart">Restart demo</button></p>
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const $  = (s, r = document) => r.querySelector(s);
+    const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+
+    const wrap  = $('.form-wrap');
+    const views = ['view-1', 'view-3', 'view-wallet', 'view-done'].map((id) => document.getElementById(id));
+    const steps = $$('.step');
+    let current = 0;
+
+    function updateSteps(i) {
+      steps.forEach((s, idx) => {
+        s.classList.toggle('done', idx < i);
+        s.classList.toggle('active', idx === i);
+      });
+    }
+
+    function goTo(i) {
+      if (i === current) return;
+      const out = views[current];
+      const inn = views[i];
+      wrap.dataset.dir = i > current ? 'fwd' : 'back';
+      updateSteps(i);
+      out.classList.add('leaving');
+      setTimeout(() => {
+        out.classList.remove('active', 'leaving');
+        inn.classList.add('active');
+        current = i;
+        onEnter(i);
+      }, 280);
+    }
+
+    function onEnter(i) {
+      if (i === 1 && !avatar.classList.contains('has-photo')) {
+        avatar.textContent = initials();
+      }
+      if (i === 3) fillSummary();
+      if (i === 1 || i === 2) {
+        const first = $('input', views[i]);
+        if (first) first.focus({ preventScroll: true });
+      }
+    }
+
+    $$('[data-back]').forEach((b) => b.addEventListener('click', () => goTo(current - 1)));
+
+    function flag(el, ok) {
+      el.classList.remove('invalid');
+      if (!ok) {
+        void el.offsetWidth;
+        el.classList.add('invalid');
+      }
+      return ok;
+    }
+
+    document.addEventListener('input', (e) => e.target.classList && e.target.classList.remove('invalid'));
+
+    function wire(view, validateFn, onSuccess) {
+      const btn  = $('.btn-primary', view);
+      const form = $('form', view);
+      const busy = () => ['loading', 'done', 'error'].some((c) => btn.classList.contains(c));
+
+      function run() {
+        if (busy()) return;
+        const valid = validateFn();
+        view.classList.add('sending');
+        btn.classList.add('loading');
+
+        setTimeout(() => {
+          btn.classList.remove('loading');
+          btn.classList.add(valid ? 'done' : 'error');
+        }, 1000);
+
+        setTimeout(() => {
+          view.classList.remove('sending');
+          if (valid) {
+            onSuccess();
+            setTimeout(() => btn.classList.remove('done'), 700);
+          } else {
+            btn.classList.remove('error');
+          }
+        }, valid ? 1900 : 2000);
+      }
+
+      form.addEventListener('submit', (e) => e.preventDefault());
+      btn.addEventListener('click', run);
+      form.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && e.target.tagName === 'INPUT') { e.preventDefault(); run(); }
+      });
+    }
+
+    const f = {
+      first: $('#first'), last: $('#last'), email: $('#email'), pass: $('#password')
+    };
+
+    $('.toggle-pass').addEventListener('click', () => {
+      f.pass.type = f.pass.type === 'password' ? 'text' : 'password';
+    });
+
+    function validateAccount() {
+      const r = [
+        flag(f.first, f.first.value.trim().length > 0),
+        flag(f.last,  f.last.value.trim().length > 0),
+        flag(f.email, /^\S+@\S+\.\S+$/.test(f.email.value.trim())),
+        flag(f.pass,  f.pass.value.length >= 8)
+      ];
+      return r.every(Boolean);
+    }
+
+    const avatar = $('#avatar');
+    const job = $('#job');
+
+    const initials = () =>
+      ((f.first.value.trim()[0] || '') + (f.last.value.trim()[0] || '')).toUpperCase() || 'GP';
+
+    $('#upload-btn').addEventListener('click', () => $('#photo').click());
+    $('#photo').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        avatar.style.backgroundImage = `url(${reader.result})`;
+        avatar.textContent = '';
+        avatar.classList.add('has-photo');
+      };
+      reader.readAsDataURL(file);
+    });
+
+    function validateProfile() {
+      return flag(job, job.value.trim().length >= 2);
+    }
+
+    const wallet = {
+      options: $('#wallet-options'),
+      address: $('#wallet-address'),
+      label: $('#wallet-label'),
+      type: null,
+      value: ''
+    };
+    const ghostPanel  = $('#panel-ghost');
+    const customPanel = $('#panel-custom');
+
+    $$('.wallet-card', wallet.options).forEach((card) => card.addEventListener('click', () => {
+      wallet.type = card.dataset.wallet;
+      $$('.wallet-card', wallet.options).forEach((c) => {
+        const on = c === card;
+        c.classList.toggle('selected', on);
+        c.setAttribute('aria-checked', String(on));
+      });
+      wallet.options.classList.remove('invalid');
+      ghostPanel.hidden  = wallet.type !== 'ghost';
+      customPanel.hidden = wallet.type !== 'custom';
+      if (wallet.type === 'custom') wallet.address.focus({ preventScroll: true });
+    }));
+
+    const isAddress = (a) => /^0x[a-fA-F0-9]{40}$/.test(a.trim());
+
+    const demoAddress = () => {
+      const bytes = new Uint8Array(20);
+      crypto.getRandomValues(bytes);
+      return '0x' + [...bytes].map((b) => b.toString(16).padStart(2, '0')).join('');
+    };
+
+    function validateWallet() {
+      if (!flag(wallet.options, !!wallet.type)) return false;
+      if (wallet.type === 'ghost') {
+        wallet.value = demoAddress();
+        return true;
+      }
+      const ok = flag(wallet.address, isAddress(wallet.address.value));
+      if (ok) wallet.value = wallet.address.value.trim();
+      return ok;
+    }
+
+    const shortAddr = (a) => a.slice(0, 6) + '…' + a.slice(-4);
+    const esc = (t) => t.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+    function fillSummary() {
+      const name = f.first.value.trim();
+      $('#done-title').textContent = name ? `You're all set, ${name}!` : "You're all set!";
+
+      const walletName = wallet.type === 'ghost' ? 'Ghost Wallet' : 'Custom wallet';
+      const label = wallet.type === 'custom' && wallet.label.value.trim()
+        ? ` (${wallet.label.value.trim()})` : '';
+
+      $('#summary').innerHTML =
+        `<div><strong>Account</strong> · ${esc((name + ' ' + f.last.value.trim()).trim())}</div>` +
+        `<div><strong>Role</strong> · ${esc(job.value.trim())}</div>` +
+        `<div><strong>Wallet</strong> · ${esc(walletName + label)}</div>` +
+        `<div><strong>Address</strong> · ${esc(shortAddr(wallet.value))}</div>`;
+    }
+
+    $('#restart').addEventListener('click', () => {
+      $$('form').forEach((fm) => fm.reset());
+      $$('.wallet-card').forEach((c) => { c.classList.remove('selected'); c.setAttribute('aria-checked', 'false'); });
+      ghostPanel.hidden = true;
+      customPanel.hidden = true;
+      wallet.type = null;
+      wallet.value = '';
+      avatar.style.backgroundImage = '';
+      avatar.classList.remove('has-photo');
+      goTo(0);
+    });
+
+    const DEFAULT_PAGE = 'index.html';
+
+    let glitching = false;
+
+    function runGlitch() {
+      if (glitching) return;
+      glitching = true;
+
+      const page    = $('.page');
+      const overlay = $('#glitch');
+      const bars    = $('#glitch-bars');
+      const sub     = $('#glitch-sub');
+      const turb = $('#gturb'), disp = $('#gdisp'), offR = $('#goffr'), offB = $('#goffb');
+      const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      const r = (a, b) => a + Math.random() * (b - a);
+      const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+      function reset() {
+        glitching = false;
+        overlay.className = 'glitch-overlay';
+        bars.textContent = '';
+        page.style.transform = '';
+        page.style.filter = '';
+        document.documentElement.style.overflow = '';
+      }
+
+      function go() {
+        try { window.location.href = DEFAULT_PAGE; } catch (e) { /* ignorado */ }
+        setTimeout(reset, 1500);
+      }
+
+      if (reduce) {
+        overlay.classList.add('on', 'dark');
+        setTimeout(go, 450);
+        return;
+      }
+
+      document.documentElement.style.overflow = 'hidden';
+      overlay.classList.add('on', 'hot');
+
+      const T = { intense: 550, collapse: 1750, line: 2000, dark: 2150, end: 2600 };
+      const lines = [[0, '> bug detected…'], [900, '> corrupting pixels…'], [1400, '> rerouting…']];
+      const colors = ['#ff2d55', '#00e5ff', '#ffffff', '#000000', '#7c3aed'];
+
+      function tick(k, moveTransform) {
+        disp.setAttribute('scale', String(k * r(30, 110)));
+        turb.setAttribute('baseFrequency', `0 ${r(0.004, 0.05).toFixed(4)}`);
+        turb.setAttribute('seed', String(Math.floor(r(1, 100))));
+        offR.setAttribute('dx', String(r(-1, 1) * k * 22));
+        offB.setAttribute('dx', String(r(-1, 1) * k * 22));
+
+        if (moveTransform) {
+          page.style.transform =
+            `translate(${r(-1, 1) * k * 26}px, ${r(-1, 1) * k * 5}px) skewX(${r(-1, 1) * k * 5}deg)`;
+          const hue = Math.random() < 0.25 ? r(-60, 60) : 0;
+          page.style.filter = `url(#glitch) hue-rotate(${hue}deg) saturate(${1 + k * 0.6})`;
+        }
+
+        bars.textContent = '';
+        const n = Math.round(k * 9);
+        for (let i = 0; i < n; i++) {
+          const d = document.createElement('div');
+          d.className = 'gbar';
+          d.style.cssText =
+            `top:${r(0, 100)}%;height:${r(2, 36)}px;background:${pick(colors)};` +
+            `transform:translateX(${r(-40, 40)}px);` +
+            `mix-blend-mode:${Math.random() < 0.5 ? 'difference' : 'screen'};opacity:${r(0.35, 0.9)}`;
+          bars.appendChild(d);
+        }
+      }
+
+      page.style.filter = 'url(#glitch)';
+      const start = performance.now();
+      let last = 0;
+
+      function frame(now) {
+        const t = now - start;
+        if (t >= T.end) { go(); return; }
+
+        let k;
+        if (t < T.intense)        k = (Math.floor(t / 90) % 3 === 0) ? 0.55 : 0.12;
+        else if (t < T.collapse)  k = r(0.7, 1);
+        else                      k = 0.35;
+
+        if (now - last > 70) {
+          last = now;
+          tick(k, t < T.collapse);
+        }
+
+        if (t >= T.intense && t < T.collapse) overlay.classList.add('msg-on');
+        if (t >= T.collapse) overlay.classList.remove('msg-on');
+
+        lines.forEach(([at, txt]) => { if (t >= at && sub.dataset.line !== String(at)) { sub.dataset.line = String(at); sub.textContent = txt; } });
+
+        if (t >= T.collapse) {
+          const p = Math.min(1, (t - T.collapse) / 350);
+          page.style.transform = `scale(${1 + p * 0.08}, ${Math.max(0.004, 1 - p * p * p * 0.996)})`;
+          page.style.filter = `url(#glitch) brightness(${1 + p * 1.4})`;
+        }
+        if (t >= T.line) overlay.classList.add('crt');
+        if (t >= T.dark) overlay.classList.remove('hot'), overlay.classList.add('dark');
+
+        requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    }
+
+    $('#go-dashboard').addEventListener('click', runGlitch);
+
+    wire(views[0], validateAccount,   () => goTo(1));
+    wire(views[1], validateProfile,   () => goTo(2));
+    wire(views[2], validateWallet,    () => goTo(3));
+  </script>
+</body>
+</html>
